@@ -55,7 +55,7 @@ export const CtaSection: React.FC = () => {
                         </div>
                         <div className="text-center">
                             <div className="text-3xl font-bold">12+</div>
-                            <div className="text-sm text-gray-400 dark:text-gray-600">Années d'expérience</div>
+                            <div className="text-sm text-gray-400 dark:text-gray-600">Expérience</div>
                         </div>
                         <div className="text-center">
                             <div className="text-3xl font-bold">24/7</div>

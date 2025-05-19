@@ -6,6 +6,7 @@ export * from './blog.types';
 export * from './projects.types';
 
 export interface Profile {
+    results?: any;
     id: number;
     nom: string;
     sousTitre: string;

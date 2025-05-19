@@ -8,7 +8,7 @@ export const FeaturedProjects: React.FC = () => {
 
     // Utiliser le hook useApi pour récupérer les projets depuis l'API
     const { data, loading, error } = useApi<{results: Project[]}>({
-        endpoint: '/api/projects/?featured=true&limit=3',
+        endpoint: '/api/projects/?featured=true&limit=6',
         loadOnMount: true
     });
 
@@ -18,13 +18,13 @@ export const FeaturedProjects: React.FC = () => {
                 <div className="flex flex-col md:flex-row md:justify-between md:items-end mb-12 md:mb-16">
                     <div className="max-w-2xl">
             <span className="inline-block mb-2 px-3 py-1 text-xs font-semibold uppercase tracking-wider bg-gray-200 dark:bg-gray-800 text-black dark:text-white rounded-full">
-              Portfolio
+              Projets
             </span>
                         <h2 className="text-3xl md:text-4xl font-bold text-black dark:text-white leading-tight">
-                            Nos Dernières Réalisations
+                            Quelques projets de Fox
                         </h2>
                         <p className="mt-3 text-lg text-gray-600 dark:text-gray-400">
-                            Découvrez une sélection de nos projets les plus récents et innovants.
+                            Découvrez une sélection de nos projets les plus récents.
                         </p>
                     </div>
 
@@ -135,7 +135,7 @@ export const FeaturedProjects: React.FC = () => {
                         to="/projects"
                         className="inline-flex items-center px-7 py-3.5 bg-black dark:bg-white text-white dark:text-black text-sm font-semibold rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-all duration-300 ease-in-out shadow-md hover:shadow-lg"
                     >
-                        Explorer Tous Nos Projets
+                        Explorer Plus de Projets
                         <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                         </svg>

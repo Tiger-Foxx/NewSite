@@ -7,8 +7,9 @@ import foxLoaderAnimation from './assets/lotties/fox-loader.json';
 // Composants partagés
 import { Header } from './components/layout/Header';
 import { Footer } from './components/layout/Footer';
+import { ProtectedRoute } from './components/ProtectedRoute';
 
-// Pages
+// Pages publiques
 import { HomePage } from './pages/HomePage';
 import { ProjectsPage } from './pages/ProjectsPage';
 import { ProjectDetailPage } from './pages/ProjectDetailPage';
@@ -17,6 +18,13 @@ import { BlogPage } from './pages/BlogPage';
 import { BlogPostPage } from './pages/BlogPostPage';
 import { ContactPage } from './pages/ContactPage';
 import { ErrorPage } from './pages/ErrorPage';
+import { LoginPage } from './pages/LoginPage';
+
+// Pages d'administration (protégées)
+
+// Contexte d'authentification
+import { AuthProvider } from './context/AuthContext';
+import AdminNewsletterPage from "@/pages/AdminNewsletterPage.tsx";
 
 const App: React.FC = () => {
     const [loading, setLoading] = useState(true);
@@ -58,33 +66,46 @@ const App: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen flex flex-col bg-white dark:bg-black text-black dark:text-white">
-            <Header />
+        <AuthProvider>
+            <div className="min-h-screen flex flex-col bg-white dark:bg-black text-black dark:text-white">
+                <Header />
 
-            <AnimatePresence mode="wait">
-                <motion.div
-                    key={location.pathname}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="flex-grow"
-                >
-                    <Routes location={location}>
-                        <Route path="/" element={<HomePage />} />
-                        <Route path="/projects" element={<ProjectsPage />} />
-                        <Route path="/projects/:id" element={<ProjectDetailPage />} />
-                        <Route path="/about" element={<AboutPage />} />
-                        <Route path="/blog" element={<BlogPage />} />
-                        <Route path="/blog/:slug" element={<BlogPostPage />} />
-                        <Route path="/contact" element={<ContactPage />} />
-                        <Route path="*" element={<ErrorPage />} />
-                    </Routes>
-                </motion.div>
-            </AnimatePresence>
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={location.pathname}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="flex-grow"
+                    >
+                        <Routes location={location}>
+                            {/* Routes publiques */}
+                            <Route path="/" element={<HomePage />} />
+                            <Route path="/projects" element={<ProjectsPage />} />
+                            <Route path="/projects/:id" element={<ProjectDetailPage />} />
+                            <Route path="/about" element={<AboutPage />} />
+                            <Route path="/blog" element={<BlogPage />} />
+                            <Route path="/blog/:slug" element={<BlogPostPage />} />
+                            <Route path="/contact" element={<ContactPage />} />
+                            <Route path="/login" element={<LoginPage />} />
 
-            <Footer />
-        </div>
+                            {/* Routes protégées (administration) */}
+                            <Route path="/admin/newsletter" element={
+                                <ProtectedRoute>
+                                    <AdminNewsletterPage />
+                                </ProtectedRoute>
+                            } />
+
+                            {/* Route 404 */}
+                            <Route path="*" element={<ErrorPage />} />
+                        </Routes>
+                    </motion.div>
+                </AnimatePresence>
+
+                <Footer />
+            </div>
+        </AuthProvider>
     );
 };
 

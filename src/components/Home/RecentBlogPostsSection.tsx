@@ -15,7 +15,7 @@ const formatDate = (dateString: string | undefined): string => {
 
 export const RecentBlogPostsSection: React.FC = () => {
     const { data, loading, error } = useApi<{ results: Post[] }>({
-        endpoint: '/api/posts/?limit=3&ordering=-date_publication', // ou -date
+        endpoint: '/api/posts/?limit=6&ordering=-date_publication', // ou -date
         loadOnMount: true,
     });
 

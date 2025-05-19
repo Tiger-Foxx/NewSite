@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { AuthContext } from '../context';
-import { updateMetaTags } from '../utils';
+import {AuthContext} from "@/context/AuthContext.tsx";
+import {updateMetaTags} from "@/utils/seo.ts";
+
 
 export const LoginPage: React.FC = () => {
     const { isAuthenticated, login, loading } = useContext(AuthContext);
