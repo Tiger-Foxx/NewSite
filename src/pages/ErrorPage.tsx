@@ -1,119 +1,26 @@
-import React, { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { updateMetaTags } from '../utils';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 export const ErrorPage: React.FC = () => {
-    const navigate = useNavigate();
-
-    // Mettre à jour les meta tags
-    useEffect(() => {
-        updateMetaTags({
-            title: 'Page non trouvée (404)',
-            description: 'La page que vous recherchez n\'existe pas ou a été déplacée.',
-            type: 'website'
-        });
+    React.useEffect(() => {
+        document.title = 'Page non trouvée - Fox Engineering';
     }, []);
 
-    // Rediriger vers l'accueil après un certain temps
-    useEffect(() => {
-        const timeout = setTimeout(() => {
-            navigate('/');
-        }, 10000); // 10 secondes
-
-        return () => clearTimeout(timeout);
-    }, [navigate]);
-
-    // Animation variants
-    const containerVariants = {
-        initial: { opacity: 0 },
-        animate: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.2,
-                delayChildren: 0.1
-            }
-        }
-    };
-
-    const itemVariants = {
-        initial: { opacity: 0, y: 30 },
-        animate: {
-            opacity: 1,
-            y: 0,
-            transition: {
-                duration: 0.6,
-                ease: [0.6, 0.05, -0.01, 0.9]
-            }
-        }
-    };
-
     return (
-        <div className="min-h-screen flex items-center justify-center px-4 py-32">
-            <div className="fox-noise absolute inset-0" />
-            <div className="fox-gradient-bg absolute inset-0" />
-
-            <motion.div
-                className="text-center z-10 max-w-xl"
-                variants={containerVariants}
-                initial="initial"
-                animate="animate"
+        <div className="min-h-screen pt-16 md:pt-20 flex flex-col items-center justify-center text-center px-4 bg-white dark:bg-black text-black dark:text-white">
+            <h1 className="text-6xl font-bold text-red-500">404</h1>
+            <h2 className="mt-4 text-3xl font-semibold">Page Non Trouvée</h2>
+            <p className="mt-4 text-lg text-gray-600 dark:text-gray-400">
+                Désolé, la page que vous recherchez n'existe pas ou a été déplacée.
+            </p>
+            <Link
+                to="/"
+                className="mt-8 px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-full font-medium hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
             >
-                <motion.div
-                    className="relative mx-auto mb-6 w-32 h-32"
-                    variants={itemVariants}
-                >
-                    <div className="w-full h-full rounded-full bg-fox-light/20 flex items-center justify-center">
-                        <span className="text-6xl">🦊</span>
-                    </div>
-                    <div className="absolute top-0 -right-2 w-8 h-8 bg-fox-light/10 rounded-full flex items-center justify-center">
-                        <span className="text-xl">❓</span>
-                    </div>
-                    <div className="absolute -bottom-2 left-4 w-10 h-10 bg-fox-light/10 rounded-full flex items-center justify-center">
-                        <span className="text-xl">❓</span>
-                    </div>
-                </motion.div>
-
-                <motion.h1
-                    className="text-5xl sm:text-6xl font-bold mb-4 gradient-text"
-                    variants={itemVariants}
-                >
-                    404
-                </motion.h1>
-
-                <motion.h2
-                    className="text-2xl sm:text-3xl font-bold mb-6 text-white"
-                    variants={itemVariants}
-                >
-                    Page Non Trouvée
-                </motion.h2>
-
-                <motion.p
-                    className="text-gray-300 mb-8 text-lg"
-                    variants={itemVariants}
-                >
-                    Oups ! Il semble que vous ayez pris un chemin inexistant.
-                    Le renard est parti explorer d'autres territoires.
-                </motion.p>
-
-                <motion.div
-                    variants={itemVariants}
-                >
-                    <Link
-                        to="/"
-                        className="btn btn-primary px-6 py-3"
-                    >
-                        Retour à l'accueil
-                    </Link>
-                </motion.div>
-
-                <motion.p
-                    className="mt-8 text-gray-400 text-sm"
-                    variants={itemVariants}
-                >
-                    Redirection automatique dans quelques secondes...
-                </motion.p>
-            </motion.div>
+                Retour à l'accueil
+            </Link>
         </div>
     );
 };
+
+export default ErrorPage;

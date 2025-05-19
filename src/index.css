@@ -8,97 +8,21 @@
 /*@tailwind utilities;*/
 
 @import "tailwindcss";
-@import './styles/base.css';
-@import './styles/components.css';
-@import './styles/typography.css';
-@import './styles/animations.css';
-@import './styles/utilities.css';
 
-/* Styles spécifiques qui écrasent potentiellement les importations ci-dessus */
-:root {
-    /* Palettes thème sombre (par défaut) */
-    --color-background: #121212;
-    --color-surface: #1E1E1E;
-    --color-primary: #FF7B25;
-    --color-primary-light: #FF9E5E;
-    --color-text: #E0E0E0;
-    --color-text-secondary: #A0A0A0;
-    --color-border: rgba(255, 123, 37, 0.1);
+/* Styles de base minimalistes */
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply font-sans text-black dark:text-white bg-white dark:bg-black antialiased;
+    }
 }
 
-/* Thème clair si nécessaire */
-.light {
-    --color-background: #F8F9FA;
-    --color-surface: #FFFFFF;
-    --color-primary: #FF7B25;
-    --color-primary-light: #FF9E5E;
-    --color-text: #212529;
-    --color-text-secondary: #6C757D;
-    --color-border: rgba(255, 123, 37, 0.2);
-}
-
-/* Scrollbar personnalisée */
-::-webkit-scrollbar {
-    width: 12px;
-}
-
-::-webkit-scrollbar-track {
-    background: var(--color-background);
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--color-primary);
-    border-radius: 6px;
-    border: 3px solid var(--color-background);
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: var(--color-primary-light);
-}
-
-/* Sélection de texte */
-::selection {
-    background-color: var(--color-primary);
-    color: white;
-}
-
-/* Style global lorsqu'un élément est en focus */
-*:focus-visible {
-    outline: 2px solid var(--color-primary);
-    outline-offset: 2px;
-}
-
-/* Retirer les marges par défaut du body */
-body {
-    margin: 0;
-    padding: 0;
-}
-
-/* Style pour que le footer reste en bas */
-#root {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
-main {
-    flex: 1;
-}
-
-/* Conteneurs d'orange */
-.fox-gradient-bg {
-    background: radial-gradient(circle at 70% 30%, rgba(255, 123, 37, 0.15) 0%, rgba(30, 30, 30, 0) 70%);
-}
-
-.fox-noise {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('../public/noise.png');
-    background-repeat: repeat;
-    opacity: 0.03;
-    mix-blend-mode: overlay;
-    pointer-events: none;
+/* Classe utilitaire de transition */
+.transition-all {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
 }
