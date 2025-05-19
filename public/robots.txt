@@ -1,0 +1,25 @@
+# Fox - Service d'ingénierie Informatique
+User-agent: *
+Allow: /
+
+# Empêcher l'indexation des fichiers PDF non publics et des images sources
+User-agent: *
+Disallow: /assets/files/internal/
+Disallow: /assets/source-images/
+Disallow: /login
+
+# Optimisation de l'exploration
+User-agent: Googlebot
+Crawl-delay: 1
+
+User-agent: Bingbot
+Crawl-delay: 2
+
+User-agent: Slurp
+Crawl-delay: 3
+
+# Host prioritaire
+Host: fox-dev.com
+
+# Sitemap
+Sitemap: https://fox-dev.com/sitemap.xml

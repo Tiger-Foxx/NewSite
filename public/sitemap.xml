@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+                            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd
+                            http://www.google.com/schemas/sitemap-image/1.1
+                            http://www.google.com/schemas/sitemap-image/1.1/sitemap-image.xsd">
+    <!-- Pages Principales -->
+    <url>
+        <loc>https://fox-dev.com/</loc>
+        <lastmod>2025-05-18T00:00:00+00:00</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+        <image:image>
+            <image:loc>https://fox-dev.com/assets/images/hero-image.webp</image:loc>
+            <image:title>Fox - Service d'ingénierie Informatique</image:title>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://fox-dev.com/projects</loc>
+        <lastmod>2025-05-18T00:00:00+00:00</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>https://fox-dev.com/blog</loc>
+        <lastmod>2025-05-18T00:00:00+00:00</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>https://fox-dev.com/about</loc>
+        <lastmod>2025-05-18T00:00:00+00:00</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+        <image:image>
+            <image:loc>https://fox-dev.com/assets/images/profile.webp</image:loc>
+            <image:title>Arthur Donfack - Fox</image:title>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://fox-dev.com/contact</loc>
+        <lastmod>2025-05-18T00:00:00+00:00</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Produits Fox -->
+    <url>
+        <loc>https://fox-dev.com/projects/foxybluelight</loc>
+        <lastmod>2025-05-18T00:00:00+00:00</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+        <image:image>
+            <image:loc>https://fox-dev.com/assets/icons/FoxyBlueLight.svg</image:loc>
+            <image:title>FoxyBlueLight - Filtre de lumière bleue amélioré pour Windows</image:title>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://fox-dev.com/projects/mood-music</loc>
+        <lastmod>2025-05-18T00:00:00+00:00</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+        <image:image>
+            <image:loc>https://fox-dev.com/assets/icons/MoodMusic.svg</image:loc>
+            <image:title>Mood-Music - IA qui génère des playlists Spotify selon votre humeur</image:title>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://fox-dev.com/projects/nan-cv</loc>
+        <lastmod>2025-05-18T00:00:00+00:00</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+        <image:image>
+            <image:loc>https://fox-dev.com/assets/icons/NanCV.svg</image:loc>
+            <image:title>NAN-CV - Créateur de CV intelligent et gratuit</image:title>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://fox-dev.com/projects/yt-learn</loc>
+        <lastmod>2025-05-18T00:00:00+00:00</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+        <image:image>
+            <image:loc>https://fox-dev.com/assets/icons/YTLearn.svg</image:loc>
+            <image:title>YT-Learn - Transforme les vidéos YouTube en jeux éducatifs</image:title>
+        </image:image>
+    </url>
+
+    <!-- Articles de blog générés dynamiquement (exemples) -->
+    <url>
+        <loc>https://fox-dev.com/blog/1</loc>
+        <lastmod>2025-05-10T00:00:00+00:00</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://fox-dev.com/blog/2</loc>
+        <lastmod>2025-04-15T00:00:00+00:00</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://fox-dev.com/blog/3</loc>
+        <lastmod>2025-03-22T00:00:00+00:00</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <!-- Projets générés dynamiquement (exemples) -->
+    <url>
+        <loc>https://fox-dev.com/projects/1</loc>
+        <lastmod>2025-05-18T00:00:00+00:00</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://fox-dev.com/projects/2</loc>
+        <lastmod>2025-04-10T00:00:00+00:00</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://fox-dev.com/projects/3</loc>
+        <lastmod>2025-03-05T00:00:00+00:00</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.7</priority>
+    </url>
+</urlset>

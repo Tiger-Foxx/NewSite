@@ -1,0 +1,268 @@
+/*!* Animation d'apparition de base *!*/
+/*@keyframes fadeIn {*/
+/*    from {*/
+/*        opacity: 0;*/
+/*    }*/
+/*    to {*/
+/*        opacity: 1;*/
+/*    }*/
+/*}*/
+
+/*@keyframes fadeInUp {*/
+/*    from {*/
+/*        opacity: 0;*/
+/*        transform: translateY(20px);*/
+/*    }*/
+/*    to {*/
+/*        opacity: 1;*/
+/*        transform: translateY(0);*/
+/*    }*/
+/*}*/
+
+/*@keyframes fadeInDown {*/
+/*    from {*/
+/*        opacity: 0;*/
+/*        transform: translateY(-20px);*/
+/*    }*/
+/*    to {*/
+/*        opacity: 1;*/
+/*        transform: translateY(0);*/
+/*    }*/
+/*}*/
+
+/*@keyframes fadeInLeft {*/
+/*    from {*/
+/*        opacity: 0;*/
+/*        transform: translateX(-20px);*/
+/*    }*/
+/*    to {*/
+/*        opacity: 1;*/
+/*        transform: translateX(0);*/
+/*    }*/
+/*}*/
+
+/*@keyframes fadeInRight {*/
+/*    from {*/
+/*        opacity: 0;*/
+/*        transform: translateX(20px);*/
+/*    }*/
+/*    to {*/
+/*        opacity: 1;*/
+/*        transform: translateX(0);*/
+/*    }*/
+/*}*/
+
+/*!* Animation de flottement *!*/
+/*@keyframes float {*/
+/*    0% {*/
+/*        transform: translateY(0px);*/
+/*    }*/
+/*    50% {*/
+/*        transform: translateY(-10px);*/
+/*    }*/
+/*    100% {*/
+/*        transform: translateY(0px);*/
+/*    }*/
+/*}*/
+
+/*!* Animation de rebond *!*/
+/*@keyframes bounce {*/
+/*    0%, 20%, 50%, 80%, 100% {*/
+/*        transform: translateY(0);*/
+/*    }*/
+/*    40% {*/
+/*        transform: translateY(-20px);*/
+/*    }*/
+/*    60% {*/
+/*        transform: translateY(-10px);*/
+/*    }*/
+/*}*/
+
+/*!* Animation de pulse *!*/
+/*@keyframes pulse {*/
+/*    0% {*/
+/*        transform: scale(1);*/
+/*    }*/
+/*    50% {*/
+/*        transform: scale(1.05);*/
+/*    }*/
+/*    100% {*/
+/*        transform: scale(1);*/
+/*    }*/
+/*}*/
+
+/*!* Animation pour les indicateurs de scroll *!*/
+/*@keyframes scrollIndicator {*/
+/*    0% {*/
+/*        opacity: 1;*/
+/*        transform: translateY(0);*/
+/*    }*/
+/*    50% {*/
+/*        opacity: 0.5;*/
+/*        transform: translateY(10px);*/
+/*    }*/
+/*    100% {*/
+/*        opacity: 1;*/
+/*        transform: translateY(0);*/
+/*    }*/
+/*}*/
+
+/*!* Animation pour le clignotement *!*/
+/*@keyframes blink {*/
+/*    0%, 100% {*/
+/*        opacity: 1;*/
+/*    }*/
+/*    50% {*/
+/*        opacity: 0.5;*/
+/*    }*/
+/*}*/
+
+/*!* Animation pour les cartes qui se retournent *!*/
+/*@keyframes flip {*/
+/*    0% {*/
+/*        transform: rotateY(0);*/
+/*    }*/
+/*    100% {*/
+/*        transform: rotateY(180deg);*/
+/*    }*/
+/*}*/
+
+/*!* Animation pour l'effet de typage *!*/
+/*@keyframes typing {*/
+/*    from {*/
+/*        width: 0;*/
+/*    }*/
+/*    to {*/
+/*        width: 100%;*/
+/*    }*/
+/*}*/
+
+/*@keyframes blink-caret {*/
+/*    from, to {*/
+/*        border-color: transparent;*/
+/*    }*/
+/*    50% {*/
+/*        border-color: var(--color-primary);*/
+/*    }*/
+/*}*/
+
+/*!* Classes d'animation *!*/
+/*.animate-fade-in {*/
+/*    animation: fadeIn 0.5s ease forwards;*/
+/*}*/
+
+/*.animate-fade-in-up {*/
+/*    animation: fadeInUp 0.5s ease forwards;*/
+/*}*/
+
+/*.animate-fade-in-down {*/
+/*    animation: fadeInDown 0.5s ease forwards;*/
+/*}*/
+
+/*.animate-fade-in-left {*/
+/*    animation: fadeInLeft 0.5s ease forwards;*/
+/*}*/
+
+/*.animate-fade-in-right {*/
+/*    animation: fadeInRight 0.5s ease forwards;*/
+/*}*/
+
+/*.animate-float {*/
+/*    animation: float 4s ease-in-out infinite;*/
+/*}*/
+
+/*.animate-bounce {*/
+/*    animation: bounce 2s ease infinite;*/
+/*}*/
+
+/*!* Remplacer l'animation pulse problématique *!*/
+/*.animate-pulse {*/
+/*    animation: pulse 2s ease-in-out infinite; !* Utiliser ease-in-out au lieu de cubic-bezier *!*/
+/*}*/
+
+/*.animate-scroll-indicator {*/
+/*    animation: scrollIndicator 2s ease-in-out infinite;*/
+/*}*/
+
+/*.animate-blink {*/
+/*    animation: blink 1.5s ease-in-out infinite;*/
+/*}*/
+
+/*!* Animation avec délais *!*/
+/*.delay-100 {*/
+/*    animation-delay: 100ms;*/
+/*}*/
+
+/*.delay-200 {*/
+/*    animation-delay: 200ms;*/
+/*}*/
+
+/*.delay-300 {*/
+/*    animation-delay: 300ms;*/
+/*}*/
+
+/*.delay-500 {*/
+/*    animation-delay: 500ms;*/
+/*}*/
+
+/*.delay-700 {*/
+/*    animation-delay: 700ms;*/
+/*}*/
+
+/*.delay-1000 {*/
+/*    animation-delay: 1000ms;*/
+/*}*/
+
+/*!* Page transitions *!*/
+/*.page-enter {*/
+/*    opacity: 0;*/
+/*    transform: translateY(20px);*/
+/*}*/
+
+/*.page-enter-active {*/
+/*    opacity: 1;*/
+/*    transform: translateY(0);*/
+/*    transition: opacity 300ms, transform 300ms;*/
+/*}*/
+
+/*.page-exit {*/
+/*    opacity: 1;*/
+/*}*/
+
+/*.page-exit-active {*/
+/*    opacity: 0;*/
+/*    transition: opacity 300ms;*/
+/*}*/
+
+/*!* Effet de loader *!*/
+/*.loader {*/
+/*    !*position: fixed;*!*/
+/*    top: 0;*/
+/*    left: 0;*/
+/*    width: 100%;*/
+/*    height: 100%;*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*    background-color: var(--color-background);*/
+/*    z-index: var(--z-index-modal);*/
+/*}*/
+
+/*.loader-content {*/
+/*    text-align: center;*/
+/*}*/
+
+/*.loader-spinner {*/
+/*    width: 50px;*/
+/*    height: 50px;*/
+/*    border: 5px solid rgba(255, 123, 37, 0.3);*/
+/*    border-radius: 50%;*/
+/*    border-top-color: var(--color-primary);*/
+/*    animation: spin 1s ease-in-out infinite;*/
+/*}*/
+
+/*@keyframes spin {*/
+/*    to {*/
+/*        transform: rotate(360deg);*/
+/*    }*/
+/*}*/

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Fox - Service d'ingénierie Informatique</title>
+  <meta name="description" content="Fox - Développement web, mobile, desktop, cybersécurité et solutions d'intelligence artificielle. Un service d'ingénierie informatique d'excellence." />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#FF7B25" />
+
+  <!-- Meta tags pour réseaux sociaux -->
+  <meta property="og:title" content="Fox - Service d'ingénierie Informatique" />
+  <meta property="og:description" content="Développement web, mobile, desktop, cybersécurité et solutions d'intelligence artificielle par Arthur Donfack." />
+  <meta property="og:image" content="/logo-fox-light.png" />
+  <meta property="og:url" content="https://fox-dev.com" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Fox" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Fox - Service d'ingénierie Informatique" />
+  <meta name="twitter:description" content="Développement web, mobile, desktop, cybersécurité et solutions d'intelligence artificielle par Arthur Donfack." />
+  <meta name="twitter:image" content="/logo-fox-light.png" />
+
+  <!-- Mots-clés et auteur -->
+  <meta name="keywords" content="développement web, développement mobile, cybersécurité, intelligence artificielle, computer engineering, ingénierie logicielle, Fox, Arthur Donfack" />
+  <meta name="author" content="Arthur Donfack" />
+
+  <!-- Apple PWA Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Fox Dev">
+
+  <!-- Splash screens pour iOS -->
+  <link rel="apple-touch-startup-image" href="/icons/splash-2048x2732.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="/icons/splash-1668x2388.png" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="/icons/splash-1536x2048.png" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="/icons/splash-1242x2688.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="/icons/splash-1125x2436.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="/icons/splash-828x1792.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="/icons/splash-750x1334.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+  <link rel="apple-touch-startup-image" href="/icons/splash-640x1136.png" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+
+  <!-- Préchargement des polices -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Préchargement des ressources critiques -->
+  <link rel="preload" href="/assets/icons/logo-fox.svg" as="image" type="image/svg+xml">
+  <link rel="preload" href="/assets/lotties/fox-loader.json" as="fetch" crossorigin="anonymous">
+
+  <!-- Structured Data - Organization -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Fox",
+      "url": "https://fox-dev.com",
+      "logo": "https://fox-dev.com/logo-fox-light.png",
+      "sameAs": [
+        "https://github.com/theTigerFox",
+        "https://linkedin.com/in/arthur-donfack",
+        "https://instagram.com/thetigerfox",
+        "https://facebook.com/thetigerfox"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+237-658-866-639",
+        "contactType": "customer service",
+        "email": "donfackarthur750@gmail.com",
+        "availableLanguage": ["French", "English"]
+      }
+    }
+  </script>
+
+  <!-- Structured Data - Person -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Arthur Donfack",
+      "alternateName": "Fox",
+      "url": "https://fox-dev.com",
+      "image": "https://fox-dev.com/assets/images/profile.webp",
+      "jobTitle": "Computer Engineering Scientist",
+      "worksFor": {
+        "@type": "Organization",
+        "name": "Fox"
+      },
+      "sameAs": [
+        "https://github.com/theTigerFox",
+        "https://linkedin.com/in/arthur-donfack"
+      ]
+    }
+  </script>
+</head>
+<body>
+<div id="root"></div>
+<!-- Élément pour afficher un message lorsque JavaScript est désactivé -->
+<noscript>
+  <div style="padding: 2rem; text-align: center; max-width: 500px; margin: 0 auto; color: #E0E0E0; background-color: #121212; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+    <h1 style="color: #FF7B25;">JavaScript requis</h1>
+    <p>Le site Fox nécessite JavaScript pour fonctionner. Veuillez l'activer dans votre navigateur pour visualiser le contenu.</p>
+  </div>
+</noscript>
+<script type="module" src="/src/main.tsx"></script>
+</body>
+</html>

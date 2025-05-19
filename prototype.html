@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fox Computer Engineering | Services Technologiques d'Excellence</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            fox: {
+              dark: '#121212',
+              light: '#1E1E1E',
+              orange: '#FF7B25',
+              accent: '#FF9E5E',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #121212;
+      color: #E0E0E0;
+      scroll-behavior: smooth;
+    }
+
+    .fox-gradient-text {
+      background: linear-gradient(90deg, #FF7B25 0%, #FF9E5E 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .fox-card {
+      background: linear-gradient(145deg, #1E1E1E 0%, #121212 100%);
+      border: 1px solid rgba(255, 123, 37, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .fox-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(255, 123, 37, 0.2);
+      border-color: rgba(255, 123, 37, 0.3);
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -38px;
+      top: 0;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #FF7B25;
+      border: 3px solid #121212;
+    }
+
+    .timeline-line::before {
+      content: '';
+      position: absolute;
+      left: -30px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, #FF7B25, transparent);
+    }
+
+    .nav-link {
+      position: relative;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #FF7B25;
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .hero-section {
+      background: radial-gradient(circle at 70% 30%, rgba(255, 123, 37, 0.1) 0%, rgba(30, 30, 30, 0) 50%);
+    }
+
+    .product-card {
+      perspective: 1000px;
+    }
+
+    .product-card-inner {
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+
+    .product-card:hover .product-card-inner {
+      transform: rotateY(15deg);
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+
+    .floating {
+      animation: float 4s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-fox-dark">
+<!-- Navigation -->
+<nav class="fixed w-full bg-fox-dark/90 backdrop-blur-md z-50 border-b border-fox-light">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16 items-center">
+      <div class="flex items-center">
+        <div class="flex-shrink-0 flex items-center">
+          <span class="text-2xl font-bold fox-gradient-text">FOX</span>
+        </div>
+        <div class="hidden md:block ml-10">
+          <div class="flex space-x-8">
+            <a href="#services" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium">Services</a>
+            <a href="#products" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium">Produits</a>
+            <a href="#about" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium">Fox</a>
+            <a href="#timeline" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium">Évolution</a>
+            <a href="#contact" class="nav-link text-gray-300 hover:text-white px-3 py-2 text-sm font-medium">Contact</a>
+          </div>
+        </div>
+      </div>
+      <div class="hidden md:block">
+        <a href="#contact" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-fox-orange hover:bg-fox-accent transition duration-300">
+          Discutons
+        </a>
+      </div>
+      <div class="-mr-2 flex md:hidden">
+        <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none">
+          <span class="sr-only">Open main menu</span>
+          <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div class="md:hidden hidden" id="mobile-menu">
+    <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+      <a href="#services" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Services</a>
+      <a href="#products" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Produits</a>
+      <a href="#about" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Fox</a>
+      <a href="#timeline" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Évolution</a>
+      <a href="#contact" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero-section pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex flex-col md:flex-row items-center">
+      <div class="md:w-1/2 mb-10 md:mb-0">
+        <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-6">
+          <span class="fox-gradient-text">Ingénierie Logicielle</span><br>
+          <span class="text-white">à l'état pur</span>
+        </h1>
+        <p class="text-lg text-gray-300 mb-8 max-w-lg">
+          Fox combine expertise technique et innovation pour créer des solutions logicielles sur mesure. Sécurité, performance et élégance au service de votre vision.
+        </p>
+        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+          <a href="#contact" class="px-6 py-3 bg-fox-orange hover:bg-fox-accent text-white font-medium rounded-md transition duration-300 text-center">
+            Lancez votre projet
+          </a>
+          <a href="#products" class="px-6 py-3 border border-fox-orange text-fox-orange hover:bg-fox-orange/10 font-medium rounded-md transition duration-300 text-center">
+            Voir nos produits
+          </a>
+        </div>
+      </div>
+      <div class="md:w-1/2 flex justify-center">
+        <div class="relative w-full max-w-md">
+          <div class="absolute -top-10 -left-10 w-32 h-32 bg-fox-orange/20 rounded-full filter blur-3xl"></div>
+          <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-fox-orange/20 rounded-full filter blur-3xl"></div>
+          <div class="relative z-10 floating">
+            <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" alt="Fox Illustration" class="rounded-2xl shadow-2xl border border-fox-light/50">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Services Section -->
+<section id="services" class="py-20 px-4 sm:px-6 lg:px-8 bg-fox-light/10">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Nos Domaines d'Expertise</h2>
+      <p class="text-lg text-gray-400 max-w-3xl mx-auto">
+        Des solutions techniques complètes, de la conception à la mise en production
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Service 1 -->
+      <div class="fox-card rounded-xl p-8">
+        <div class="w-14 h-14 bg-fox-orange/10 rounded-lg flex items-center justify-center mb-6">
+          <i class="fas fa-shield-alt text-2xl text-fox-orange"></i>
+        </div>
+        <h3 class="text-xl font-bold text-white mb-3">Sécurité Informatique</h3>
+        <p class="text-gray-400 mb-4">
+          Audit de sécurité, pentesting, architecture sécurisée et formation pour protéger vos actifs numériques.
+        </p>
+        <ul class="space-y-2 text-gray-400">
+          <li class="flex items-center">
+            <i class="fas fa-check-circle text-fox-orange mr-2"></i>
+            Tests d'intrusion
+          </li>
+          <li class="flex items-center">
+            <i class="fas fa-check-circle text-fox-orange mr-2"></i>
+            Sécurité des applications
+          </li>
+          <li class="flex items-center">
+            <i class="fas fa-check-circle text-fox-orange mr-2"></i>
+            Formation des équipes
+          </li>
+        </ul>
+      </div>
+
+      <!-- Service 2 -->
+      <div class="fox-card rounded-xl p-8">
+        <div class="w-14 h-14 bg-fox-orange/10 rounded-lg flex items-center justify-center mb-6">
+          <i class="fas fa-code text-2xl text-fox-orange"></i>
+        </div>
+        <h3 class="text-xl font-bold text-white mb-3">Développement Logiciel</h3>
+        <p class="text-gray-400 mb-4">
+          Applications sur mesure, architecture cloud-native et solutions évolutives pour votre entreprise.
+        </p>
+        <ul class="space-y-2 text-gray-400">
+          <li class="flex items-center">
+            <i class="fas fa-check-circle text-fox-orange mr-2"></i>
+            Web & Mobile
+          </li>
+          <li class="flex items-center">
+            <i class="fas fa-check-circle text-fox-orange mr-2"></i>
+            Desktop & Embedded
+          </li>
+          <li class="flex items-center">
+            <i class="fas fa-check-circle text-fox-orange mr-2"></i>
+            API & Microservices
+          </li>
+        </ul>
+      </div>
+
+      <!-- Service 3 -->
+      <div class="fox-card rounded-xl p-8">
+        <div class="w-14 h-14 bg-fox-orange/10 rounded-lg flex items-center justify-center mb-6">
+          <i class="fas fa-brain text-2xl text-fox-orange"></i>
+        </div>
+        <h3 class="text-xl font-bold text-white mb-3">Intelligence Artificielle</h3>
+        <p class="text-gray-400 mb-4">
+          Solutions IA intégrées, machine learning et traitement automatique pour automatiser et optimiser.
+        </p>
+        <ul class="space-y-2 text-gray-400">
+          <li class="flex items-center">
+            <i class="fas fa-check-circle text-fox-orange mr-2"></i>
+            NLP & Computer Vision
+          </li>
+          <li class="flex items-center">
+            <i class="fas fa-check-circle text-fox-orange mr-2"></i>
+            Modèles prédictifs
+          </li>
+          <li class="flex items-center">
+            <i class="fas fa-check-circle text-fox-orange mr-2"></i>
+            Automatisation intelligente
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Products Section -->
+<section id="products" class="py-20 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Nos Produits Open-Source</h2>
+      <p class="text-lg text-gray-400 max-w-3xl mx-auto">
+        Des outils innovants déjà utilisés par des milliers d'utilisateurs
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Product 1 -->
+      <div class="fox-card rounded-xl overflow-hidden product-card">
+        <div class="product-card-inner">
+          <div class="md:flex">
+            <div class="md:w-1/3 bg-fox-orange/10 flex items-center justify-center p-6">
+              <i class="fas fa-music text-5xl text-fox-orange"></i>
+            </div>
+            <div class="md:w-2/3 p-6">
+              <h3 class="text-xl font-bold text-white mb-2">Mood-Music</h3>
+              <p class="text-gray-400 mb-4">
+                Votre playlist Spotify générée automatiquement en fonction de votre humeur du moment.
+              </p>
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="px-3 py-1 bg-fox-dark text-fox-orange text-xs font-medium rounded-full">IA</span>
+                <span class="px-3 py-1 bg-fox-dark text-fox-orange text-xs font-medium rounded-full">Spotify</span>
+                <span class="px-3 py-1 bg-fox-dark text-fox-orange text-xs font-medium rounded-full">Web App</span>
+              </div>
+              <div class="flex space-x-3">
+                <a href="#" class="px-4 py-2 bg-fox-orange hover:bg-fox-accent text-white text-sm font-medium rounded-md transition duration-300">
+                  Tester maintenant
+                </a>
+                <a href="#" class="px-4 py-2 border border-fox-orange text-fox-orange hover:bg-fox-orange/10 text-sm font-medium rounded-md transition duration-300">
+                  Voir le code
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product 2 -->
+      <div class="fox-card rounded-xl overflow-hidden product-card">
+        <div class="product-card-inner">
+          <div class="md:flex">
+            <div class="md:w-1/3 bg-fox-orange/10 flex items-center justify-center p-6">
+              <i class="fas fa-file-alt text-5xl text-fox-orange"></i>
+            </div>
+            <div class="md:w-2/3 p-6">
+              <h3 class="text-xl font-bold text-white mb-2">NAN-CV</h3>
+              <p class="text-gray-400 mb-4">
+                Créateur de CV alimenté par IA qui génère des designs professionnels en quelques minutes.
+              </p>
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="px-3 py-1 bg-fox-dark text-fox-orange text-xs font-medium rounded-full">IA</span>
+                <span class="px-3 py-1 bg-fox-dark text-fox-orange text-xs font-medium rounded-full">PDF</span>
+                <span class="px-3 py-1 bg-fox-dark text-fox-orange text-xs font-medium rounded-full">Gratuit</span>
+              </div>
+              <div class="flex space-x-3">
+                <a href="#" class="px-4 py-2 bg-fox-orange hover:bg-fox-accent text-white text-sm font-medium rounded-md transition duration-300">
+                  Créer mon CV
+                </a>
+                <a href="#" class="px-4 py-2 border border-fox-orange text-fox-orange hover:bg-fox-orange/10 text-sm font-medium rounded-md transition duration-300">
+                  Voir le code
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product 3 -->
+      <div class="fox-card rounded-xl overflow-hidden product-card">
+        <div class="product-card-inner">
+          <div class="md:flex">
+            <div class="md:w-1/3 bg-fox-orange/10 flex items-center justify-center p-6">
+              <i class="fas fa-graduation-cap text-5xl text-fox-orange"></i>
+            </div>
+            <div class="md:w-2/3 p-6">
+              <h3 class="text-xl font-bold text-white mb-2">YT-Learn</h3>
+              <p class="text-gray-400 mb-4">
+                Transformez les vidéos YouTube et PDF en jeux éducatifs interactifs avec notre IA.
+              </p>
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="px-3 py-1 bg-fox-dark text-fox-orange text-xs font-medium rounded-full">IA</span>
+                <span class="px-3 py-1 bg-fox-dark text-fox-orange text-xs font-medium rounded-full">PWA</span>
+                <span class="px-3 py-1 bg-fox-dark text-fox-orange text-xs font-medium rounded-full">Windows</span>
+              </div>
+              <div class="flex space-x-3">
+                <a href="#" class="px-4 py-2 bg-fox-orange hover:bg-fox-accent text-white text-sm font-medium rounded-md transition duration-300">
+                  Essayer
+                </a>
+                <a href="#" class="px-4 py-2 border border-fox-orange text-fox-orange hover:bg-fox-orange/10 text-sm font-medium rounded-md transition duration-300">
+                  Télécharger
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product 4 -->
+      <div class="fox-card rounded-xl overflow-hidden product-card">
+        <div class="product-card-inner">
+          <div class="md:flex">
+            <div class="md:w-1/3 bg-fox-orange/10 flex items-center justify-center p-6">
+              <i class="fas fa-desktop text-5xl text-fox-orange"></i>
+            </div>
+            <div class="md:w-2/3 p-6">
+              <h3 class="text-xl font-bold text-white mb-2">FoxyBlueLight</h3>
+              <p class="text-gray-400 mb-4">
+                Filtre de lumière bleue intelligent pour Windows, avec réglages automatiques selon l'heure.
+              </p>
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="px-3 py-1 bg-fox-dark text-fox-orange text-xs font-medium rounded-full">Windows</span>
+                <span class="px-3 py-1 bg-fox-dark text-fox-orange text-xs font-medium rounded-full">Open-Source</span>
+                <span class="px-3 py-1 bg-fox-dark text-fox-orange text-xs font-medium rounded-full">Santé</span>
+              </div>
+              <div class="flex space-x-3">
+                <a href="#" class="px-4 py-2 bg-fox-orange hover:bg-fox-accent text-white text-sm font-medium rounded-md transition duration-300">
+                  Télécharger
+                </a>
+                <a href="#" class="px-4 py-2 border border-fox-orange text-fox-orange hover:bg-fox-orange/10 text-sm font-medium rounded-md transition duration-300">
+                  GitHub
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- About Section -->
+<section id="about" class="py-20 px-4 sm:px-6 lg:px-8 bg-fox-light/10">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex flex-col lg:flex-row items-center">
+      <div class="lg:w-1/2 mb-10 lg:mb-0 lg:pr-10">
+        <div class="relative">
+          <div class="absolute -top-6 -left-6 w-32 h-32 bg-fox-orange/20 rounded-full filter blur-3xl"></div>
+          <img src="https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Fox" class="relative z-10 rounded-2xl shadow-xl border border-fox-light/50">
+        </div>
+      </div>
+      <div class="lg:w-1/2">
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">Rencontrez Fox</h2>
+        <p class="text-gray-400 mb-6">
+          "Je suis un ingénieur logiciel passionné par la résolution de problèmes complexes avec des solutions élégantes. Mon approche combine rigueur technique et créativité pour livrer des produits qui dépassent les attentes."
+        </p>
+        <div class="mb-8">
+          <h3 class="text-xl font-bold text-white mb-4">Mes Superpouvoirs</h3>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="flex items-center">
+              <div class="w-10 h-10 bg-fox-orange/10 rounded-lg flex items-center justify-center mr-3">
+                <i class="fas fa-bug text-fox-orange"></i>
+              </div>
+              <span class="text-gray-300">Débogage intensif</span>
+            </div>
+            <div class="flex items-center">
+              <div class="w-10 h-10 bg-fox-orange/10 rounded-lg flex items-center justify-center mr-3">
+                <i class="fas fa-robot text-fox-orange"></i>
+              </div>
+              <span class="text-gray-300">Automatisation IA</span>
+            </div>
+            <div class="flex items-center">
+              <div class="w-10 h-10 bg-fox-orange/10 rounded-lg flex items-center justify-center mr-3">
+                <i class="fas fa-lock text-fox-orange"></i>
+              </div>
+              <span class="text-gray-300">Sécurité renforcée</span>
+            </div>
+            <div class="flex items-center">
+              <div class="w-10 h-10 bg-fox-orange/10 rounded-lg flex items-center justify-center mr-3">
+                <i class="fas fa-rocket text-fox-orange"></i>
+              </div>
+              <span class="text-gray-300">Optimisation extrême</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+          <a href="#" class="px-6 py-3 bg-fox-orange hover:bg-fox-accent text-white font-medium rounded-md transition duration-300 text-center">
+            <i class="fas fa-download mr-2"></i> Télécharger mon CV
+          </a>
+          <a href="#contact" class="px-6 py-3 border border-fox-orange text-fox-orange hover:bg-fox-orange/10 font-medium rounded-md transition duration-300 text-center">
+            <i class="fas fa-paper-plane mr-2"></i> Me contacter
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Timeline Section -->
+<section id="timeline" class="py-20 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-4xl mx-auto">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Mon Évolution Technologique</h2>
+      <p class="text-lg text-gray-400 max-w-3xl mx-auto">
+        Un parcours d'apprentissage continu et d'adaptation aux nouvelles technologies
+      </p>
+    </div>
+
+    <div class="relative pl-10">
+      <!-- Timeline Item 1 -->
+      <div class="relative pb-12 timeline-item timeline-line">
+        <div class="fox-card rounded-xl p-6">
+          <div class="flex items-center mb-2">
+            <span class="text-fox-orange font-bold mr-2">2015-2017</span>
+            <span class="text-gray-500 text-sm">Débuts en programmation</span>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-3">Découverte du code</h3>
+          <p class="text-gray-400">
+            Premiers pas en Python et Java, création de petits scripts et jeux simples. Apprentissage des bases de l'algorithmie et des structures de données.
+          </p>
+        </div>
+      </div>
+
+      <!-- Timeline Item 2 -->
+      <div class="relative pb-12 timeline-item timeline-line">
+        <div class="fox-card rounded-xl p-6">
+          <div class="flex items-center mb-2">
+            <span class="text-fox-orange font-bold mr-2">2018-2019</span>
+            <span class="text-gray-500 text-sm">Spécialisation Web</span>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-3">Maîtrise du développement web</h3>
+          <p class="text-gray-400">
+            Approfondissement de JavaScript, découverte de React et Node.js. Premiers projets full-stack avec MongoDB et Express. Création d'applications web complètes.
+          </p>
+        </div>
+      </div>
+
+      <!-- Timeline Item 3 -->
+      <div class="relative pb-12 timeline-item timeline-line">
+        <div class="fox-card rounded-xl p-6">
+          <div class="flex items-center mb-2">
+            <span class="text-fox-orange font-bold mr-2">2020</span>
+            <span class="text-gray-500 text-sm">Plongée dans la sécurité</span>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-3">Certifications et pentesting</h3>
+          <p class="text-gray-400">
+            Formation intensive en sécurité informatique, obtention de certifications. Réalisation de premiers tests d'intrusion et audits de sécurité pour des clients.
+          </p>
+        </div>
+      </div>
+
+      <!-- Timeline Item 4 -->
+      <div class="relative pb-12 timeline-item timeline-line">
+        <div class="fox-card rounded-xl p-6">
+          <div class="flex items-center mb-2">
+            <span class="text-fox-orange font-bold mr-2">2021-2022</span>
+            <span class="text-gray-500 text-sm">Ère de l'IA</span>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-3">Machine Learning & NLP</h3>
+          <p class="text-gray-400">
+            Développement de modèles de machine learning avec TensorFlow et PyTorch. Travail sur le traitement automatique du langage naturel et la génération de contenu.
+          </p>
+        </div>
+      </div>
+
+      <!-- Timeline Item 5 -->
+      <div class="relative timeline-item">
+        <div class="fox-card rounded-xl p-6">
+          <div class="flex items-center mb-2">
+            <span class="text-fox-orange font-bold mr-2">2023-Présent</span>
+            <span class="text-gray-500 text-sm">Expertise complète</span>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-3">Architecture cloud-native</h3>
+          <p class="text-gray-400">
+            Conception de systèmes distribués évolutifs sur AWS et GCP. Intégration des conteneurs, Kubernetes et des microservices dans des architectures complexes.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="py-20 px-4 sm:px-6 lg:px-8 bg-fox-light/10">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Prêt à collaborer ?</h2>
+      <p class="text-lg text-gray-400 max-w-3xl mx-auto">
+        Discutons de votre projet et voyons comment Fox peut vous aider à le concrétiser.
+      </p>
+    </div>
+
+    <div class="flex flex-col lg:flex-row">
+      <div class="lg:w-1/2 mb-10 lg:mb-0 lg:pr-10">
+        <form class="space-y-6">
+          <div>
+            <label for="name" class="block text-sm font-medium text-gray-300 mb-1">Votre nom</label>
+            <input type="text" id="name" class="w-full px-4 py-3 bg-fox-light border border-gray-700 rounded-md focus:ring-2 focus:ring-fox-orange focus:border-transparent text-white placeholder-gray-500" placeholder="Jean Dupont">
+          </div>
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-300 mb-1">Email</label>
+            <input type="email" id="email" class="w-full px-4 py-3 bg-fox-light border border-gray-700 rounded-md focus:ring-2 focus:ring-fox-orange focus:border-transparent text-white placeholder-gray-500" placeholder="jean@exemple.com">
+          </div>
+          <div>
+            <label for="project" class="block text-sm font-medium text-gray-300 mb-1">Type de projet</label>
+            <select id="project" class="w-full px-4 py-3 bg-fox-light border border-gray-700 rounded-md focus:ring-2 focus:ring-fox-orange focus:border-transparent text-white">
+              <option>Sélectionnez une option</option>
+              <option>Développement Web</option>
+              <option>Application Mobile</option>
+              <option>Sécurité Informatique</option>
+              <option>Solution IA</option>
+              <option>Autre</option>
+            </select>
+          </div>
+          <div>
+            <label for="message" class="block text-sm font-medium text-gray-300 mb-1">Message</label>
+            <textarea id="message" rows="4" class="w-full px-4 py-3 bg-fox-light border border-gray-700 rounded-md focus:ring-2 focus:ring-fox-orange focus:border-transparent text-white placeholder-gray-500" placeholder="Décrivez votre projet..."></textarea>
+          </div>
+          <div>
+            <button type="submit" class="w-full px-6 py-3 bg-fox-orange hover:bg-fox-accent text-white font-medium rounded-md transition duration-300">
+              Envoyer le message
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="lg:w-1/2 lg:pl-10">
+        <div class="fox-card rounded-xl p-8 h-full">
+          <h3 class="text-xl font-bold text-white mb-6">Autres moyens de contact</h3>
+
+          <div class="space-y-6">
+            <div class="flex items-start">
+              <div class="w-12 h-12 bg-fox-orange/10 rounded-lg flex items-center justify-center mr-4">
+                <i class="fas fa-envelope text-xl text-fox-orange"></i>
+              </div>
+              <div>
+                <h4 class="text-lg font-medium text-white mb-1">Email</h4>
+                <a href="mailto:contact@fox-engineering.com" class="text-gray-400 hover:text-fox-orange transition duration-300">contact@fox-engineering.com</a>
+              </div>
+            </div>
+
+            <div class="flex items-start">
+              <div class="w-12 h-12 bg-fox-orange/10 rounded-lg flex items-center justify-center mr-4">
+                <i class="fab fa-github text-xl text-fox-orange"></i>
+              </div>
+              <div>
+                <h4 class="text-lg font-medium text-white mb-1">GitHub</h4>
+                <a href="https://github.com/fox-engineering" target="_blank" class="text-gray-400 hover:text-fox-orange transition duration-300">github.com/fox-engineering</a>
+              </div>
+            </div>
+
+            <div class="flex items-start">
+              <div class="w-12 h-12 bg-fox-orange/10 rounded-lg flex items-center justify-center mr-4">
+                <i class="fab fa-linkedin text-xl text-fox-orange"></i>
+              </div>
+              <div>
+                <h4 class="text-lg font-medium text-white mb-1">LinkedIn</h4>
+                <a href="https://linkedin.com/in/fox-engineering" target="_blank" class="text-gray-400 hover:text-fox-orange transition duration-300">linkedin.com/in/fox-engineering</a>
+              </div>
+            </div>
+
+            <div class="flex items-start">
+              <div class="w-12 h-12 bg-fox-orange/10 rounded-lg flex items-center justify-center mr-4">
+                <i class="fas fa-map-marker-alt text-xl text-fox-orange"></i>
+              </div>
+              <div>
+                <h4 class="text-lg font-medium text-white mb-1">Localisation</h4>
+                <p class="text-gray-400">Paris, France (Remote worldwide)</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="py-12 px-4 sm:px-6 lg:px-8 bg-fox-light">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex flex-col md:flex-row justify-between items-center">
+      <div class="mb-6 md:mb-0">
+        <span class="text-2xl font-bold fox-gradient-text">FOX</span>
+        <p class="text-gray-400 mt-2">Ingénierie logicielle d'exception</p>
+      </div>
+      <div class="flex space-x-6">
+        <a href="#" class="text-gray-400 hover:text-fox-orange transition duration-300">
+          <i class="fab fa-github text-xl"></i>
+        </a>
+        <a href="#" class="text-gray-400 hover:text-fox-orange transition duration-300">
+          <i class="fab fa-linkedin text-xl"></i>
+        </a>
+        <a href="#" class="text-gray-400 hover:text-fox-orange transition duration-300">
+          <i class="fab fa-twitter text-xl"></i>
+        </a>
+        <a href="#" class="text-gray-400 hover:text-fox-orange transition duration-300">
+          <i class="fab fa-dev text-xl"></i>
+        </a>
+      </div>
+    </div>
+    <div class="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+      <p class="text-gray-500 text-sm mb-4 md:mb-0">© 2023 Fox Computer Engineering. Tous droits réservés.</p>
+      <div class="flex space-x-6">
+        <a href="#" class="text-gray-400 hover:text-fox-orange text-sm transition duration-300">Mentions légales</a>
+        <a href="#" class="text-gray-400 hover:text-fox-orange text-sm transition duration-300">Confidentialité</a>
+        <a href="#" class="text-gray-400 hover:text-fox-orange text-sm transition duration-300">Conditions</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Mobile menu toggle
+  document.getElementById('mobile-menu-button').addEventListener('click', function() {
+    const menu = document.getElementById('mobile-menu');
+    menu.classList.toggle('hidden');
+  });
+
+  // Smooth scrolling for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+
+      const targetId = this.getAttribute('href');
+      if (targetId === '#') return;
+
+      const targetElement = document.querySelector(targetId);
+      if (targetElement) {
+        // Close mobile menu if open
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (!mobileMenu.classList.contains('hidden')) {
+          mobileMenu.classList.add('hidden');
+        }
+
+        // Scroll to target
+        window.scrollTo({
+          top: targetElement.offsetTop - 80,
+          behavior: 'smooth'
+        });
+      }
+    });
+  });
+
+  // Add shadow to navbar on scroll
+  window.addEventListener('scroll', function() {
+    const nav = document.querySelector('nav');
+    if (window.scrollY > 10) {
+      nav.classList.add('shadow-lg');
+    } else {
+      nav.classList.remove('shadow-lg');
+    }
+  });
+</script>
+</body>
+</html>

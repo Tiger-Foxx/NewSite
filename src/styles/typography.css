@@ -1,0 +1,230 @@
+/*!* Typographie *!*/
+/*body {*/
+/*    font-family: var(--font-family);*/
+/*    line-height: 1.5;*/
+/*    -webkit-font-smoothing: antialiased;*/
+/*    -moz-osx-font-smoothing: grayscale;*/
+/*}*/
+
+/*!* Titres *!*/
+/*h1, h2, h3, h4, h5, h6 {*/
+/*    margin-top: 0;*/
+/*    margin-bottom: var(--spacing-4);*/
+/*    font-weight: 700;*/
+/*    line-height: 1.2;*/
+/*    color: var(--color-text);*/
+/*}*/
+
+/*h1 {*/
+/*    font-size: clamp(2.5rem, 5vw, 3.5rem);*/
+/*    letter-spacing: -0.02em;*/
+/*}*/
+
+/*h2 {*/
+/*    font-size: clamp(2rem, 4vw, 2.5rem);*/
+/*    letter-spacing: -0.01em;*/
+/*}*/
+
+/*h3 {*/
+/*    font-size: clamp(1.5rem, 3vw, 2rem);*/
+/*}*/
+
+/*h4 {*/
+/*    font-size: clamp(1.25rem, 2vw, 1.5rem);*/
+/*}*/
+
+/*h5 {*/
+/*    font-size: clamp(1.1rem, 1.5vw, 1.25rem);*/
+/*}*/
+
+/*h6 {*/
+/*    font-size: 1rem;*/
+/*}*/
+
+/*!* Texte *!*/
+/*p {*/
+/*    margin-top: 0;*/
+/*    margin-bottom: var(--spacing-4);*/
+/*}*/
+
+/*.lead {*/
+/*    font-size: 1.125rem;*/
+/*    font-weight: 300;*/
+/*}*/
+
+/*.large {*/
+/*    font-size: 1.25rem;*/
+/*}*/
+
+/*.small {*/
+/*    font-size: 0.875rem;*/
+/*}*/
+
+/*!* Poids de police *!*/
+/*.font-light {*/
+/*    font-weight: 300;*/
+/*}*/
+
+/*.font-normal {*/
+/*    font-weight: 400;*/
+/*}*/
+
+/*.font-medium {*/
+/*    font-weight: 500;*/
+/*}*/
+
+/*.font-semibold {*/
+/*    font-weight: 600;*/
+/*}*/
+
+/*.font-bold {*/
+/*    font-weight: 700;*/
+/*}*/
+
+/*.font-extrabold {*/
+/*    font-weight: 800;*/
+/*}*/
+
+/*!* Alignement de texte *!*/
+/*.text-left {*/
+/*    text-align: left;*/
+/*}*/
+
+/*.text-center {*/
+/*    text-align: center;*/
+/*}*/
+
+/*.text-right {*/
+/*    text-align: right;*/
+/*}*/
+
+/*.text-justify {*/
+/*    text-align: justify;*/
+/*}*/
+
+/*!* Transformations de texte *!*/
+/*.uppercase {*/
+/*    text-transform: uppercase;*/
+/*}*/
+
+/*.lowercase {*/
+/*    text-transform: lowercase;*/
+/*}*/
+
+/*.capitalize {*/
+/*    text-transform: capitalize;*/
+/*}*/
+
+/*!* Couleurs de texte *!*/
+/*.text-gradient {*/
+/*    background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary-light) 100%);*/
+/*    -webkit-background-clip: text;*/
+/*    background-clip: text;*/
+/*    color: transparent;*/
+/*}*/
+
+/*.text-primary {*/
+/*    color: var(--color-primary);*/
+/*}*/
+
+/*.text-secondary {*/
+/*    color: var(--color-text-secondary);*/
+/*}*/
+
+/*.text-success {*/
+/*    color: var(--color-success);*/
+/*}*/
+
+/*.text-danger {*/
+/*    color: var(--color-error);*/
+/*}*/
+
+/*.text-warning {*/
+/*    color: var(--color-warning);*/
+/*}*/
+
+/*.text-info {*/
+/*    color: var(--color-info);*/
+/*}*/
+
+/*!* Listes *!*/
+/*ul, ol {*/
+/*    margin-top: 0;*/
+/*    margin-bottom: var(--spacing-4);*/
+/*    padding-left: var(--spacing-6);*/
+/*}*/
+
+/*li {*/
+/*    margin-bottom: var(--spacing-2);*/
+/*}*/
+
+/*.list-none {*/
+/*    list-style: none;*/
+/*    padding-left: 0;*/
+/*}*/
+
+/*.list-disc {*/
+/*    list-style: disc;*/
+/*}*/
+
+/*.list-decimal {*/
+/*    list-style: decimal;*/
+/*}*/
+
+/*!* Citations *!*/
+/*blockquote {*/
+/*    margin: var(--spacing-6) 0;*/
+/*    padding: var(--spacing-4) var(--spacing-6);*/
+/*    border-left: 4px solid var(--color-primary);*/
+/*    background-color: rgba(255, 123, 37, 0.05);*/
+/*    font-style: italic;*/
+/*}*/
+
+/*blockquote p:last-child {*/
+/*    margin-bottom: 0;*/
+/*}*/
+
+/*blockquote cite {*/
+/*    display: block;*/
+/*    margin-top: var(--spacing-2);*/
+/*    font-style: normal;*/
+/*    font-size: 0.875rem;*/
+/*    color: var(--color-text-secondary);*/
+/*}*/
+
+/*!* Effet de typage *!*/
+/*.typing-effect {*/
+/*    display: inline-block;*/
+/*    overflow: hidden;*/
+/*    border-right: 0.15em solid var(--color-primary);*/
+/*    white-space: nowrap;*/
+/*    margin: 0 auto;*/
+/*    letter-spacing: 0.15em;*/
+/*    animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;*/
+/*}*/
+
+/*!* Code *!*/
+/*code {*/
+/*    font-family: 'SF Mono', 'Fira Code', Consolas, Monaco, 'Andale Mono', monospace;*/
+/*    font-size: 0.9em;*/
+/*    padding: 0.2em 0.4em;*/
+/*    border-radius: var(--border-radius-small);*/
+/*    background-color: rgba(255, 255, 255, 0.1);*/
+/*    color: var(--color-primary-light);*/
+/*}*/
+
+/*pre {*/
+/*    margin-top: 0;*/
+/*    margin-bottom: var(--spacing-4);*/
+/*    overflow: auto;*/
+/*    padding: var(--spacing-4);*/
+/*    background-color: rgba(0, 0, 0, 0.2);*/
+/*    border-radius: var(--border-radius-medium);*/
+/*}*/
+
+/*pre code {*/
+/*    padding: 0;*/
+/*    background-color: transparent;*/
+/*    border-radius: 0;*/
+/*    color: inherit;*/
+/*}*/
