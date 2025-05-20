@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useApi } from '../hooks/useApi';
-import { Post, Commentaire, CommentairePayload, PaginatedResponse } from '../types';
+import { apiService } from '../services/api';
+import { Post, Commentaire, CommentairePayload, PaginatedResponse, SubscribePayload } from '../types';
 import DOMPurify from 'dompurify';
 
 export const BlogPostPage: React.FC = () => {
@@ -17,6 +18,9 @@ export const BlogPostPage: React.FC = () => {
         contenu: ''
     });
     const [commentFormStatus, setCommentFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+    const [subscribeEmail, setSubscribeEmail] = useState('');
+    const [subscribeStatus, setSubscribeStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+    const [errorMessage, setErrorMessage] = useState('');
 
     // Récupérer l'article par son slug ou son ID
     const {
@@ -52,19 +56,15 @@ export const BlogPostPage: React.FC = () => {
             }
 
             // Charger des articles liés par catégorie
-            const relatedEndpoint = `/api/posts/?categorie=${postData.categorie}&limit=3&exclude=${postData.id}`;
-            fetchRelatedPosts(relatedEndpoint);
+            fetchRelatedPosts(postData.categorie, postData.id);
         }
     }, [postData]);
 
     // Fonction pour charger les articles liés
-    const fetchRelatedPosts = async (endpoint: string) => {
+    const fetchRelatedPosts = async (categorie: string, postId: number) => {
         try {
-            const response = await fetch(endpoint);
-            if (response.ok) {
-                const data = await response.json();
-                setRelatedPosts(data.results || []);
-            }
+            const response = await apiService.get(`/api/posts/?categorie=${categorie}&limit=3&exclude=${postId}`);
+            setRelatedPosts(response.data.results || []);
         } catch (error) {
             console.error('Erreur lors du chargement des articles liés:', error);
         }
@@ -97,18 +97,8 @@ export const BlogPostPage: React.FC = () => {
         setCommentFormStatus('submitting');
 
         try {
-            // Appel API pour soumettre le commentaire
-            const response = await fetch(`/api/posts/${slug}/comments/`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(commentFormData),
-            });
-
-            if (!response.ok) {
-                throw new Error('Erreur lors de l\'envoi du commentaire');
-            }
+            // Utiliser apiService à la place de fetch
+            await apiService.post(`/api/posts/${slug}/comments/`, commentFormData);
 
             setCommentFormStatus('success');
             setCommentFormData({ nom: '', email: '', contenu: '' });
@@ -122,10 +112,45 @@ export const BlogPostPage: React.FC = () => {
         } catch (error) {
             console.error('Erreur de soumission du commentaire:', error);
             setCommentFormStatus('error');
+            setErrorMessage((error as any)?.response?.data?.error || 'Une erreur est survenue lors de l\'envoi du commentaire.');
 
             // Réinitialiser l'état d'erreur après 3 secondes
             setTimeout(() => {
                 setCommentFormStatus('idle');
+                setErrorMessage('');
+            }, 3000);
+        }
+    };
+
+    // Gérer la soumission à la newsletter
+    const handleSubscribeSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!subscribeEmail) return;
+
+        setSubscribeStatus('submitting');
+
+        try {
+            const subscribeData: SubscribePayload = {
+                email: subscribeEmail
+            };
+
+            await apiService.post('/api/subscribe/', subscribeData);
+
+            setSubscribeStatus('success');
+            setSubscribeEmail('');
+
+            setTimeout(() => {
+                setSubscribeStatus('idle');
+            }, 3000);
+
+        } catch (error) {
+            console.error('Erreur lors de l\'inscription à la newsletter:', error);
+            setSubscribeStatus('error');
+            setErrorMessage((error as any)?.response?.data?.error || 'Une erreur est survenue lors de l\'inscription à la newsletter.');
+
+            setTimeout(() => {
+                setSubscribeStatus('idle');
+                setErrorMessage('');
             }, 3000);
         }
     };
@@ -472,7 +497,7 @@ export const BlogPostPage: React.FC = () => {
                                                     </svg>
                                                     <h3 className="text-lg font-medium text-red-800 dark:text-red-300 mb-2">Erreur</h3>
                                                     <p className="text-red-600 dark:text-red-400">
-                                                        Une erreur est survenue lors de l'envoi du commentaire. Veuillez réessayer.
+                                                        {errorMessage || "Une erreur est survenue lors de l'envoi du commentaire. Veuillez réessayer."}
                                                     </p>
                                                 </div>
                                             ) : (
@@ -581,7 +606,7 @@ export const BlogPostPage: React.FC = () => {
                                                     {post.auteur || 'Fox'}
                                                 </h4>
                                                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                                                    Développeur et Ingénieur
+                                                    Computer Engineering Scientist
                                                 </p>
                                             </div>
                                         </div>
@@ -677,20 +702,60 @@ export const BlogPostPage: React.FC = () => {
                             <p className="text-lg text-gray-300 dark:text-gray-700 max-w-2xl mx-auto mb-8">
                                 Abonnez-vous à la newsletter pour recevoir les prochains articles directement dans votre boîte mail.
                             </p>
-                            <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-                                <input
-                                    type="email"
-                                    placeholder="Votre adresse email"
-                                    className="flex-grow px-5 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-white dark:focus:ring-black text-black dark:text-white bg-white/90 dark:bg-black/90"
-                                    required
-                                />
-                                <button
-                                    type="submit"
-                                    className="px-6 py-3 bg-white dark:bg-black text-black dark:text-white rounded-lg font-medium hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors"
-                                >
-                                    S'abonner
-                                </button>
-                            </form>
+
+                            {subscribeStatus === 'success' ? (
+                                <div className="bg-green-500/20 border border-green-500/30 rounded-lg p-6 text-center max-w-md mx-auto">
+                                    <svg className="w-12 h-12 text-green-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <h3 className="text-lg font-medium text-green-400 mb-2">Inscription réussie !</h3>
+                                    <p className="text-gray-300 dark:text-gray-700">
+                                        Merci de vous être abonné à notre newsletter. Vous recevrez nos prochains articles par email.
+                                    </p>
+                                </div>
+                            ) : subscribeStatus === 'error' ? (
+                                <div className="bg-red-500/20 border border-red-500/30 rounded-lg p-6 text-center max-w-md mx-auto">
+                                    <svg className="w-12 h-12 text-red-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <h3 className="text-lg font-medium text-red-400 mb-2">Erreur</h3>
+                                    <p className="text-gray-300 dark:text-gray-700">
+                                        {errorMessage || "Une erreur est survenue lors de l'inscription à notre newsletter. Veuillez réessayer."}
+                                    </p>
+                                </div>
+                            ) : (
+                                <form onSubmit={handleSubscribeSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+                                    <input
+                                        type="email"
+                                        value={subscribeEmail}
+                                        onChange={(e) => setSubscribeEmail(e.target.value)}
+                                        placeholder="Votre adresse email"
+                                        className="flex-grow px-5 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-white dark:focus:ring-black text-black dark:text-white bg-white/90 dark:bg-black/90"
+                                        required
+                                    />
+                                    <button
+                                        type="submit"
+                                        disabled={subscribeStatus === 'submitting'}
+                                        className={`px-6 py-3 bg-white dark:bg-black text-black dark:text-white rounded-lg font-medium transition-colors ${
+                                            subscribeStatus === 'submitting'
+                                                ? 'opacity-70 cursor-not-allowed'
+                                                : 'hover:bg-gray-100 dark:hover:bg-gray-900'
+                                        }`}
+                                    >
+                                        {subscribeStatus === 'submitting' ? (
+                                            <span className="flex items-center">
+                                                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-black dark:text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                </svg>
+                                                Inscription...
+                                            </span>
+                                        ) : (
+                                            "S'abonner"
+                                        )}
+                                    </button>
+                                </form>
+                            )}
                         </div>
                     </section>
                 </>

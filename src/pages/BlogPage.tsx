@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useApi } from '../hooks/useApi';
-import { Post, PaginatedResponse } from '../types';
+import {Post, PaginatedResponse, SubscribePayload} from '../types';
+import newsletterService from "@/services/newsletter.service.ts";
 
 interface Category {
     id: string;
@@ -17,6 +18,52 @@ export const BlogPage: React.FC = () => {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(1);
     const [totalPosts, setTotalPosts] = useState<number>(0);
+    // État pour le formulaire de newsletter
+    const [email, setEmail] = useState('');
+    const [subscriptionStatus, setSubscriptionStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+    const [statusMessage, setStatusMessage] = useState('');
+
+    // Année courante pour le copyright
+    const currentYear = new Date().getFullYear();
+
+    // Gérer la soumission du formulaire d'abonnement
+    const handleSubscribe = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        // Validation simple
+        if (!email || !email.includes('@')) {
+            setSubscriptionStatus('error');
+            setStatusMessage('Veuillez saisir une adresse email valide');
+            return;
+        }
+
+        setSubscriptionStatus('loading');
+
+        try {
+            const payload: SubscribePayload = { email };
+            const response = await newsletterService.subscribe(payload);
+
+            setSubscriptionStatus('success');
+            setStatusMessage(response.message || 'Inscription réussie !');
+            setEmail(''); // Réinitialiser le champ
+
+            // Réinitialiser l'état après 5 secondes
+            setTimeout(() => {
+                setSubscriptionStatus('idle');
+                setStatusMessage('');
+            }, 5000);
+        } catch (error) {
+            console.error('Erreur lors de l\'abonnement:', error);
+            setSubscriptionStatus('error');
+            setStatusMessage('Une erreur est survenue. Veuillez réessayer.');
+
+            // Réinitialiser l'état d'erreur après 5 secondes
+            setTimeout(() => {
+                setSubscriptionStatus('idle');
+                setStatusMessage('');
+            }, 5000);
+        }
+    };
 
     // Pagination et filtrage
     const limit = 6; // Nombre d'articles par page
@@ -427,23 +474,45 @@ export const BlogPage: React.FC = () => {
                             Abonnez-vous à notre newsletter pour recevoir nos derniers articles et actualités directement dans votre boîte mail.
                         </p>
 
-                        <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+                        <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
                             <input
+                                onChange={(e) => setEmail(e.target.value)}
                                 type="email"
+                                name="email"
                                 placeholder="Votre adresse email"
+                                disabled={subscriptionStatus === 'loading'}
                                 className="flex-grow px-5 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-white dark:focus:ring-black text-black dark:text-white bg-white/90 dark:bg-black/90"
                                 required
+
                             />
                             <button
                                 type="submit"
-                                className="px-6 py-3 bg-white dark:bg-black text-black dark:text-white rounded-lg font-medium hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors transform hover:scale-105 duration-200"
+                                disabled={subscriptionStatus === 'loading'}
+                                className={`flex-shrink-0 px-4 py-2 text-base font-medium text-white bg-black border border-transparent rounded-r-lg dark:bg-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black dark:focus:ring-white ${
+                                    subscriptionStatus === 'loading' ? 'opacity-70 cursor-not-allowed' : ''
+                                }`}
                             >
-                                S'abonner
+                                {subscriptionStatus === 'loading' ? (
+                                    <span className="flex items-center">
+                                                <svg
+                                                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-white dark:text-black"
+                                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                    <circle className="opacity-25" cx="12" cy="12" r="10"
+                                                            stroke="currentColor" strokeWidth="4"></circle>
+                                                    <path className="opacity-75" fill="currentColor"
+                                                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                </svg>
+                                                Envoi...
+                                            </span>
+                                ) : (
+                                    'S\'abonner'
+                                )}
                             </button>
                         </form>
 
                         <p className="text-xs text-gray-400 dark:text-gray-600 mt-4">
-                            En vous inscrivant, vous acceptez notre politique de confidentialité. Vous pourrez vous désabonner à tout moment.
+                            En vous inscrivant, vous acceptez notre politique de confidentialité. Vous pourrez vous
+                            désabonner à tout moment.
                         </p>
                     </motion.div>
                 </div>
@@ -454,10 +523,10 @@ export const BlogPage: React.FC = () => {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <motion.div
                         className="text-center mb-12"
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5 }}
+                        initial={{opacity: 0, y: 20}}
+                        whileInView={{opacity: 1, y: 0}}
+                        viewport={{once: true}}
+                        transition={{duration: 0.5}}
                     >
                         <h2 className="text-3xl font-bold text-black dark:text-white mb-4">
                             Explorez par catégorie
@@ -469,10 +538,10 @@ export const BlogPage: React.FC = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         {[
-                            { name: 'Développement Web', icon: 'code', color: 'bg-blue-500', count: 12 },
-                            { name: 'Cybersécurité', icon: 'shield-check', color: 'bg-red-500', count: 8 },
-                            { name: 'Intelligence Artificielle', icon: 'chip', color: 'bg-purple-500', count: 10 },
-                            { name: 'Tutoriels', icon: 'academic-cap', color: 'bg-green-500', count: 15 }
+                            {name: 'Développement', icon: 'code', color: 'bg-blue-500', slug: 'dev'},
+                            {name: 'Cybersécurité', icon: 'shield-check', color: 'bg-red-500', slug: 'secu'},
+                            {name: 'Intelligence Artificielle', icon: 'chip', color: 'bg-purple-500', slug: 'IA'},
+                            { name: 'Tutos', icon: 'academic-cap', color: 'bg-green-500',slug:'Tuto'}
                         ].map((category, index) => (
                             <motion.div
                                 key={index}
@@ -481,7 +550,7 @@ export const BlogPage: React.FC = () => {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                                onClick={() => handleCategoryChange(category.name.toLowerCase().replace(/\s+/g, '-'))}
+                                onClick={() => handleCategoryChange(category.slug.toLowerCase().replace(/\s+/g, '-'))}
                             >
                                 <div className={`h-2 ${category.color}`}></div>
                                 <div className="p-6 flex flex-col items-center">

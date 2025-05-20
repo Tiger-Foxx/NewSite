@@ -1,9 +1,55 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import newsletterService from '../../services/newsletter.service';
+import { SubscribePayload } from '../../types';
 
 export const Footer: React.FC = () => {
+    // État pour le formulaire de newsletter
+    const [email, setEmail] = useState('');
+    const [subscriptionStatus, setSubscriptionStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+    const [statusMessage, setStatusMessage] = useState('');
+
     // Année courante pour le copyright
     const currentYear = new Date().getFullYear();
+
+    // Gérer la soumission du formulaire d'abonnement
+    const handleSubscribe = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        // Validation simple
+        if (!email || !email.includes('@')) {
+            setSubscriptionStatus('error');
+            setStatusMessage('Veuillez saisir une adresse email valide');
+            return;
+        }
+
+        setSubscriptionStatus('loading');
+
+        try {
+            const payload: SubscribePayload = { email };
+            const response = await newsletterService.subscribe(payload);
+
+            setSubscriptionStatus('success');
+            setStatusMessage(response.message || 'Inscription réussie !');
+            setEmail(''); // Réinitialiser le champ
+
+            // Réinitialiser l'état après 5 secondes
+            setTimeout(() => {
+                setSubscriptionStatus('idle');
+                setStatusMessage('');
+            }, 5000);
+        } catch (error) {
+            console.error('Erreur lors de l\'abonnement:', error);
+            setSubscriptionStatus('error');
+            setStatusMessage('Une erreur est survenue. Veuillez réessayer.');
+
+            // Réinitialiser l'état d'erreur après 5 secondes
+            setTimeout(() => {
+                setSubscriptionStatus('idle');
+                setStatusMessage('');
+            }, 5000);
+        }
+    };
 
     return (
         <footer className="bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800">
@@ -18,7 +64,6 @@ export const Footer: React.FC = () => {
                                 alt="Fox Logo"
                                 className="h-10 w-auto"
                             />
-
                         </Link>
                         <p className="text-gray-600 dark:text-gray-400 max-w-md">
                             Ingénierie logicielle et services numériques pour les entreprises et startups innovantes. Développement, sécurité, et accompagnement technique sur mesure.
@@ -27,7 +72,7 @@ export const Footer: React.FC = () => {
                         {/* Réseaux sociaux */}
                         <div className="flex space-x-5">
                             <a
-                                href="https://twitter.com/theTigerFox"
+                                href="https://www.instagram.com/i_am_the_fox_coder/"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors duration-200"
@@ -38,7 +83,7 @@ export const Footer: React.FC = () => {
                                 </svg>
                             </a>
                             <a
-                                href="https://github.com/theTigerFox"
+                                href="https://github.com/Tiger-Foxx/"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors duration-200"
@@ -49,7 +94,7 @@ export const Footer: React.FC = () => {
                                 </svg>
                             </a>
                             <a
-                                href="https://linkedin.com/in/theTigerFox"
+                                href="https://www.linkedin.com/in/pascal-arthur-donfack-567575327/"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors duration-200"
@@ -61,7 +106,7 @@ export const Footer: React.FC = () => {
                             </a>
                         </div>
 
-                        {/* Newsletter (optionnelle) */}
+                        {/* Newsletter avec gestion d'état */}
                         <div className="pt-4">
                             <h3 className="text-sm font-semibold uppercase tracking-wider text-black dark:text-white mb-3">
                                 Newsletter
@@ -69,24 +114,50 @@ export const Footer: React.FC = () => {
                             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                                 Restez informé des dernières actualités et articles.
                             </p>
-                            <form className="flex sm:max-w-md">
-                                <label htmlFor="email-address" className="sr-only">Adresse email</label>
-                                <input
-                                    id="email-address"
-                                    name="email"
-                                    type="email"
-                                    autoComplete="email"
-                                    required
-                                    className="w-full min-w-0 px-4 py-2 text-base text-gray-900 dark:text-white placeholder-gray-500 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-l-lg focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white"
-                                    placeholder="Votre email"
-                                />
-                                <button
-                                    type="submit"
-                                    className="flex-shrink-0 px-4 py-2 text-base font-medium text-white bg-black border border-transparent rounded-r-lg dark:bg-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black dark:focus:ring-white"
-                                >
-                                    S'abonner
-                                </button>
-                            </form>
+                            {subscriptionStatus === 'success' ? (
+                                <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3 text-sm text-green-800 dark:text-green-300">
+                                    {statusMessage}
+                                </div>
+                            ) : subscriptionStatus === 'error' ? (
+                                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3 text-sm text-red-800 dark:text-red-300">
+                                    {statusMessage}
+                                </div>
+                            ) : (
+                                <form onSubmit={handleSubscribe} className="flex sm:max-w-md">
+                                    <label htmlFor="email-address" className="sr-only">Adresse email</label>
+                                    <input
+                                        id="email-address"
+                                        name="email"
+                                        type="email"
+                                        autoComplete="email"
+                                        required
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        className="w-full min-w-0 px-4 py-2 text-base text-gray-900 dark:text-white placeholder-gray-500 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-l-lg focus:outline-none focus:ring-1 focus:ring-black dark:focus:ring-white focus:border-black dark:focus:border-white"
+                                        placeholder="Votre email"
+                                        disabled={subscriptionStatus === 'loading'}
+                                    />
+                                    <button
+                                        type="submit"
+                                        disabled={subscriptionStatus === 'loading'}
+                                        className={`flex-shrink-0 px-4 py-2 text-base font-medium text-white bg-black border border-transparent rounded-r-lg dark:bg-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black dark:focus:ring-white ${
+                                            subscriptionStatus === 'loading' ? 'opacity-70 cursor-not-allowed' : ''
+                                        }`}
+                                    >
+                                        {subscriptionStatus === 'loading' ? (
+                                            <span className="flex items-center">
+                                                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white dark:text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                </svg>
+                                                Envoi...
+                                            </span>
+                                        ) : (
+                                            'S\'abonner'
+                                        )}
+                                    </button>
+                                </form>
+                            )}
                         </div>
                     </div>
 
@@ -134,12 +205,12 @@ export const Footer: React.FC = () => {
                                 </a>
                             </li>
                             <li>
-                                <a href="https://nan-cv.fox-dev.com" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors">
+                                <a href="https://nan-cv.vercel.app" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors">
                                     NAN-CV
                                 </a>
                             </li>
                             <li>
-                                <a href="https://yt-learn.fox-dev.com" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors">
+                                <a href="https://yt-learn.the-fox.tech/" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors">
                                     YT-Learn
                                 </a>
                             </li>
@@ -160,16 +231,16 @@ export const Footer: React.FC = () => {
                                 <svg className="h-5 w-5 mr-2 text-gray-500 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                 </svg>
-                                <a href="mailto:contact@fox-engineering.com" className="hover:text-black dark:hover:text-white transition-colors">
-                                    contact@fox-engineering.com
+                                <a href="mailto:donfackarthur750@gmail.com" className="hover:text-black dark:hover:text-white transition-colors">
+                                    donfackarthur750@gmail.com
                                 </a>
                             </li>
                             <li className="flex items-center text-gray-600 dark:text-gray-400">
                                 <svg className="h-5 w-5 mr-2 text-gray-500 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                                 </svg>
-                                <a href="tel:+33612345678" className="hover:text-black dark:hover:text-white transition-colors">
-                                    +33 6 12 34 56 78
+                                <a href="https://wa.me/+237658866639" className="hover:text-black dark:hover:text-white transition-colors">
+                                    +237 658 86 66 39
                                 </a>
                             </li>
                             <li className="flex items-center text-gray-600 dark:text-gray-400">
@@ -177,20 +248,20 @@ export const Footer: React.FC = () => {
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                 </svg>
-                                <span>Paris, France</span>
+                                <span>Yaoundé, Cameroun</span>
                             </li>
                         </ul>
 
                         {/* Badges de certification/expertise */}
                         <div className="mt-6 flex space-x-3">
                             <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded-md">
-                                <img src="/images/tech-badge-1.svg" alt="Certification 1" className="h-8 w-8" />
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Twitter_Verified_Badge_Gold.svg/2048px-Twitter_Verified_Badge_Gold.svg.png" alt="Certification 1" className="h-8 w-8" />
                             </div>
                             <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded-md">
-                                <img src="/images/tech-badge-2.svg" alt="Certification 2" className="h-8 w-8" />
+                                <img src="https://cdn.freebiesupply.com/logos/large/2x/ai-logo-black-and-white.png" alt="Certification 2" className="h-8 w-8" />
                             </div>
                             <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded-md">
-                                <img src="/images/tech-badge-3.svg" alt="Certification 3" className="h-8 w-8" />
+                                <img src="https://images.credly.com/images/54fb7539-513a-4475-9eeb-9fa629792abc/cybersecurity_badges_blue_600x600.png" alt="Certification 3" className="h-8 w-8" />
                             </div>
                         </div>
                     </div>
@@ -212,13 +283,6 @@ export const Footer: React.FC = () => {
                             Mentions légales
                         </Link>
                     </div>
-                </div>
-
-                {/* Petit badge "Made with ♥" */}
-                <div className="flex justify-center py-4 border-t border-gray-200 dark:border-gray-800">
-          <span className="text-xs text-gray-500 dark:text-gray-500">
-            Conçu et développé avec <span className="text-red-500">♥</span> par Fox Engineering
-          </span>
                 </div>
             </div>
         </footer>

@@ -9,7 +9,7 @@ export const AboutPage: React.FC = () => {
 
     // Récupérer les données du profil
     const { data, loading, error } = useApi<Profile>({
-        endpoint: '/api/profile/',
+        endpoint: '/api/profile/?limit=1',
         loadOnMount: true
     });
 
@@ -39,19 +39,39 @@ export const AboutPage: React.FC = () => {
     // Milestones de carrière
     const milestones = [
         {
-            year: '2022 - Présent',
-            title: 'Engineering Scientist',
-            description: 'Fondateur de Fox, Computer Engineering Scientist, dev de solutions IA.'
+            year: 'Aout 2024 - Aujourd\'hui',
+            title: 'JE BOOSTE TOUT AU MACHINE LEARNING/IA',
+            description: 'Oui, je sais : \'Toujours eu du mal à me poser exactement dans mon domaine tranquille\', il faut toujours que je l\'affine avec d\'autres.'
         },
         {
-            year: '2020 - 2022',
-            title: 'Engineering Scientist ',
-            description: 'Hacking Ethique, gestion d\'architecture de systèmes complexes.'
+            year: 'Sept 2023 - Juin 2024',
+            title: 'Sécurité Informatique à Fond',
+            description: 'Ces derniers mois, ma passion pour la cybersécurité est devenue mon focus principal. J\'ai développé plusieurs outils spécialisés.'
         },
         {
-            year: '2018 - 2020',
-            title: 'Engineering Scientiste',
-            description: 'Gestion d\'équipe et développement de solutions  à grande échelle.'
+            year: 'Fév 2024 - Mai 2024',
+            title: 'Plongée dans Spring Boot , JEE et les framework JS frontEnd',
+            description: 'Un réseau social scolaire ou encore une application de monétisation. Ce fut une période où j\'ai vraiment mis les bouchées doubles en backend, et en Front niveau JS halala que c\'était bon.'
+        },
+        {
+            year: 'Août 2023 - Jan 2024',
+            title: 'Java, mon dada..ou..mon \'ADA\' heheh',
+            description: 'Développement d\'applications de bureau complexes, gestion d\'interfaces graphiques élégantes, et mise en place de fonctionnalités de pointe. Sans oublier une participation à diverses compétions autour du langage.'
+        },
+        {
+            year: 'Fév 2022 - Juil 2023',
+            title: 'Développement Mobile avec Flutter',
+            description: 'Avec Flutter, j\'ai pu enchaîner les projets, notamment pour des clients dans le monde de la crypto. Une realisation dont je suis particulièrement fier dans cette période est Zenfamili'
+        },
+        {
+            year: 'Sept 2021 - Janv 2022',
+            title: 'Développement Web avec Django',
+            description: 'Ah, Django ! J’ai passé ces mois à travailler sur des projets persos à but non lucratif, notamment des applis pour l’apprentissage.'
+        },
+        {
+            year: 'Juin 2020 - Août 2021',
+            title: 'Python à un Niveau Supérieur',
+            description: 'Que ce soit pour des jeux vidéo, des outils de conversion ou des utilitaires avancés, Python était mon langage de prédilection.'
         },
 
     ];

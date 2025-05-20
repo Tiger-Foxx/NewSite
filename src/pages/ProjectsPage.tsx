@@ -317,11 +317,11 @@ export const ProjectsPage: React.FC = () => {
                                                 {project.nom}
                                             </h3>
 
-                                            {project.description && (
-                                                <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
-                                                    {project.description}
-                                                </p>
-                                            )}
+                                            {/*{project.description && (*/}
+                                            {/*    <p className="text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">*/}
+                                            {/*        {project.description}*/}
+                                            {/*    </p>*/}
+                                            {/*)}*/}
 
                                             <div className="flex flex-wrap gap-2 mb-6">
                                                 {project.sujet && (

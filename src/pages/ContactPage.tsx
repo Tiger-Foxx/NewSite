@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useApi } from '../hooks/useApi';
-import { Profile } from '../types';
+import { apiService } from '../services/api';
+import { Profile, ContactPayload } from '../types';
 
 export const ContactPage: React.FC = () => {
     // État du formulaire
-    const [formData, setFormData] = useState({
-        name: '',
+    const [formData, setFormData] = useState<ContactPayload>({
+        nom: '',
         email: '',
-        subject: '',
-        message: ''
+        objet: '',
+        contenu: ''
     });
     const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
     const [errorMessage, setErrorMessage] = useState('');
@@ -17,12 +18,12 @@ export const ContactPage: React.FC = () => {
 
     // Récupérer les données du profil pour les informations de contact
     const { data: profileData } = useApi<Profile>({
-        endpoint: '/api/profile/',
+        endpoint: '/api/profile/?limit=1',
         loadOnMount: true
     });
 
     useEffect(() => {
-        if (profileData) {
+        if (profileData && profileData.results && profileData.results.length > 0) {
             setProfile(profileData.results[0]);
             document.title = `Contact - ${profileData.results[0].nom || 'Fox Engineering'}`;
         } else {
@@ -42,22 +43,16 @@ export const ContactPage: React.FC = () => {
         setFormStatus('submitting');
 
         try {
-            // Simulation d'appel API - remplacer par un vrai appel API
-
-            const response = await fetch('127.0.0.1:8000/api/send-message/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
+            // Utiliser apiService pour envoyer le message
+            await apiService.post('/api/send-message/', {
+                email: formData.email,
+                nom: formData.nom,
+                objet: formData.objet,
+                contenu: formData.contenu
             });
 
-            if (!response.ok) {
-                throw new Error('Erreur lors de l\'envoi du message');
-            }
-
             setFormStatus('success');
-            setFormData({ name: '', email: '', subject: '', message: '' });
+            setFormData({ nom: '', email: '', objet: '', contenu: '' });
 
             // Réinitialiser l'état après 5 secondes
             setTimeout(() => {
@@ -67,7 +62,7 @@ export const ContactPage: React.FC = () => {
         } catch (error) {
             console.error('Erreur de soumission du formulaire:', error);
             setFormStatus('error');
-            setErrorMessage(error instanceof Error ? error.message : 'Une erreur est survenue');
+            setErrorMessage((error as any)?.response?.data?.error || 'Une erreur est survenue lors de l\'envoi du message. Veuillez réessayer.');
 
             // Réinitialiser l'état d'erreur après 5 secondes
             setTimeout(() => {
@@ -169,15 +164,15 @@ export const ContactPage: React.FC = () => {
                                     <form onSubmit={handleSubmit} className="space-y-6">
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div>
-                                                <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                <label htmlFor="nom" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                                     Votre nom <span className="text-red-500">*</span>
                                                 </label>
                                                 <input
-                                                    id="name"
-                                                    name="name"
+                                                    id="nom"
+                                                    name="nom"
                                                     type="text"
                                                     required
-                                                    value={formData.name}
+                                                    value={formData.nom}
                                                     onChange={handleChange}
                                                     className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-black text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent"
                                                     placeholder="Entrez votre nom"
@@ -202,19 +197,19 @@ export const ContactPage: React.FC = () => {
                                         </div>
 
                                         <div>
-                                            <label htmlFor="subject" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                            <label htmlFor="objet" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                                 Sujet <span className="text-red-500">*</span>
                                             </label>
                                             <select
-                                                id="subject"
-                                                name="subject"
+                                                id="objet"
+                                                name="objet"
                                                 required
-                                                value={formData.subject}
+                                                value={formData.objet}
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-black text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent"
                                             >
                                                 {serviceOptions.map(option => (
-                                                    <option key={option.value} value={option.value}>
+                                                    <option key={option.value} value={option.value || option.label}>
                                                         {option.label}
                                                     </option>
                                                 ))}
@@ -222,15 +217,15 @@ export const ContactPage: React.FC = () => {
                                         </div>
 
                                         <div>
-                                            <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                            <label htmlFor="contenu" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                                 Message <span className="text-red-500">*</span>
                                             </label>
                                             <textarea
-                                                id="message"
-                                                name="message"
+                                                id="contenu"
+                                                name="contenu"
                                                 rows={6}
                                                 required
-                                                value={formData.message}
+                                                value={formData.contenu}
                                                 onChange={handleChange}
                                                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-black text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent resize-none"
                                                 placeholder="Décrivez votre projet ou votre demande..."
@@ -426,7 +421,7 @@ export const ContactPage: React.FC = () => {
                     >
                         <iframe
                             title="Notre localisation"
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d83998.76457410877!2d2.2769947577463574!3d48.85894658138323!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66e1f06e2b70f%3A0x40b82c3688c9460!2sParis%2C%20France!5e0!3m2!1sfr!2sfr!4v1621342995913!5m2!1sfr!2sfr"
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31916.620052717232!2d11.514035!3d3.866667!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x108bcf7a309a7977%3A0x7f804cad8231ab56!2zWWFvdW5kw6k!5e0!3m2!1sfr!2scm!4v1653042000000!5m2!1sfr!2scm"
                             width="100%"
                             height="100%"
                             style={{ border: 0 }}
@@ -519,7 +514,7 @@ export const ContactPage: React.FC = () => {
                                 Quelles technologies utilisez-vous principalement ?
                             </h3>
                             <p className="text-gray-600 dark:text-gray-400">
-                                Je travaille principalement avec React, Vue.js et Node.js pour le développement web. Pour les applications mobiles, j'utilise React Native ou Flutter. Côté backend, j'utilise Django, Spring, Express ou Laravel selon les besoins. J'adapte toujours mes choix technologiques aux spécificités de chaque projet pour garantir performance et évolutivité.
+                                Je travaille principalement avec React, Vue.js et Node.js pour le développement web. Pour les applications mobiles, j'utilise React Native ou Flutter. Côté backend, j'utilise Django, Express ou Laravel selon les besoins. J'adapte toujours mes choix technologiques aux spécificités de chaque projet pour garantir performance et évolutivité.
                             </p>
                         </motion.div>
                     </motion.div>

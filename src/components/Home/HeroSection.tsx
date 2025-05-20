@@ -82,7 +82,7 @@ export const HeroSection: React.FC = () => {
     });
 
     const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-    const y = useTransform(scrollYProgress, [0, 1], [0, 200]);
+    // const y = useTransform(scrollYProgress, [0, 1], [0, 200]);
 
     // Animation pour le renard qui médite
     useEffect(() => {
