@@ -32,6 +32,7 @@ export const BlogPage: React.FC = () => {
 
         // Validation simple
         if (!email || !email.includes('@')) {
+            console.log(statusMessage)
             setSubscriptionStatus('error');
             setStatusMessage('Veuillez saisir une adresse email valide');
             return;

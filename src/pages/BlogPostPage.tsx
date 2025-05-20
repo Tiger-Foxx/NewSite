@@ -64,7 +64,7 @@ export const BlogPostPage: React.FC = () => {
     // Fonction pour charger les articles liés
     const fetchRelatedPosts = async (categorie: string, postId: number) => {
         try {
-            const response = await apiService.get(`/api/posts/?categorie=${categorie}&limit=3&exclude=${postId}`);
+            const response = await apiService.get<{ results: any; count: number }>(`/api/posts/?categorie=${categorie}&limit=3&exclude=${postId}`);
             setRelatedPosts(response.data.results || []);
         } catch (error) {
             console.error('Erreur lors du chargement des articles liés:', error);

@@ -67,7 +67,7 @@ export const AdminNewsletterPage: React.FC = () => {
     // Récupérer les abonnés (visiteurs)
     const fetchSubscribers = async () => {
         try {
-            const response = await apiService.get('/api/visiteurs/');
+            const response = await apiService.get<{ results: any; count: number }>('/api/visiteurs/');
             setSubscribers(response.data.results || []);
             setSubscribersCount(response.data.count || 0);
         } catch (err) {
@@ -79,7 +79,7 @@ export const AdminNewsletterPage: React.FC = () => {
     // Récupérer les newsletters précédentes
     const fetchNewsletters = async () => {
         try {
-            const response = await apiService.get('/api/newsletters/');
+            const response = await apiService.get<{ results: any; count: number }>('/api/newsletters/');
             setPreviousNewsletters(response.data.results || []);
         } catch (err) {
             setError('Erreur lors de la récupération des newsletters');
@@ -151,7 +151,7 @@ export const AdminNewsletterPage: React.FC = () => {
 
         try {
             // D'abord, créer la newsletter
-            const createResponse = await apiService.post('/api/newsletters/', newsletter);
+            const createResponse = await apiService.post<{ results: any; count: number;id:any }>('/api/newsletters/', newsletter);
 
             // Ensuite, envoyer la newsletter
             await apiService.post(`/api/newsletters/${createResponse.data.id}/send/`, {});

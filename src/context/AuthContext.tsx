@@ -56,6 +56,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const login = async (username: string, password: string) => {
         setLoading(true);
         try {
+            console.log(username,password)
             // const authData = await authService.login({ username, password });
 
             // Récupérer les informations complètes de l'utilisateur
