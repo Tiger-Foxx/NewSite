@@ -489,7 +489,7 @@ export const BlogPostPage: React.FC = () => {
                                     animate="visible"
                                     transition={{ delay: 0.2 }}
                                 >
-                                    <div className="bg-gray-50 dark:bg-gray-900/50 rounded-xl p-6 mb-8 sticky top-24">
+                                    <div className="bg-gray-50 dark:bg-gray-900/50 rounded-xl p-6 mb-8  top-24">
                                         <h3 className="text-lg font-bold text-black dark:text-white mb-4">
                                             À propos de l'auteur
                                         </h3>
