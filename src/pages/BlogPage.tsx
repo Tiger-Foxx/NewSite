@@ -328,10 +328,10 @@ export const BlogPage: React.FC = () => {
                                         variants={itemVariants}
                                         layout
                                     >
-                                        {post.photo800_x_533 && (
+                                        {post.photo500_x_800 && (
                                             <div className="aspect-video overflow-hidden">
                                                 <img
-                                                    src={post.photo800_x_533}
+                                                    src={post.photo500_x_800}
                                                     alt={post.titre}
                                                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                                                     onError={(e) => {

@@ -75,10 +75,10 @@ export const RecentBlogPostsSection: React.FC = () => {
                                 to={`/blog/${ post.id}`}
                                 className="group flex flex-col bg-gray-50 dark:bg-gray-900/70 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 border border-gray-200 dark:border-gray-800 overflow-hidden h-full"
                             >
-                                {post.photo800_x_533 && (
+                                {post.photo500_x_800 && (
                                     <div className="aspect-video overflow-hidden">
                                         <img
-                                            src={post.photo800_x_533}
+                                            src={post.photo500_x_800}
                                             alt={post.titre}
                                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                                             onError={(e) => {
