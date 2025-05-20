@@ -242,10 +242,10 @@ export const BlogPostPage: React.FC = () => {
                 <>
                     <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden">
                         <div className="absolute inset-0 opacity-[0.03] bg-[url('/noise.png')] dark:opacity-[0.02]"></div>
-                        {post.photo800_x_533 && (
+                        {post.photo500_x_800 && (
                             <div className="absolute inset-0 opacity-20 dark:opacity-10">
                                 <img
-                                    src={post.photo800_x_533}
+                                    src={post.photo500_x_800}
                                     alt=""
                                     className="w-full h-full object-cover filter blur-sm"
                                 />
