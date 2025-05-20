@@ -523,10 +523,10 @@ export const BlogPostPage: React.FC = () => {
                                                         to={`/blog/${relatedPost.id}`}
                                                         className="flex items-start space-x-3 group"
                                                     >
-                                                        {relatedPost.photo800_x_533 && (
+                                                        {relatedPost.photo500_x_800 && (
                                                             <div className="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden">
                                                                 <img
-                                                                    src={relatedPost.photo800_x_533}
+                                                                    src={relatedPost.photo500_x_800}
                                                                     alt={relatedPost.titre}
                                                                     className="w-full h-full object-cover"
                                                                     onError={(e) => {
