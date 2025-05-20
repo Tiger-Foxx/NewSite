@@ -76,8 +76,7 @@ export const ProjectsPage: React.FC = () => {
         // Filtrer par recherche
         const matchesSearch = searchQuery === '' ||
             project.nom.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            (project.description && project.description.toLowerCase().includes(searchQuery.toLowerCase())) ||
-            (project.tags && project.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())));
+            (project.description && project.description.toLowerCase().includes(searchQuery.toLowerCase()))
 
         return matchesCategory && matchesSearch;
     });
@@ -329,14 +328,7 @@ export const ProjectsPage: React.FC = () => {
                             {project.sujet}
                           </span>
                                                 )}
-                                                {project.technologies?.split(',').map((tech, index) => (
-                                                    <span
-                                                        key={index}
-                                                        className="px-2.5 py-0.5 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 text-xs font-medium rounded-full"
-                                                    >
-                            {tech.trim()}
-                          </span>
-                                                ))}
+
                                             </div>
 
                                             <div className="mt-auto">

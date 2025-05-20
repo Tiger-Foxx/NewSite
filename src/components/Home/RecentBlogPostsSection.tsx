@@ -72,7 +72,7 @@ export const RecentBlogPostsSection: React.FC = () => {
                         {data.results.map((post) => (
                             <Link
                                 key={post.id}
-                                to={`/blog/${post.slug || post.id}`}
+                                to={`/blog/${ post.id}`}
                                 className="group flex flex-col bg-gray-50 dark:bg-gray-900/70 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 border border-gray-200 dark:border-gray-800 overflow-hidden h-full"
                             >
                                 {post.photo800_x_533 && (
@@ -99,10 +99,10 @@ export const RecentBlogPostsSection: React.FC = () => {
                                         {post.titre}
                                     </h3>
                                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-3 flex-grow">
-                                        {post.description || post.contenu?.substring(0, 120) + '...'}
+                                        {post.description.substring(0, 120)  + '...'}
                                     </p>
                                     <div className="mt-auto flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
-                                        <span>{formatDate(post.date_publication || post.date)}</span>
+                                        <span>{formatDate( post.date)}</span>
                                         <span className="inline-flex items-center font-medium text-black dark:text-white group-hover:underline">
                       Lire la suite
                       <svg className="ml-1 w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">

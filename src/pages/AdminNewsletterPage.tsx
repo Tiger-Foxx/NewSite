@@ -25,7 +25,7 @@ interface Subscriber {
 }
 
 export const AdminNewsletterPage: React.FC = () => {
-    const { isAuthenticated, user } = useContext(AuthContext);
+    const { isAuthenticated } = useContext(AuthContext);
     const navigate = useNavigate();
 
     // États pour gérer les données

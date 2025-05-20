@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
-import { HeroSection } from '../components/home/HeroSection';
-import { FeaturedProjects } from '../components/home/FeaturedProjects';
-import { ServicesSection } from '../components/home/ServicesSection';
-import { CtaSection } from '../components/home/CtaSection';
-import { RecentBlogPostsSection } from '../components/home/RecentBlogPostsSection';
+import {HeroSection} from "@/components/Home/HeroSection.tsx";
+import {FeaturedProjects} from "@/components/Home/FeaturedProjects.tsx";
+import {ServicesSection} from "@/components/Home/ServicesSection.tsx";
+import {RecentBlogPostsSection} from "@/components/Home/RecentBlogPostsSection.tsx";
+import {CtaSection} from "@/components/Home/CtaSection.tsx";
+
 
 export const HomePage: React.FC = () => {
     // Mise à jour du titre de la page

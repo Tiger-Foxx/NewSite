@@ -52,6 +52,7 @@ export const BlogPostPage: React.FC = () => {
             // Mettre à jour les méta-tags
             const metaDescription = document.querySelector('meta[name="description"]');
             if (metaDescription) {
+                console.log(commentsError)
                 metaDescription.setAttribute('content', postData.description || postData.titre);
             }
 

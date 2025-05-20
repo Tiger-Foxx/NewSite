@@ -77,10 +77,10 @@ export const ProjectDetailPage: React.FC = () => {
     };
 
     // Extraire les technologies à partir de la chaîne
-    const getTechnologies = (techString?: string): string[] => {
-        if (!techString) return [];
-        return techString.split(',').map(tech => tech.trim()).filter(Boolean);
-    };
+    // const getTechnologies = (techString?: string): string[] => {
+    //     if (!techString) return [];
+    //     return techString.split(',').map(tech => tech.trim()).filter(Boolean);
+    // };
 
     // Obtenir toutes les images du projet en un tableau
     const getProjectImages = (project: Project): string[] => {
@@ -156,14 +156,7 @@ export const ProjectDetailPage: React.FC = () => {
                                 </h1>
 
                                 <div className="flex flex-wrap justify-center items-center text-sm text-gray-600 dark:text-gray-400 mb-8 gap-4">
-                                    {project.client && (
-                                        <div className="flex items-center">
-                                            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                                            </svg>
-                                            <span>Client: {project.client}</span>
-                                        </div>
-                                    )}
+
 
                                     {project.date && (
                                         <div className="flex items-center">
@@ -174,14 +167,7 @@ export const ProjectDetailPage: React.FC = () => {
                                         </div>
                                     )}
 
-                                    {project.duree && (
-                                        <div className="flex items-center">
-                                            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
-                                            <span>Durée: {project.duree}</span>
-                                        </div>
-                                    )}
+
                                 </div>
                             </motion.div>
                         </div>
@@ -302,29 +288,9 @@ export const ProjectDetailPage: React.FC = () => {
                                         )
                                     )}
 
-                                    {/* Objectifs du projet si disponible */}
-                                    {project.objectif && (
-                                        <div className="mt-8 px-4 sm:px-6 lg:px-0">
-                                            <h3 className="text-xl font-bold text-black dark:text-white mb-4">
-                                                Objectifs
-                                            </h3>
-                                            <div className="prose prose-lg dark:prose-invert max-w-none">
-                                                <p>{project.objectif}</p>
-                                            </div>
-                                        </div>
-                                    )}
 
-                                    {/* Résultats du projet si disponible */}
-                                    {project.resultat && (
-                                        <div className="mt-8 px-4 sm:px-6 lg:px-0">
-                                            <h3 className="text-xl font-bold text-black dark:text-white mb-4">
-                                                Résultats
-                                            </h3>
-                                            <div className="prose prose-lg dark:prose-invert max-w-none">
-                                                <p>{project.resultat}</p>
-                                            </div>
-                                        </div>
-                                    )}
+
+
 
                                     {/* Liens du projet */}
                                     <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800 px-4 sm:px-6 lg:px-0">
@@ -332,37 +298,13 @@ export const ProjectDetailPage: React.FC = () => {
                                             Liens du projet
                                         </h3>
                                         <div className="flex flex-wrap gap-4">
-                                            {project.lien_site && (
-                                                <a
-                                                    href={project.lien_site}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="inline-flex items-center px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
-                                                >
-                                                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-                                                    </svg>
-                                                    Visiter le site
-                                                </a>
-                                            )}
 
-                                            {project.lien_github && (
-                                                <a
-                                                    href={project.lien_github}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="inline-flex items-center px-6 py-3 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                                                >
-                                                    <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                                        <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
-                                                    </svg>
-                                                    Code source
-                                                </a>
-                                            )}
 
-                                            {project.lien_demo && (
+
+
+                                            {project.demo && (
                                                 <a
-                                                    href={project.lien_demo}
+                                                    href={project.demo}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     className="inline-flex items-center px-6 py-3 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
@@ -410,15 +352,7 @@ export const ProjectDetailPage: React.FC = () => {
                                                 </div>
                                             )}
 
-                                            {/* Client */}
-                                            {project.client && (
-                                                <div>
-                                                    <h4 className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                                                        Client
-                                                    </h4>
-                                                    <p className="text-black dark:text-white">{project.client}</p>
-                                                </div>
-                                            )}
+
 
                                             {/* Date */}
                                             {project.date && (
@@ -430,34 +364,9 @@ export const ProjectDetailPage: React.FC = () => {
                                                 </div>
                                             )}
 
-                                            {/* Durée */}
-                                            {project.duree && (
-                                                <div>
-                                                    <h4 className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                                                        Durée
-                                                    </h4>
-                                                    <p className="text-black dark:text-white">{project.duree}</p>
-                                                </div>
-                                            )}
 
-                                            {/* Technologies */}
-                                            {project.technologies && (
-                                                <div>
-                                                    <h4 className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                                                        Technologies
-                                                    </h4>
-                                                    <div className="flex flex-wrap gap-2 mt-2">
-                                                        {getTechnologies(project.technologies).map((tech, index) => (
-                                                            <span
-                                                                key={index}
-                                                                className="px-3 py-1 bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-xs"
-                                                            >
-                                {tech}
-                              </span>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            )}
+
+
                                         </div>
                                     </div>
 

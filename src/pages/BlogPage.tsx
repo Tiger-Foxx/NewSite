@@ -24,7 +24,7 @@ export const BlogPage: React.FC = () => {
     const [statusMessage, setStatusMessage] = useState('');
 
     // Année courante pour le copyright
-    const currentYear = new Date().getFullYear();
+    // const currentYear = new Date().getFullYear();
 
     // Gérer la soumission du formulaire d'abonnement
     const handleSubscribe = async (e: React.FormEvent) => {
@@ -347,19 +347,19 @@ export const BlogPage: React.FC = () => {
                           {post.categorie}
                         </span>
                                                 <span className="text-xs text-gray-500 dark:text-gray-400">
-                          {formatDate(post.date_publication || post.date)}
+                          {formatDate( post.date)}
                         </span>
                                             </div>
                                             <h3 className="text-lg font-semibold text-black dark:text-white mb-2 leading-tight group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors">
                                                 {post.titre}
                                             </h3>
                                             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-3 flex-grow">
-                                                {post.description || post.contenu?.substring(0, 120) + '...'}
+                                                {post.description.substring(0, 120)  + '...'}
                                             </p>
                                             <div className="mt-auto flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
                                                 <span>{post.auteur || 'Fox'}</span>
                                                 <Link
-                                                    to={`/blog/${post.slug || post.id}`}
+                                                    to={`/blog/${post.id}`}
                                                     className="inline-flex items-center font-medium text-black dark:text-white group-hover:underline"
                                                 >
                                                     Lire la suite
@@ -581,9 +581,7 @@ export const BlogPage: React.FC = () => {
                                     <h3 className="text-xl font-bold text-black dark:text-white mb-2 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors">
                                         {category.name}
                                     </h3>
-                                    <p className="text-gray-600 dark:text-gray-400 text-sm">
-                                        {category.count} article{category.count > 1 ? 's' : ''}
-                                    </p>
+
                                 </div>
                             </motion.div>
                         ))}
