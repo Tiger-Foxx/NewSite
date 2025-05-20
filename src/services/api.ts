@@ -23,6 +23,9 @@ export class ApiService {
         }
         return ApiService.instance;
     }
+    public getBaseUrl(): string {
+        return API_BASE_URL;
+    }
 
     /**
      * Définit le token d'authentification
