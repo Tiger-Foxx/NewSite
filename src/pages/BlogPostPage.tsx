@@ -1,9 +1,11 @@
+// src/pages/BlogPostPage.tsx (ou le chemin correct vers votre composant)
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useApi } from '../hooks/useApi';
-import { apiService } from '../services/api';
-import { Post, Commentaire, CommentairePayload, PaginatedResponse, SubscribePayload } from '../types';
+import { Helmet } from 'react-helmet-async';
+import { useApi } from '../hooks/useApi'; // Assurez-vous que le chemin est correct
+import { apiService } from '../services/api'; // Assurez-vous que le chemin est correct
+import { Post, Commentaire, CommentairePayload, PaginatedResponse, SubscribePayload } from '../types'; // Assurez-vous que le chemin est correct
 import DOMPurify from 'dompurify';
 
 export const BlogPostPage: React.FC = () => {
@@ -22,7 +24,8 @@ export const BlogPostPage: React.FC = () => {
     const [subscribeStatus, setSubscribeStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
     const [errorMessage, setErrorMessage] = useState('');
 
-    // Récupérer l'article par son slug ou son ID
+    const siteUrl = "https://site.the-fox.tech"; // Votre URL de base du site
+
     const {
         data: postData,
         loading: postLoading,
@@ -32,131 +35,99 @@ export const BlogPostPage: React.FC = () => {
         loadOnMount: true
     });
 
-    // Récupérer les commentaires de l'article
     const {
         data: commentsData,
         loading: commentsLoading,
-        error: commentsError,
+        // error: commentsError, // Vous pouvez décommenter et gérer si besoin
         refetch: refetchComments
     } = useApi<PaginatedResponse<Commentaire>>({
-        endpoint: `/api/posts/${slug}/comments/`,
-        loadOnMount: true
+        endpoint: postData?.id ? `/api/posts/${postData.id}/comments/?limit=100` : '',
+        loadOnMount: !!postData?.id
     });
 
-    // Mettre à jour les données quand l'article est chargé
     useEffect(() => {
         if (postData) {
             setPost(postData);
-            document.title = `${postData.titre} - Fox Engineering`;
-
-            // Mettre à jour les méta-tags
-            const metaDescription = document.querySelector('meta[name="description"]');
-            if (metaDescription) {
-                console.log(commentsError)
-                metaDescription.setAttribute('content', postData.description || postData.titre);
-            }
-
-            // Charger des articles liés par catégorie
+            // La mise à jour de document.title est maintenant gérée par Helmet
+            // const metaDescription = document.querySelector('meta[name="description"]');
+            // if (metaDescription) {
+            //     metaDescription.setAttribute('content', postData.description || postData.titre);
+            // }
             fetchRelatedPosts(postData.categorie, postData.id);
         }
     }, [postData]);
 
-    // Fonction pour charger les articles liés
     const fetchRelatedPosts = async (categorie: string, postId: number) => {
         try {
-            const response = await apiService.get<{ results: any; count: number }>(`/api/posts/?categorie=${categorie}&limit=3&exclude=${postId}`);
+            const response = await apiService.get<{ results: Post[]; count: number }>(
+                `/api/posts/?categorie=${encodeURIComponent(categorie)}&limit=3&exclude_id=${postId}`
+            );
             setRelatedPosts(response.data.results || []);
         } catch (error) {
             console.error('Erreur lors du chargement des articles liés:', error);
         }
     };
 
-    // Mettre à jour les commentaires
     useEffect(() => {
         if (commentsData && commentsData.results) {
             setComments(commentsData.results);
         }
     }, [commentsData]);
 
-    // Gérer les erreurs
     useEffect(() => {
         if (postError) {
-            // Rediriger vers 404 si l'article n'existe pas
             navigate('/404', { replace: true });
         }
     }, [postError, navigate]);
 
-    // Gérer les changements du formulaire de commentaire
     const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setCommentFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    // Gérer la soumission du formulaire de commentaire
     const handleCommentSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!post) return;
         setCommentFormStatus('submitting');
-
+        setErrorMessage('');
         try {
-            // Utiliser apiService à la place de fetch
-            await apiService.post(`/api/posts/${slug}/comments/`, commentFormData);
-
+            await apiService.post(`/api/posts/${post.id}/comments/?limit=100`, commentFormData);
             setCommentFormStatus('success');
             setCommentFormData({ nom: '', email: '', contenu: '' });
-            refetchComments(); // Recharger les commentaires
-
-            // Réinitialiser l'état après 3 secondes
-            setTimeout(() => {
-                setCommentFormStatus('idle');
-            }, 3000);
-
-        } catch (error) {
+            if (refetchComments) refetchComments();
+            setTimeout(() => setCommentFormStatus('idle'), 3000);
+        } catch (error: any) {
             console.error('Erreur de soumission du commentaire:', error);
             setCommentFormStatus('error');
-            setErrorMessage((error as any)?.response?.data?.error || 'Une erreur est survenue lors de l\'envoi du commentaire.');
-
-            // Réinitialiser l'état d'erreur après 3 secondes
+            setErrorMessage(error?.data?.detail || error?.data?.error || error?.message || 'Une erreur est survenue.');
             setTimeout(() => {
                 setCommentFormStatus('idle');
                 setErrorMessage('');
-            }, 3000);
+            }, 5000);
         }
     };
 
-    // Gérer la soumission à la newsletter
     const handleSubscribeSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!subscribeEmail) return;
-
         setSubscribeStatus('submitting');
-
+        setErrorMessage('');
         try {
-            const subscribeData: SubscribePayload = {
-                email: subscribeEmail
-            };
-
-            await apiService.post('/api/subscribe/', subscribeData);
-
+            await apiService.post<SubscribePayload>('/api/subscribe/', { email: subscribeEmail });
             setSubscribeStatus('success');
             setSubscribeEmail('');
-
-            setTimeout(() => {
-                setSubscribeStatus('idle');
-            }, 3000);
-
-        } catch (error) {
+            setTimeout(() => setSubscribeStatus('idle'), 3000);
+        } catch (error: any) {
             console.error('Erreur lors de l\'inscription à la newsletter:', error);
             setSubscribeStatus('error');
-            setErrorMessage((error as any)?.response?.data?.error || 'Une erreur est survenue lors de l\'inscription à la newsletter.');
-
+            setErrorMessage(error?.data?.detail || error?.data?.error || error?.message || 'Une erreur est survenue.');
             setTimeout(() => {
                 setSubscribeStatus('idle');
                 setErrorMessage('');
-            }, 3000);
+            }, 5000);
         }
     };
 
-    // Formatter la date
     const formatDate = (dateString: string | undefined): string => {
         if (!dateString) return 'Date inconnue';
         return new Date(dateString).toLocaleDateString('fr-FR', {
@@ -166,29 +137,26 @@ export const BlogPostPage: React.FC = () => {
         });
     };
 
-    // Calculer le temps de lecture approximatif
-    const calculateReadingTime = (content: string): number => {
-        // Supprimer les balises HTML pour calculer plus précisément
+    const calculateReadingTime = (content: string | undefined): number => {
+        if (!content) return 1;
         const textContent = content.replace(/<[^>]*>/g, '');
         const wordsPerMinute = 200;
         const wordCount = textContent.split(/\s+/).length;
-        return Math.ceil(wordCount / wordsPerMinute) || 1; // Minimum 1 minute
+        return Math.ceil(wordCount / wordsPerMinute) || 1;
     };
 
-    // Animation variants
     const fadeInUp = {
         hidden: { opacity: 0, y: 30 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: { duration: 0.6, ease: "easeOut" }
-        }
+        visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
     };
 
-    // Afficher le loader pendant le chargement
     if (postLoading) {
         return (
             <div className="flex justify-center items-center min-h-screen bg-white dark:bg-black">
+                <Helmet>
+                    <title>Chargement... - Fox Engineering</title>
+                    <meta name="robots" content="noindex" />
+                </Helmet>
                 <div className="flex flex-col items-center">
                     <div className="w-16 h-16 border-t-4 border-b-4 border-black dark:border-white rounded-full animate-spin"></div>
                     <p className="mt-4 text-black dark:text-white">Chargement de l'article...</p>
@@ -197,31 +165,93 @@ export const BlogPostPage: React.FC = () => {
         );
     }
 
-    // Gérer le cas où l'article n'est pas trouvé
-    if (!post && !postLoading) {
-        return null; // La redirection sera gérée par l'effet ci-dessus
+    if (!post && !postLoading) { // S'assure que le chargement est terminé et que post est toujours null
+        return (
+            <>
+                <Helmet>
+                    <title>Article non trouvé - Fox Engineering</title>
+                    <meta name="robots" content="noindex" />
+                </Helmet>
+                <div className="flex justify-center items-center min-h-screen bg-white dark:bg-black text-center">
+                    <div className="p-8">
+                        <h1 className="text-2xl font-bold text-black dark:text-white mb-4">Oops! Article non trouvé.</h1>
+                        <p className="text-gray-600 dark:text-gray-400 mb-8">
+                            Il semble que l'article que vous cherchez n'existe pas ou a été déplacé.
+                        </p>
+                        <Link
+                            to="/blog"
+                            className="px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-lg font-medium hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
+                        >
+                            Retourner au Blog
+                        </Link>
+                    </div>
+                </div>
+            </>
+        );
     }
+
+    // Construction des valeurs pour les métas. S'assurer que `post` est défini.
+    const postTitle = post ? `${post.titre} - Fox Engineering` : "Article - Fox Engineering";
+
+    let metaDescriptionContent = "Lisez cet article détaillé sur Fox Engineering.";
+    if (post?.description) {
+        metaDescriptionContent = post.description;
+    } else if (post?.contenuP1) {
+        const cleanText = post.contenuP1.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+        metaDescriptionContent = cleanText.substring(0, 155) + (cleanText.length > 155 ? '...' : '');
+    }
+
+    let metaImage = `${siteUrl}/favicon.png`; // Image par défaut
+    if (post?.photo800_x_533) { // Utilisation de photo800_x_533
+        metaImage = post.photo800_x_533.startsWith('http')
+            ? post.photo800_x_533
+            : `${siteUrl}${post.photo800_x_533.startsWith('/') ? '' : '/'}${post.photo800_x_533}`;
+    }
+
+    const currentPageUrl = window.location.href;
 
     return (
         <main className="bg-white dark:bg-black min-h-screen">
             {post && (
+                <Helmet>
+                    <title>{postTitle}</title>
+                    <meta name="description" content={metaDescriptionContent} />
+                    <link rel="canonical" href={currentPageUrl} />
+
+                    <meta property="og:title" content={postTitle} />
+                    <meta property="og:description" content={metaDescriptionContent} />
+                    <meta property="og:image" content={metaImage} />
+                    <meta property="og:url" content={currentPageUrl} />
+                    <meta property="og:type" content="article" />
+                    <meta property="og:site_name" content="Fox Engineering" />
+                    {post.date && <meta property="article:published_time" content={new Date(post.date).toISOString()} />}
+                    {post.auteur && <meta property="article:author" content={post.auteur} />}
+                    {post.categorie && <meta property="article:section" content={post.categorie} />}
+                    {/* Si vous avez des tags, par exemple: post.tags?.map(tag => <meta property="article:tag" content={tag.name} key={tag.id} />) */}
+
+                    <meta name="twitter:card" content="summary_large_image" />
+                    <meta name="twitter:title" content={postTitle} />
+                    <meta name="twitter:description" content={metaDescriptionContent} />
+                    <meta name="twitter:image" content={metaImage} />
+                    {/* <meta name="twitter:site" content="@VotrePseudoTwitter" /> */}
+                    {/* <meta name="twitter:creator" content={post.auteur ? `@PseudoTwitterAuteur` : '@VotrePseudoTwitter'} /> */}
+                </Helmet>
+            )}
+
+            {post && (
                 <>
-                    {/* Header de l'article */}
                     <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden">
                         <div className="absolute inset-0 opacity-[0.03] bg-[url('/noise.png')] dark:opacity-[0.02]"></div>
-
-                        {/* Image d'en-tête en arrière-plan */}
                         {post.photo800_x_533 && (
                             <div className="absolute inset-0 opacity-20 dark:opacity-10">
                                 <img
                                     src={post.photo800_x_533}
-                                    alt={post.titre}
+                                    alt=""
                                     className="w-full h-full object-cover filter blur-sm"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-b from-white via-white to-transparent dark:from-black dark:via-black dark:to-transparent"></div>
                             </div>
                         )}
-
                         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative">
                             <motion.div
                                 className="text-center"
@@ -229,13 +259,12 @@ export const BlogPostPage: React.FC = () => {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5 }}
                             >
-                <span className="inline-block px-3 py-1 text-xs font-medium uppercase tracking-wider bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full mb-4">
-                  {post.categorie}
-                </span>
+                                <span className="inline-block px-3 py-1 text-xs font-medium uppercase tracking-wider bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full mb-4">
+                                  {post.categorie}
+                                </span>
                                 <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-black dark:text-white mb-6 leading-tight">
                                     {post.titre}
                                 </h1>
-
                                 <div className="flex flex-wrap justify-center items-center text-sm text-gray-600 dark:text-gray-400 mb-8 gap-4">
                                     <div className="flex items-center">
                                         <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -256,7 +285,6 @@ export const BlogPostPage: React.FC = () => {
                                         <span>{calculateReadingTime(post.contenuP1)} min de lecture</span>
                                     </div>
                                 </div>
-
                                 {post.description && (
                                     <p className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto italic">
                                         {post.description}
@@ -266,7 +294,6 @@ export const BlogPostPage: React.FC = () => {
                         </div>
                     </section>
 
-                    {/* Image principale de l'article */}
                     {post.photo800_x_533 && (
                         <section className="py-6 bg-white dark:bg-black">
                             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -286,134 +313,52 @@ export const BlogPostPage: React.FC = () => {
                         </section>
                     )}
 
-                    {/* Contenu de l'article */}
                     <section className="py-12 bg-white dark:bg-black">
                         <div className="max-w-7xl mx-auto">
                             <div className="flex flex-col lg:flex-row">
-                                {/* Article principal - Occupe toute la largeur sur mobile et 2/3 sur desktop */}
                                 <motion.div
-                                    className="lg:w-2/3 px-0 sm:px-0 lg:px-8" // Pas de padding sur mobile pour le contenu HTML
+                                    className="lg:w-2/3 px-4 sm:px-6 lg:px-8"
                                     variants={fadeInUp}
                                     initial="hidden"
                                     animate="visible"
                                 >
-                                    {/* Le contenu HTML de l'article */}
                                     {post.contenuP1 && (
                                         <div
-                                            className="article-content w-full" // Classe pour styliser au besoin
-                                            dangerouslySetInnerHTML={{
-                                                __html: DOMPurify.sanitize(post.contenuP1)
-                                            }}
+                                            className="article-content prose dark:prose-invert lg:prose-lg max-w-none"
+                                            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.contenuP1) }}
                                         />
                                     )}
+                                    {post.contenuP2 && <div className="article-content prose dark:prose-invert lg:prose-lg max-w-none mt-6" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.contenuP2) }} />}
+                                    {post.contenuP3 && <div className="article-content prose dark:prose-invert lg:prose-lg max-w-none mt-6" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.contenuP3) }} />}
+                                    {post.contenuP4 && <div className="article-content prose dark:prose-invert lg:prose-lg max-w-none mt-6" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.contenuP4) }} />}
 
-                                    {/* Afficher les autres paragraphes s'ils existent */}
-                                    {post.contenuP2 && (
-                                        <div
-                                            className="article-content w-full mt-6"
-                                            dangerouslySetInnerHTML={{
-                                                __html: DOMPurify.sanitize(post.contenuP2)
-                                            }}
-                                        />
-                                    )}
-
-                                    {post.contenuP3 && (
-                                        <div
-                                            className="article-content w-full mt-6"
-                                            dangerouslySetInnerHTML={{
-                                                __html: DOMPurify.sanitize(post.contenuP3)
-                                            }}
-                                        />
-                                    )}
-
-                                    {post.contenuP4 && (
-                                        <div
-                                            className="article-content w-full mt-6"
-                                            dangerouslySetInnerHTML={{
-                                                __html: DOMPurify.sanitize(post.contenuP4)
-                                            }}
-                                        />
-                                    )}
-
-                                    {/* Citation si elle existe */}
                                     {post.contenuSitation && (
-                                        <div className="my-8 pl-4 border-l-4 border-gray-300 dark:border-gray-700 italic text-gray-700 dark:text-gray-300">
-                                            {post.contenuSitation}
-                                        </div>
+                                        <blockquote className="my-8 pl-4 border-l-4 border-gray-300 dark:border-gray-700 italic text-gray-700 dark:text-gray-300 text-xl">
+                                            <p>{post.contenuSitation}</p>
+                                        </blockquote>
                                     )}
 
-                                    {/* Conclusion si elle existe */}
                                     {post.contenuConclusion && (
                                         <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800">
                                             <h2 className="text-2xl font-bold text-black dark:text-white mb-4">Conclusion</h2>
-                                            <div
-                                                className="article-content w-full"
-                                                dangerouslySetInnerHTML={{
-                                                    __html: DOMPurify.sanitize(post.contenuConclusion)
-                                                }}
-                                            />
+                                            <div className="article-content prose dark:prose-invert lg:prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.contenuConclusion) }} />
                                         </div>
                                     )}
 
-                                    {/* Partage */}
-                                    <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-800 px-4 sm:px-6 lg:px-0">
+                                    <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-800">
                                         <h3 className="text-lg font-bold text-black dark:text-white mb-4">Partager cet article</h3>
                                         <div className="flex space-x-4">
-                                            <a
-                                                href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(post.titre)}`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600 transition-colors"
-                                                aria-label="Partager sur Twitter"
-                                            >
-                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                                    <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
-                                                </svg>
-                                            </a>
-                                            <a
-                                                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-blue-800 hover:text-white dark:hover:bg-blue-900 transition-colors"
-                                                aria-label="Partager sur Facebook"
-                                            >
-                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                                    <path fillRule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clipRule="evenodd" />
-                                                </svg>
-                                            </a>
-                                            <a
-                                                href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-blue-700 hover:text-white dark:hover:bg-blue-800 transition-colors"
-                                                aria-label="Partager sur LinkedIn"
-                                            >
-                                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                                                </svg>
-                                            </a>
-                                            <button
-                                                onClick={() => {
-                                                    navigator.clipboard.writeText(window.location.href);
-                                                    alert('Lien copié !');
-                                                }}
-                                                className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors"
-                                                aria-label="Copier le lien"
-                                            >
-                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                                                </svg>
-                                            </button>
+                                            <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(currentPageUrl)}&text=${encodeURIComponent(post.titre)}`} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600 transition-colors" aria-label="Partager sur Twitter"><svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" /></svg></a>
+                                            <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentPageUrl)}`} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-blue-800 hover:text-white dark:hover:bg-blue-900 transition-colors" aria-label="Partager sur Facebook"><svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fillRule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clipRule="evenodd" /></svg></a>
+                                            <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(currentPageUrl)}`} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-blue-700 hover:text-white dark:hover:bg-blue-800 transition-colors" aria-label="Partager sur LinkedIn"><svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
+                                            <button onClick={() => { navigator.clipboard.writeText(currentPageUrl); alert('Lien copié !'); }} className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors" aria-label="Copier le lien"><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg></button>
                                         </div>
                                     </div>
 
-                                    {/* Section commentaires */}
-                                    <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800 px-4 sm:px-6 lg:px-0">
+                                    <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
                                         <h3 className="text-2xl font-bold text-black dark:text-white mb-8">
                                             Commentaires ({comments.length})
                                         </h3>
-
-                                        {/* Liste des commentaires */}
                                         {commentsLoading ? (
                                             <div className="space-y-4">
                                                 {[...Array(3)].map((_, i) => (
@@ -453,7 +398,7 @@ export const BlogPostPage: React.FC = () => {
                                                                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
                                                                     {formatDate(comment.date)}
                                                                 </p>
-                                                                <div className="prose prose-sm dark:prose-invert">
+                                                                <div className="prose prose-sm dark:prose-invert max-w-none">
                                                                     <p>{comment.contenu}</p>
                                                                 </div>
                                                             </div>
@@ -474,13 +419,10 @@ export const BlogPostPage: React.FC = () => {
                                                 </p>
                                             </div>
                                         )}
-
-                                        {/* Formulaire de commentaire */}
                                         <div className="mt-10">
                                             <h4 className="text-xl font-bold text-black dark:text-white mb-6">
                                                 Laisser un commentaire
                                             </h4>
-
                                             {commentFormStatus === 'success' ? (
                                                 <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-6 text-center">
                                                     <svg className="w-12 h-12 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -498,7 +440,7 @@ export const BlogPostPage: React.FC = () => {
                                                     </svg>
                                                     <h3 className="text-lg font-medium text-red-800 dark:text-red-300 mb-2">Erreur</h3>
                                                     <p className="text-red-600 dark:text-red-400">
-                                                        {errorMessage || "Une erreur est survenue lors de l'envoi du commentaire. Veuillez réessayer."}
+                                                        {errorMessage || "Une erreur est survenue. Veuillez réessayer."}
                                                     </p>
                                                 </div>
                                             ) : (
@@ -508,75 +450,30 @@ export const BlogPostPage: React.FC = () => {
                                                             <label htmlFor="nom" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                                                 Votre nom <span className="text-red-500">*</span>
                                                             </label>
-                                                            <input
-                                                                id="nom"
-                                                                name="nom"
-                                                                type="text"
-                                                                required
-                                                                value={commentFormData.nom}
-                                                                onChange={handleCommentChange}
-                                                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-black text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent"
-                                                                placeholder="Entrez votre nom"
-                                                            />
+                                                            <input id="nom" name="nom" type="text" required value={commentFormData.nom} onChange={handleCommentChange} className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-black text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent" placeholder="Entrez votre nom" />
                                                         </div>
-
                                                         <div>
                                                             <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                                                 Votre email <span className="text-red-500">*</span>
                                                             </label>
-                                                            <input
-                                                                id="email"
-                                                                name="email"
-                                                                type="email"
-                                                                required
-                                                                value={commentFormData.email}
-                                                                onChange={handleCommentChange}
-                                                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-black text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent"
-                                                                placeholder="Entrez votre email"
-                                                            />
-                                                            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                                                                Votre email ne sera pas publié.
-                                                            </p>
+                                                            <input id="email" name="email" type="email" required value={commentFormData.email} onChange={handleCommentChange} className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-black text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent" placeholder="Entrez votre email" />
+                                                            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">Votre email ne sera pas publié.</p>
                                                         </div>
                                                     </div>
-
                                                     <div>
                                                         <label htmlFor="contenu" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                                             Votre commentaire <span className="text-red-500">*</span>
                                                         </label>
-                                                        <textarea
-                                                            id="contenu"
-                                                            name="contenu"
-                                                            rows={4}
-                                                            required
-                                                            value={commentFormData.contenu}
-                                                            onChange={handleCommentChange}
-                                                            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-black text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent resize-none"
-                                                            placeholder="Écrivez votre commentaire ici..."
-                                                        ></textarea>
+                                                        <textarea id="contenu" name="contenu" rows={4} required value={commentFormData.contenu} onChange={handleCommentChange} className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-black text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent resize-none" placeholder="Écrivez votre commentaire ici..."></textarea>
                                                     </div>
-
                                                     <div className="text-right">
-                                                        <button
-                                                            type="submit"
-                                                            disabled={commentFormStatus === 'submitting'}
-                                                            className={`inline-flex items-center px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-lg font-medium transition-colors ${
-                                                                commentFormStatus === 'submitting'
-                                                                    ? 'opacity-70 cursor-not-allowed'
-                                                                    : 'hover:bg-gray-800 dark:hover:bg-gray-200'
-                                                            }`}
-                                                        >
+                                                        <button type="submit" disabled={commentFormStatus === 'submitting'} className={`inline-flex items-center px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-lg font-medium transition-colors ${commentFormStatus === 'submitting' ? 'opacity-70 cursor-not-allowed' : 'hover:bg-gray-800 dark:hover:bg-gray-200'}`}>
                                                             {commentFormStatus === 'submitting' ? (
                                                                 <>
-                                                                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white dark:text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                                                    </svg>
+                                                                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white dark:text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                                                                     Envoi en cours...
                                                                 </>
-                                                            ) : (
-                                                                'Publier le commentaire'
-                                                            )}
+                                                            ) : ('Publier le commentaire')}
                                                         </button>
                                                     </div>
                                                 </form>
@@ -585,7 +482,6 @@ export const BlogPostPage: React.FC = () => {
                                     </div>
                                 </motion.div>
 
-                                {/* Sidebar */}
                                 <motion.div
                                     className="lg:w-1/3 px-4 sm:px-6 lg:px-8 mt-10 lg:mt-0"
                                     variants={fadeInUp}
@@ -593,7 +489,6 @@ export const BlogPostPage: React.FC = () => {
                                     animate="visible"
                                     transition={{ delay: 0.2 }}
                                 >
-                                    {/* À propos de l'auteur */}
                                     <div className="bg-gray-50 dark:bg-gray-900/50 rounded-xl p-6 mb-8 sticky top-24">
                                         <h3 className="text-lg font-bold text-black dark:text-white mb-4">
                                             À propos de l'auteur
@@ -616,7 +511,6 @@ export const BlogPostPage: React.FC = () => {
                                         </p>
                                     </div>
 
-                                    {/* Articles liés */}
                                     {relatedPosts.length > 0 && (
                                         <div className="bg-gray-50 dark:bg-gray-900/50 rounded-xl p-6 mb-8">
                                             <h3 className="text-lg font-bold text-black dark:text-white mb-4">
@@ -656,37 +550,15 @@ export const BlogPostPage: React.FC = () => {
                                             </div>
                                         </div>
                                     )}
-
-                                    {/* Catégories */}
                                     <div className="bg-gray-50 dark:bg-gray-900/50 rounded-xl p-6">
                                         <h3 className="text-lg font-bold text-black dark:text-white mb-4">
                                             Catégories
                                         </h3>
                                         <div className="space-y-2">
-                                            <Link
-                                                to="/blog?category=development"
-                                                className="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-md transition-colors"
-                                            >
-                                                Développement
-                                            </Link>
-                                            <Link
-                                                to="/blog?category=cybersecurity"
-                                                className="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-md transition-colors"
-                                            >
-                                                Cybersécurité
-                                            </Link>
-                                            <Link
-                                                to="/blog?category=ai"
-                                                className="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-md transition-colors"
-                                            >
-                                                Intelligence Artificielle
-                                            </Link>
-                                            <Link
-                                                to="/blog?category=tutorial"
-                                                className="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-md transition-colors"
-                                            >
-                                                Tutoriels
-                                            </Link>
+                                            <Link to="/blog?category=development" className="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-md transition-colors">Développement</Link>
+                                            <Link to="/blog?category=cybersecurity" className="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-md transition-colors">Cybersécurité</Link>
+                                            <Link to="/blog?category=ai" className="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-md transition-colors">Intelligence Artificielle</Link>
+                                            <Link to="/blog?category=tutorial" className="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-md transition-colors">Tutoriels</Link>
                                         </div>
                                     </div>
                                 </motion.div>
@@ -694,7 +566,6 @@ export const BlogPostPage: React.FC = () => {
                         </div>
                     </section>
 
-                    {/* Section CTA */}
                     <section className="py-16 bg-black dark:bg-white text-white dark:text-black">
                         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                             <h2 className="text-2xl md:text-3xl font-bold mb-6">
@@ -703,7 +574,6 @@ export const BlogPostPage: React.FC = () => {
                             <p className="text-lg text-gray-300 dark:text-gray-700 max-w-2xl mx-auto mb-8">
                                 Abonnez-vous à la newsletter pour recevoir les prochains articles directement dans votre boîte mail.
                             </p>
-
                             {subscribeStatus === 'success' ? (
                                 <div className="bg-green-500/20 border border-green-500/30 rounded-lg p-6 text-center max-w-md mx-auto">
                                     <svg className="w-12 h-12 text-green-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -711,7 +581,7 @@ export const BlogPostPage: React.FC = () => {
                                     </svg>
                                     <h3 className="text-lg font-medium text-green-400 mb-2">Inscription réussie !</h3>
                                     <p className="text-gray-300 dark:text-gray-700">
-                                        Merci de vous être abonné à notre newsletter. Vous recevrez nos prochains articles par email.
+                                        Merci de vous être abonné. Vous recevrez nos prochains articles par email.
                                     </p>
                                 </div>
                             ) : subscribeStatus === 'error' ? (
@@ -721,7 +591,7 @@ export const BlogPostPage: React.FC = () => {
                                     </svg>
                                     <h3 className="text-lg font-medium text-red-400 mb-2">Erreur</h3>
                                     <p className="text-gray-300 dark:text-gray-700">
-                                        {errorMessage || "Une erreur est survenue lors de l'inscription à notre newsletter. Veuillez réessayer."}
+                                        {errorMessage || "Une erreur est survenue. Veuillez réessayer."}
                                     </p>
                                 </div>
                             ) : (

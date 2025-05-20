@@ -124,7 +124,7 @@ export const HeroSection: React.FC = () => {
                                 transition={{ duration: 0.5 }}
                             >
                                 <Link
-                                    to="/blog/nouvelle-version-site"
+                                    to="https://site.the-fox.tech/blog/36"
                                     className="group inline-flex items-center justify-center mb-5 px-4 py-1.5 text-xs font-medium uppercase tracking-wider border border-gray-300 dark:border-gray-700 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
                                 >
                                     <span className="w-2 h-2 bg-black dark:bg-white rounded-full mr-2"></span>
