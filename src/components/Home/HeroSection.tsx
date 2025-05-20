@@ -98,7 +98,7 @@ export const HeroSection: React.FC = () => {
         <>
             <section
                 ref={heroRef}
-                className="relative pt-19 md:pt-23 pb-20 overflow-hidden bg-white dark:bg-black"
+                className="relative pt-21 md:pt-29 pb-20 overflow-hidden bg-white dark:bg-black"
             >
                 {/* Éléments d'arrière-plan et effets visuels */}
                 <div className="absolute inset-0 opacity-[0.03] bg-[url('/noise.png')] dark:opacity-[0.02]"></div>

@@ -22,4 +22,4 @@ Crawl-delay: 3
 Host: fox-dev.com
 
 # Sitemap
-Sitemap: https://fox-dev.com/sitemap.xml
+Sitemap: https://site.the-fox.tech/sitemap.xml
