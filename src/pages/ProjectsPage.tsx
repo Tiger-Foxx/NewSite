@@ -397,9 +397,7 @@ export const ProjectsPage: React.FC = () => {
                                                     </h3>
 
                                                     {project.description && (
-                                                        <p className="text-gray-600 dark:text-gray-400 mb-4">
-                                                            {project.description}
-                                                        </p>
+                                                        <div className="text-gray-600 dark:text-gray-400 mb-4" dangerouslySetInnerHTML={{ __html: project.description }} />
                                                     )}
 
                                                     <div className="flex flex-wrap gap-2 mb-6">
