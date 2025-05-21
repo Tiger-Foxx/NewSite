@@ -12,22 +12,86 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.png', 'favicon.jpg', 'offline.html', 'robots.txt'],
+      includeAssets: [
+        'favicon.png',
+        'favicon.jpg',
+        'offline.html',
+        'robots.txt',
+        '/icons/icon-192x192.png',
+        '/icons/icon-256x256.png',
+        '/icons/icon-384x384.png',
+        '/icons/icon-512x512.png'
+      ],
       manifest: {
-        name: 'Mood Music',
-        short_name: 'MoodMusic',
-        description: 'Découvrez la musique qui correspond à votre humeur',
-        theme_color: '#302b63',
-        background_color: '#0f0c29',
+        name: 'Fox',
+        short_name: 'Fox',
+        description: "Service d'ingénierie informatique spécialisé en développement web, mobile, desktop et sécurité informatique.",
+        theme_color: '#FFFFFF',
+        background_color: '#121212',
         display: 'standalone',
         icons: [
+          { "src": "/icons/icon-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+          { "src": "/icons/icon-256x256.png", "sizes": "256x256", "type": "image/png", "purpose": "any maskable" },
+          { "src": "/icons/icon-384x384.png", "sizes": "384x384", "type": "image/png", "purpose": "any maskable" },
+          { "src": "/icons/icon-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+        ],
+        screenshots: [
           {
-            src: '/favicon.png',
-            sizes: '192x192',
-            type: 'image/png',
-            purpose: 'any maskable'
+            "src": "/screenshots/0.png",
+            "sizes": "1280x720",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "Page d'accueil de Fox Dev"
           },
-
+          {
+            "src": "/screenshots/1.png",
+            "sizes": "1280x720",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "Portfolio de projets Fox"
+          },
+          {
+            "src": "/screenshots/2.png",
+            "sizes": "1280x720",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "Blog articles Fox Dev"
+          }
+        ],
+        related_applications: [
+          {
+            "platform": "windows",
+            "url": "https://foxy-blue-light.the-fox.tech",
+            "id": "FoxyBlueLight"
+          },
+          {
+            "platform": "chrome",
+            "url": "https://yt-learn.the-fox.tech",
+            "id": "YtLearn"
+          }
+        ],
+        shortcuts: [
+          {
+            "name": "Blog",
+            "short_name": "Blog",
+            "description": "Articles et tutoriels de Fox",
+            "url": "/blog",
+            "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+          },
+          {
+            "name": "Projets",
+            "short_name": "Projets",
+            "description": "Voir le portfolio de Fox",
+            "url": "/projects",
+            "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+          },
+          {
+            "name": "Contact",
+            "short_name": "Contact",
+            "description": "Contacter Fox",
+            "url": "/contact",
+            "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+          }
         ]
       },
       workbox: {

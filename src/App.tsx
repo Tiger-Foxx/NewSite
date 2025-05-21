@@ -1,6 +1,7 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Lottie from 'lottie-react';
+import InstallPromptModal from './components/InstallPromptModal'; // Import the modal
 import { AnimatePresence, motion } from 'framer-motion';
 import foxLoaderAnimation from './assets/lotties/fox-loader.json';
 import { Analytics } from '@vercel/analytics/react';
@@ -28,9 +29,21 @@ import { LoginPage } from './pages/LoginPage';
 import { AuthProvider } from './context/AuthContext';
 import AdminNewsletterPage from "@/pages/AdminNewsletterPage.tsx";
 
+// Define a more specific type for the BeforeInstallPromptEvent
+interface BeforeInstallPromptEvent extends Event {
+  readonly platforms: string[];
+  readonly userChoice: Promise<{
+    outcome: 'accepted' | 'dismissed';
+    platform: string;
+  }>;
+  prompt(): Promise<void>;
+}
+
 const App: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const location = useLocation();
+    const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+    const [isInstallModalVisible, setIsInstallModalVisible] = useState(false);
 
     // Simuler un temps de chargement minimum pour montrer l'animation
     useEffect(() => {
@@ -45,6 +58,40 @@ const App: React.FC = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [location.pathname]);
+
+    // Listener for beforeinstallprompt event
+    useEffect(() => {
+        const handleBeforeInstallPrompt = (e: Event) => {
+            e.preventDefault();
+            const customEvent = e as BeforeInstallPromptEvent;
+            setDeferredPrompt(customEvent);
+            const dismissed = localStorage.getItem('installPromptDismissed');
+            if (!dismissed) {
+                setIsInstallModalVisible(true);
+            }
+        };
+
+        window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+        return () => {
+            window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+        };
+    }, []);
+
+    const handleInstallClick = async () => {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const choiceResult = await deferredPrompt.userChoice;
+            console.log('User response to the install prompt:', choiceResult.outcome);
+            setDeferredPrompt(null);
+        }
+        setIsInstallModalVisible(false);
+    };
+
+    const handleDismissClick = () => {
+        setIsInstallModalVisible(false);
+        localStorage.setItem('installPromptDismissed', 'true');
+    };
 
     if (loading) {
         return (
@@ -111,6 +158,12 @@ const App: React.FC = () => {
                 </div>
             </AuthProvider>
             <Analytics />
+            {isInstallModalVisible && deferredPrompt && (
+                <InstallPromptModal
+                    onInstall={handleInstallClick}
+                    onDismiss={handleDismissClick}
+                />
+            )}
         </>
 
     );
