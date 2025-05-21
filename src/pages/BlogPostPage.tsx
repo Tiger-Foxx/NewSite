@@ -161,16 +161,24 @@ export const BlogPostPage: React.FC = () => {
                 </Helmet>
                 <div className="flex flex-col items-center">
 
-                    <div className="fixed inset-0 flex flex-col items-center justify-center bg-white dark:bg-black z-50">
+                    <div
+                        className="fixed inset-0 flex flex-col items-center justify-center bg-white dark:bg-black z-50">
                         <div className="w-32 h-32 mb-4">
                             <Lottie
                                 animationData={foxLoaderAnimation}
                                 loop={true}
                             />
                         </div>
+                        <motion.div
+                            className="text-sm text-gray-500 dark:text-gray-400 mt-4"
+                            initial={{opacity: 0}}
+                            animate={{opacity: 1}}
+                            transition={{delay: 0.5}}
+                        >
+                            Chargement de l'article...
+                        </motion.div>
 
                     </div>
-                    <p className="mt-4 text-black dark:text-white">Chargement de l'article...</p>
                 </div>
             </div>
         );
@@ -180,7 +188,7 @@ export const BlogPostPage: React.FC = () => {
         return (
             <>
                 <Helmet>
-                    <title>Article non trouvé - Fox Engineering</title>
+                <title>Article non trouvé - Fox Engineering</title>
                     <meta name="robots" content="noindex" />
                 </Helmet>
                 <div className="flex justify-center items-center min-h-screen bg-white dark:bg-black text-center">
