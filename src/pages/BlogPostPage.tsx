@@ -7,6 +7,8 @@ import { useApi } from '../hooks/useApi'; // Assurez-vous que le chemin est corr
 import { apiService } from '../services/api'; // Assurez-vous que le chemin est correct
 import { Post, Commentaire, CommentairePayload, PaginatedResponse, SubscribePayload } from '../types'; // Assurez-vous que le chemin est correct
 import DOMPurify from 'dompurify';
+import Lottie from "lottie-react";
+import foxLoaderAnimation from "@/assets/lotties/fox-loader.json";
 
 export const BlogPostPage: React.FC = () => {
     const { slug } = useParams<{ slug: string }>();
@@ -158,7 +160,16 @@ export const BlogPostPage: React.FC = () => {
                     <meta name="robots" content="noindex" />
                 </Helmet>
                 <div className="flex flex-col items-center">
-                    <div className="w-16 h-16 border-t-4 border-b-4 border-black dark:border-white rounded-full animate-spin"></div>
+
+                    <div className="fixed inset-0 flex flex-col items-center justify-center bg-white dark:bg-black z-50">
+                        <div className="w-32 h-32 mb-4">
+                            <Lottie
+                                animationData={foxLoaderAnimation}
+                                loop={true}
+                            />
+                        </div>
+
+                    </div>
                     <p className="mt-4 text-black dark:text-white">Chargement de l'article...</p>
                 </div>
             </div>
