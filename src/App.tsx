@@ -36,7 +36,7 @@ const App: React.FC = () => {
     useEffect(() => {
         const minLoadTime = setTimeout(() => {
             setLoading(false);
-        }, 1800); // 1.8 secondes minimum pour montrer l'animation
+        }, 2800); // 1.8 secondes minimum pour montrer l'animation
 
         return () => clearTimeout(minLoadTime);
     }, []);
