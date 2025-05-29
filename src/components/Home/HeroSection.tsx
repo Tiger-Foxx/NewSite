@@ -56,6 +56,28 @@ const openSourceProductsData: OpenSourceProduct[] = [
         buttonText: 'Télécharger FoxyBlueLight',
         secondaryButtonText: 'Voir sur GitHub',
     },
+    {
+        id: 'konan',
+        name: 'Konan',
+        description: 'Gestionnaire de presse papier persistant pour Windows.',
+        iconUrl: 'https://github.com/Tiger-Foxx/Konan/raw/main/screens/fox.png',
+        liveUrl: 'https://konan.the-fox.tech/',
+        githubUrl: 'https://github.com/Tiger-Foxx/Konan',
+        buttonText: 'Télécharger Konan',
+        secondaryButtonText: 'Voir sur GitHub',
+    },
+    {
+        id: 'qualityshoot',
+        name: 'QualityShoot',
+        description: 'Application desktop  qui te permet d\'upscaler tes images et vidéos',
+        iconUrl: 'https://github.com/Tiger-Foxx/QualityShoot---frontend/raw/main/src/assets/logo.png',
+        liveUrl: 'https://quality-shoot.the-fox.tech/',
+        githubUrl: 'https://github.com/Tiger-Foxx/QualityShoot---frontend',
+        buttonText: 'Télécharger QualityShoot',
+        secondaryButtonText: 'Voir sur GitHub',
+    },
+    
+
 ];
 
 export const HeroSection: React.FC = () => {
