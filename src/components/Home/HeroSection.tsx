@@ -60,7 +60,7 @@ const openSourceProductsData: OpenSourceProduct[] = [
         id: 'openpay',
         name: 'OpenPay',
         description: 'Enfin Savoir Combien Tu Vaux (ou pas) sur le Marché Tech',
-        iconUrl: 'https://raw.githubusercontent.com/Tiger-Foxx/openpay/main/public/logo-pay.png',
+        iconUrl: 'https://raw.githubusercontent.com/Tiger-Foxx/openpay/main/public/favicon.png',
         liveUrl: 'https://openpay.the-fox.tech',
         githubUrl: 'https://github.com/Tiger-Foxx/openpay',
         buttonText: 'Tester OpenPay',
