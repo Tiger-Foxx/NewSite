@@ -99,6 +99,7 @@ export const AboutPage: React.FC = () => {
     };
 
     if (loading) {
+        console.log(staggerContainer)
         return (
             <div className="flex justify-center items-center min-h-screen bg-white dark:bg-black">
                 <div className="w-16 h-16 border-t-4 border-b-4 border-black dark:border-white rounded-full animate-spin"></div>
