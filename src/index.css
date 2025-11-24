@@ -1,6 +1,9 @@
 /* src/index.css */
 /*@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');*/
 
+/* src/index.css */
+/*@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');*/
+
 
 
 /*@tailwind base;*/
@@ -17,6 +20,11 @@
 
     body {
         @apply font-sans text-black dark:text-white bg-white dark:bg-black antialiased;
+        font-feature-settings: "ss01", "ss02", "cv01", "cv02";
+    }
+
+    ::selection {
+        @apply bg-black text-white dark:bg-white dark:text-black;
     }
 }
 
@@ -25,4 +33,17 @@
     transition-property: all;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 300ms;
+}
+
+.animate-pulse-slow {
+    animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: .5;
+    }
 }

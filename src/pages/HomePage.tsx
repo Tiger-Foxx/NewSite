@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
-import {HeroSection} from "@/components/Home/HeroSection.tsx";
-import {FeaturedProjects} from "@/components/Home/FeaturedProjects.tsx";
-import {ServicesSection} from "@/components/Home/ServicesSection.tsx";
-import {RecentBlogPostsSection} from "@/components/Home/RecentBlogPostsSection.tsx";
-import {CtaSection} from "@/components/Home/CtaSection.tsx";
+import { HeroSection } from "@/components/Home/HeroSection.tsx";
+import { FeaturedProjects } from "@/components/Home/FeaturedProjects.tsx";
+import { OpenSourceTools } from "@/components/Home/OpenSourceTools.tsx";
+import { ServicesSection } from "@/components/Home/ServicesSection.tsx";
+import { RecentBlogPostsSection } from "@/components/Home/RecentBlogPostsSection.tsx";
+import { CtaSection } from "@/components/Home/CtaSection.tsx";
 
 
 export const HomePage: React.FC = () => {
@@ -39,9 +40,11 @@ export const HomePage: React.FC = () => {
     return (
         <main className="bg-white dark:bg-black text-black dark:text-white">
             <HeroSection />
-            <FeaturedProjects />
+
+            <OpenSourceTools />
             <ServicesSection />
             <RecentBlogPostsSection />
+            <FeaturedProjects />
             <CtaSection />
         </main>
     );

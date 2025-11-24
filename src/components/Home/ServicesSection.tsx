@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 
 interface Service {
     icon: React.ReactNode;
@@ -65,36 +66,35 @@ export const ServicesSection: React.FC = () => {
     ];
 
     return (
-        <section id="services" className="py-20 md:py-28 bg-white dark:bg-black">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center mb-12 md:mb-16">
-          <span className="inline-block mb-2 px-3 py-1 text-xs font-semibold uppercase tracking-wider bg-gray-100 dark:bg-gray-800 text-black dark:text-white rounded-full">
-            Services
-          </span>
-                    <h2 className="text-3xl md:text-4xl font-bold text-black dark:text-white mb-4">
-                        Nos Expertises
+        <section className="py-32 bg-gray-50 dark:bg-black border-t border-gray-200 dark:border-gray-900">
+            <div className="max-w-7xl mx-auto px-6 lg:px-8">
+                <div className="mb-20">
+                    <h2 className="text-4xl md:text-6xl font-bold tracking-tighter text-black dark:text-white mb-6">
+                        Expertise
                     </h2>
-                    <p className="max-w-2xl mx-auto text-lg text-gray-600 dark:text-gray-400">
-                        Des solutions complètes pour tous vos besoins en développement et sécurité informatique.
-                    </p>
+                    <div className="w-full h-px bg-gray-200 dark:bg-gray-800" />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16">
                     {services.map((service, index) => (
-                        <div
+                        <motion.div
                             key={index}
-                            className="group bg-gray-50 dark:bg-gray-900/70 rounded-xl p-8 shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 border border-gray-200/50 dark:border-gray-800/50"
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: index * 0.1 }}
+                            className="group"
                         >
-                            <div className="w-14 h-14 bg-white dark:bg-black rounded-lg flex items-center justify-center mb-6 text-black dark:text-white shadow-sm group-hover:shadow group-hover:-translate-y-1 transition-all duration-300">
+                            <div className="mb-6 text-black dark:text-white opacity-80 group-hover:opacity-100 transition-opacity duration-300 transform group-hover:scale-110 origin-left">
                                 {service.icon}
                             </div>
-                            <h3 className="text-xl font-bold text-black dark:text-white mb-3">
+                            <h3 className="text-2xl font-semibold text-black dark:text-white mb-4 flex items-center">
                                 {service.title}
                             </h3>
-                            <p className="text-gray-600 dark:text-gray-400">
+                            <p className="text-lg text-gray-600 dark:text-gray-400 pl-6 border-l border-gray-200 dark:border-gray-800 group-hover:border-black dark:group-hover:border-white transition-colors duration-300">
                                 {service.description}
                             </p>
-                        </div>
+                        </motion.div>
                     ))}
                 </div>
             </div>
