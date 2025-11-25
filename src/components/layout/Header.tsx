@@ -90,19 +90,21 @@ export const Header: React.FC = () => {
                 animate={{ y: (headerVisible || mobileMenuOpen) ? 0 : -100 }}
                 transition={{ duration: 0.3, ease: 'easeInOut' }}
                 className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${shouldHaveBackground
-                        ? 'bg-white/90 dark:bg-black/90 backdrop-blur-lg border-b border-gray-200/50 dark:border-gray-800/50 shadow-sm'
-                        : 'bg-transparent'
+                    ? 'bg-white/90 dark:bg-black/90 backdrop-blur-lg border-b border-gray-200/50 dark:border-gray-800/50 shadow-sm'
+                    : 'bg-transparent'
                     }`}
             >
                 <div className="max-w-7xl mx-auto px-6 lg:px-8">
                     <div className="flex justify-between items-center h-20">
-                        {/* Logo */}
-                        <Link to="/" className="relative z-50 flex items-center gap-2">
-                            {/* Remplace par ton image si tu veux, ici un exemple textuel stylé */}
-                            <span className="text-xl font-bold tracking-tighter text-black dark:text-white">
-                                FOX<span className="text-blue-600">.</span>
-                            </span>
+                        {/* --- TON LOGO REMIS ICI --- */}
+                        <Link to="/" className="relative z-50 flex items-center">
+                            <img
+                                src="/logo-fox-light.png"
+                                alt="Fox Logo"
+                                className="h-8 md:h-10 w-auto object-contain"
+                            />
                         </Link>
+                        {/* -------------------------- */}
 
                         {/* Desktop Navigation */}
                         <nav className="hidden md:flex items-center space-x-8">
@@ -111,15 +113,15 @@ export const Header: React.FC = () => {
                                     key={item.path}
                                     to={item.path}
                                     className={`relative text-sm font-medium transition-colors duration-300 ${isActive(item.path)
-                                            ? 'text-black dark:text-white'
-                                            : 'text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white'
+                                        ? 'text-black dark:text-white'
+                                        : 'text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white'
                                         }`}
                                 >
                                     {item.name}
                                     {isActive(item.path) && (
                                         <motion.div
                                             layoutId="underline"
-                                            className="absolute -bottom-1 left-0 w-full h-0.5 bg-blue-600 rounded-full"
+                                            className="absolute -bottom-1 left-0 w-full h-0.5 bg-white rounded-full"
                                         />
                                     )}
                                 </Link>
@@ -175,8 +177,8 @@ export const Header: React.FC = () => {
                                         to={item.path}
                                         onClick={() => setMobileMenuOpen(false)}
                                         className={`text-4xl font-medium tracking-tight transition-colors ${isActive(item.path)
-                                                ? 'text-blue-600 dark:text-blue-400'
-                                                : 'text-black dark:text-white hover:text-gray-500'
+                                            ? 'text-white dark:text-white underline'
+                                            : 'text-black dark:text-white hover:text-gray-500'
                                             }`}
                                     >
                                         {item.name}
