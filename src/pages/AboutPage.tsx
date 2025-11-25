@@ -29,50 +29,50 @@ export const AboutPage: React.FC = () => {
         { name: 'UX/UI Design', level: 78, categories: ['Design'] },
         { name: 'DevOps', level: 70, categories: ['Infra', 'CI/CD'] },
         { name: 'Machine Learning', level: 75, categories: ['IA'] },
-        { name: 'Management ', level: 99, categories: ['collaboration'] }
+        { name: 'Management', level: 99, categories: ['collaboration'] }
     ];
 
     // Milestones de carrière
     const milestones = [
         {
-            year: 'Today ! ',
+            year: 'Today !',
             title: 'JE ME FORME AUX OUTILS D\'IA ET JE MENE UN CERTAIN PROJET DE RECHERCHE',
-            description: 'Oui, le monde de la recherche m\'ouvre ses portes et je dois dire qu\'il est plutot interressant .. pour le moment le projet reste secret mais bientot on en parle'
+            description: 'Oui, le monde de la recherche m\'ouvre ses portes et je dois dire qu\'il est plutôt intéressant... pour le moment le projet reste secret mais bientôt on en parle'
         },
         {
-            year: 'Aout 2024 - Aout 2025',
+            year: 'Août 2024 - Août 2025',
             title: 'JE BOOSTE TOUT AU MACHINE LEARNING/IA',
             description: 'Oui, je sais : \'Toujours eu du mal à me poser exactement dans mon domaine tranquille\', il faut toujours que je l\'affine avec d\'autres.'
         },
         {
             year: 'Sept 2023 - Juin 2024',
-            title: 'La Cyber , c\'est mon univers',
+            title: 'La Cyber, c\'est mon univers',
             description: 'Ces derniers mois, et années ma passion pour la cybersécurité est devenue mon focus principal. J\'ai développé plusieurs outils spécialisés.'
         },
         {
             year: 'Fév 2024 - Mai 2024',
-            title: 'Immergé Spring Boot , JEE ...etc ',
-            description: 'Un réseau social scolaire ou encore une application de monétisation. Ce fut une période où j\'ai vraiment mis les bouchées doubles dans les technos java ,  et en Front niveau JS halala que c\'était bon. Biensur la cyber-secu est restée ma passion principale'
+            title: 'Immergé Spring Boot, JEE... etc',
+            description: 'Un réseau social scolaire ou encore une application de monétisation. Ce fut une période où j\'ai vraiment mis les bouchées doubles dans les technos java, et en Front niveau JS halala que c\'était bon. Bien sûr la cyber-sécu est restée ma passion principale'
         },
         {
             year: 'Août 2023 - Jan 2024',
-            title: 'Une drole de Passion pour le machine learning avancé',
-            description: 'Etant un grand Passoné de cyber , j\'ai toujours eu l\'habitude de touhcer un peu à tout. Mais si on m\'avais dis que le ML allait m\'interresser autant...'
+            title: 'Une drôle de Passion pour le machine learning avancé',
+            description: 'Étant un grand Passionné de cyber, j\'ai toujours eu l\'habitude de toucher un peu à tout. Mais si on m\'avait dit que le ML allait m\'intéresser autant...'
         },
         {
             year: 'Fév 2022 - Juil 2023',
-            title: 'Développement Mobile ...Flutter',
-            description: 'Avec Flutter, j\'ai pu enchaîner les projets, notamment pour des clients dans le monde de la crypto. Une realisation dont je suis particulièrement fier dans cette période est Zenfamili mon béébééé'
+            title: 'Développement Mobile... Flutter',
+            description: 'Avec Flutter, j\'ai pu enchaîner les projets, notamment pour des clients dans le monde de la crypto. Une réalisation dont je suis particulièrement fier dans cette période est Zenfamili mon bébé'
         },
         {
             year: 'Sept 2021 - Janv 2022',
-            title: 'Développement Web .. c\'eatit le moment',
-            description: 'Ah, Django ! J’ai passé ces mois à travailler sur des projets persos à but non lucratif et d\'autres pour des clients, je me demande bien pourquoi je suis tant omnibulé par cette techno.'
+            title: 'Développement Web... c\'était le moment',
+            description: 'Ah, Django ! J\'ai passé ces mois à travailler sur des projets persos à but non lucratif et d\'autres pour des clients, je me demande bien pourquoi je suis tant obnubilé par cette techno.'
         },
         {
             year: 'Juin 2020 - Août 2021',
-            title: 'Ingenieur Logiciel niveau galactique',
-            description: 'Que ce soit pour des jeux vidéo, des outils  ou des utilitaires avancés, Python était mon langage de prédilection pour ce genre de travaux.'
+            title: 'Ingénieur Logiciel niveau galactique',
+            description: 'Que ce soit pour des jeux vidéo, des outils ou des utilitaires avancés, Python était mon langage de prédilection pour ce genre de travaux.'
         },
 
     ];
