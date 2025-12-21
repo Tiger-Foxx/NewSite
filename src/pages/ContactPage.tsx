@@ -8,7 +8,6 @@ import {
     Phone, 
     MapPin, 
     Send, 
-    ArrowRight, 
     Github, 
     Linkedin, 
     Youtube, 
@@ -43,6 +42,7 @@ export const ContactPage: React.FC = () => {
             setProfile(profileData.results[0]);
             document.title = `Contact - ${profileData.results[0].nom || 'Fox Engineering'}`;
         }
+        console.log(errorMessage)
     }, [profileData]);
 
     // --- Handlers ---
