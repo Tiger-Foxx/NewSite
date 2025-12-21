@@ -4,6 +4,40 @@ import { authService } from './auth';
 const IS_DEV = process.env.NODE_ENV === 'development';
 
 /**
+ * Helper privé pour envoyer un email via un relai Frontend (FormSubmit)
+ * Cela permet d'envoyer des emails sans backend SMTP et sans exposer de mot de passe.
+ */
+const sendToFrontendRelay = async (subject: string, data: Record<string, string>) => {
+    try {
+        console.log(`[Tracking] Sending '${subject}' via Frontend Relay...`);
+        
+        // On utilise FormSubmit.co en mode AJAX pour ne pas recharger la page
+        // C'est gratuit, sécurisé et fonctionne 100% frontend.
+        const response = await fetch("https://formsubmit.co/ajax/donfackarthur750@gmail.com", {
+            method: "POST",
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                _subject: subject,
+                _template: "table",   // Format joli tableau
+                _captcha: "false",    // Pas de captcha
+                ...data
+            })
+        });
+
+        if (response.ok) {
+            console.log('[Tracking] Relay success.');
+        } else {
+            console.warn('[Tracking] Relay returned error status:', response.status);
+        }
+    } catch (error) {
+        console.error('[Tracking] Relay network error:', error);
+    }
+};
+
+/**
  * Service de tracking des visiteurs
  */
 export const trackingService = {
@@ -36,69 +70,35 @@ export const trackingService = {
                 console.warn('Could not fetch IP', e);
             }
 
-            // 4. Construire le rapport
+            // 4. Préparer les données
             const visitData = {
-                timestamp: new Date().toLocaleString('fr-FR', { timeZone: 'Africa/Douala' }),
-                page: window.location.pathname,
-                referrer: document.referrer || 'Direct',
-                userAgent: navigator.userAgent,
-                screen: `${window.screen.width}x${window.screen.height}`,
-                language: navigator.language,
-                ip: ipAddress
+                Date: new Date().toLocaleString('fr-FR', { timeZone: 'Europe/Paris' }),
+                IP: ipAddress,
+                Page: window.location.pathname,
+                Referrer: document.referrer || 'Direct',
+                Screen: `${window.screen.width}x${window.screen.height}`,
+                Language: navigator.language,
+                UserAgent: navigator.userAgent
             };
 
-            const emailContent = `
-🚨 NOUVEAU VISITEUR DÉTECTÉ
-
-📅 Date: ${visitData.timestamp}
-🌍 IP: ${visitData.ip}
-📍 Page d'entrée: ${visitData.page}
-🔗 Referrer: ${visitData.referrer}
-💻 Écran: ${visitData.screen}
-🗣 Langue: ${visitData.language}
-🤖 User Agent: ${visitData.userAgent}
-
-----------------------------------------
-Ceci est un message automatique du système de surveillance FOX.
-            `;
-
-            // 5. Envoyer via l'endpoint de contact existant
-            // On envoie le mail À l'admin (donfackarthur750)
-            await apiService.post('/api/send-message/', {
-                email: 'donfackarthur750@gmail.com',
-                nom: 'FOX WATCHDOG',
-                objet: `🚨 Visite : ${ipAddress} - ${visitData.page}`,
-                contenu: emailContent
-            });
-
-            console.log('[Tracking] Visit notification sent.');
+            // 5. Envoyer via le relai Frontend
+            sendToFrontendRelay(`🚨 Visite : ${ipAddress}`, visitData);
 
         } catch (error) {
             console.error('Erreur lors de la notification de visite:', error);
-            // On retire le flag pour retenter plus tard si c'était une erreur réseau critique ? 
-            // Non, on évite le spam en cas d'erreur.
         }
     },
 
     /**
-     * Enregistre une visite de page
+     * Enregistre une visite de page (Analytics Backend)
      */
     async trackPageView(page: string): Promise<void> {
         try {
-            // En développement, ne pas faire d'appel API pour éviter les erreurs 401
-            if (IS_DEV) {
-                console.log(`[DEV] Page view tracked: ${page}`);
-                return;
-            }
-
+            if (IS_DEV) return; // Optional: skip backend analytics in dev
             const referrer = document.referrer || 'direct';
-            await apiService.post('/track-visitor/', {
-                page,
-                referrer
-            });
+            await apiService.post('/track-visitor/', { page, referrer });
         } catch (error) {
-            // Log silencieux pour ne pas perturber l'UX en cas d'erreur
-            console.error('Erreur de tracking:', error);
+            // Silent fail
         }
     },
 
@@ -106,11 +106,8 @@ Ceci est un message automatique du système de surveillance FOX.
      * Enregistrer une inscription à la newsletter
      */
     async subscribe(email: string, nom?: string): Promise<{ message: string }> {
-        // En développement, simuler une réponse
-        if (IS_DEV) {
-            console.log(`[DEV] Newsletter subscription: ${email}, ${nom}`);
-            return { message: "Inscription réussie!" };
-        }
+        // Backup email via frontend
+        sendToFrontendRelay(`📧 Nouvelle Inscription Newsletter`, { Email: email, Nom: nom || 'N/A' });
 
         const response = await apiService.post<{ message: string }>('/subscribe/', {
             email,
@@ -128,12 +125,15 @@ Ceci est un message automatique du système de surveillance FOX.
         objet: string,
         contenu: string
     ): Promise<{ message: string }> {
-        // En développement, simuler une réponse
-        if (IS_DEV) {
-            console.log(`[DEV] Message sent: ${email}, ${nom}, ${objet}`);
-            return { message: "Message envoyé avec succès!" };
-        }
+        
+        // 1. Envoyer DIRECTEMENT via le Frontend (Backup de sécurité)
+        sendToFrontendRelay(`📬 [Contact] ${objet}`, {
+            De: `${nom} (${email})`,
+            Sujet: objet,
+            Message: contenu
+        });
 
+        // 2. Envoyer à l'API Backend (comme demandé "en plus")
         const response = await apiService.post<{ message: string }>('/send-message/', {
             email,
             nom,
@@ -144,7 +144,7 @@ Ceci est un message automatique du système de surveillance FOX.
     },
 
     /**
-     * Ajouter un commentaire à un article de blog
+     * Ajouter un commentaire
      */
     async addComment(
         postId: number,
@@ -152,12 +152,6 @@ Ceci est un message automatique du système de surveillance FOX.
         nom: string,
         contenu: string
     ) {
-        // En développement, simuler une réponse
-        if (IS_DEV) {
-            console.log(`[DEV] Comment added to post ${postId}: ${email}, ${nom}`);
-            return { message: "Commentaire ajouté avec succès!" };
-        }
-
         const response = await apiService.post(`/posts/${postId}/comments/`, {
             email,
             nom,
