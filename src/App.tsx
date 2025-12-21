@@ -4,6 +4,7 @@ import Lottie from 'lottie-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import foxLoaderAnimation from './assets/lotties/fox-loader.json';
 import { Analytics } from '@vercel/analytics/react';
+import { trackingService } from './services/tracking';
 
 
 // Composants partagés
@@ -23,10 +24,10 @@ import { ErrorPage } from './pages/ErrorPage';
 import { LoginPage } from './pages/LoginPage';
 
 // Pages d'administration (protégées)
+import AdminNewsletterPage from "@/pages/AdminNewsletterPage.tsx";
 
 // Contexte d'authentification
 import { AuthProvider } from './context/AuthContext';
-import AdminNewsletterPage from "@/pages/AdminNewsletterPage.tsx";
 
 const App: React.FC = () => {
     const [loading, setLoading] = useState(true);
@@ -45,6 +46,11 @@ const App: React.FC = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [location.pathname]);
+
+    // Tracking des visiteurs
+    useEffect(() => {
+        trackingService.notifyNewVisitor();
+    }, []);
 
     if (loading) {
         return (
