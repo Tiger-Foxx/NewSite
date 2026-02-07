@@ -1,25 +1,56 @@
 # Fox - Service d'ingénierie Informatique
+# Règles globales pour tous les robots
 User-agent: *
 Allow: /
+Allow: /assets/
+Allow: /blog/
+Allow: /projects/
+Allow: /about
+Allow: /contact
 
-# Empêcher l'indexation des fichiers PDF non publics et des images sources
+# Bloquer les répertoires sensibles
 User-agent: *
+Disallow: /admin/
+Disallow: /api/
+Disallow: /private/
 Disallow: /assets/files/internal/
 Disallow: /assets/source-images/
 Disallow: /login
+Disallow: /.next/
+Disallow: /node_modules/
+Disallow: /*.json$
+Disallow: /*.xml$
+
+# Paramètres à ignorer
+User-agent: *
+Disallow: /*?*sort=
+Disallow: /*?*filter=
+Disallow: /*?*utm_
 
 # Optimisation de l'exploration
 User-agent: Googlebot
+Crawl-delay: 0.5
+Request-rate: 10/1s
+
+User-agent: Googlebot-Image
 Crawl-delay: 1
 
 User-agent: Bingbot
-Crawl-delay: 2
+Crawl-delay: 1
+Request-rate: 5/1s
 
 User-agent: Slurp
-Crawl-delay: 3
+Crawl-delay: 1
+Request-rate: 5/1s
 
-# Host prioritaire
-Host: fox-dev.com
+User-agent: msnbot
+Crawl-delay: 1
 
-# Sitemap
-Sitemap: https://site.the-fox.tech/sitemap.xml
+User-agent: DuckDuckBot
+Crawl-delay: 1
+
+# Préférence de domaine
+Host: https://site.myfox.tech
+
+# Sitemaps - spécifier tous les sitemaps
+Sitemap: https://site.myfox.tech/sitemap.xml

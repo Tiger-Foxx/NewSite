@@ -110,8 +110,8 @@ export const Footer: React.FC = () => {
                             <ul className="space-y-4">
                                 <li><a href="https://mood-music-fox.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors">Mood-Music</a></li>
                                 <li><a href="https://nan-cv.vercel.app" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors">NAN-CV</a></li>
-                                <li><a href="https://yt-learn.the-fox.tech/" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors">YT-Learn</a></li>
-                                <li><a href="https://foxy-blue-light.the-fox.tech" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors">FoxyBlueLight</a></li>
+                                <li><a href="https://yt-learn.myfox.tech/" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors">YT-Learn</a></li>
+                                <li><a href="https://foxy-blue-light.myfox.tech" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors">FoxyBlueLight</a></li>
                             </ul>
                         </div>
 

@@ -59,12 +59,12 @@
   "related_applications": [
     {
       "platform": "windows",
-      "url": "https://foxy-blue-light.the-fox.tech",
+      "url": "https://foxy-blue-light.myfox.tech",
       "id": "FoxyBlueLight"
     },
     {
       "platform": "chrome",
-      "url": "https://yt-learn.the-fox.tech",
+      "url": "https://yt-learn.myfox.tech",
       "id": "YtLearn"
     }
   ],

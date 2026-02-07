@@ -26,7 +26,7 @@ export const BlogPostPage: React.FC = () => {
     const [subscribeStatus, setSubscribeStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
     const [errorMessage, setErrorMessage] = useState('');
 
-    const siteUrl = "https://site.the-fox.tech"; // Votre URL de base du site
+    const siteUrl = "https://site.myfox.tech"; // Votre URL de base du site
 
     const {
         data: postData,
