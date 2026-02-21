@@ -3,6 +3,9 @@ import { motion } from 'framer-motion';
 import { useApi } from '../hooks/useApi';
 import { Profile } from '../types';
 import { Link } from 'react-router-dom';
+import { ImageWithSkeleton } from '../components/ui/ImageWithSkeleton';
+import { Github, Linkedin, ArrowRight } from 'lucide-react';
+import meImage from '../assets/images/me.png';
 
 export const AboutPage: React.FC = () => {
     const [profile, setProfile] = useState<Profile | null>(null);
@@ -21,18 +24,18 @@ export const AboutPage: React.FC = () => {
         }
     }, [data]);
 
-    // Skills pour la section compétences
+    // Skills pour la section compétences avec logos (depuis devicon)
     const skills = [
-        { name: 'Software engineering', level: 98, categories: ['PC', 'Mobile', 'web'] },
-        { name: 'Cyber-sec RED-TEAM', level: 92, categories: ['Hacking'] },
-        { name: 'Cyber-sec BLUE-TEAM', level: 82, categories: ['Security'] },
-        { name: 'UX/UI Design', level: 78, categories: ['Design'] },
-        { name: 'DevOps', level: 70, categories: ['Infra', 'CI/CD'] },
-        { name: 'Machine Learning', level: 75, categories: ['IA'] },
-        { name: 'Management', level: 99, categories: ['collaboration'] }
+        { name: 'Software engineering', level: 98, categories: ['PC', 'Mobile', 'web'], icons: ['https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg', 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg', 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg', 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/flutter/flutter-original.svg'] },
+        { name: 'Cyber-sec RED-TEAM', level: 92, categories: ['Hacking'], icons: ['https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/bash/bash-original.svg', 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cplusplus/cplusplus-original.svg', 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/linux/linux-original.svg'] },
+        { name: 'Cyber-sec BLUE-TEAM', level: 82, categories: ['Security'], icons: ['https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/ubuntu/ubuntu-original.svg', 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg', 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cloudflare/cloudflare-original.svg'] },
+        { name: 'UX/UI Design', level: 78, categories: ['Design'], icons: ['https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg', 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/illustrator/illustrator-plain.svg'] },
+        { name: 'DevOps', level: 70, categories: ['Infra', 'CI/CD'], icons: ['https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg', 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg', 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/gitlab/gitlab-original.svg'] },
+        { name: 'Machine Learning', level: 75, categories: ['IA'], icons: ['https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg', 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tensorflow/tensorflow-original.svg', 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/pytorch/pytorch-original.svg'] },
+        { name: 'Management', level: 99, categories: ['collaboration'], icons: ['https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/jira/jira-original.svg', 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/trello/trello-original.svg', 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/slack/slack-original.svg'] }
     ];
 
-    // Milestones de carrière
+    // Milestones de carrière originaux textuellement préservés
     const milestones = [
         {
             year: 'Today !',
@@ -74,180 +77,170 @@ export const AboutPage: React.FC = () => {
             title: 'Ingénieur Logiciel niveau galactique',
             description: 'Que ce soit pour des jeux vidéo, des outils ou des utilitaires avancés, Python était mon langage de prédilection pour ce genre de travaux.'
         },
-
     ];
 
-    // Animation variants
-    const fadeInUp = {
-        hidden: { opacity: 0, y: 30 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: { duration: 0.6, ease: "easeOut" }
-        }
-    };
-
-    const staggerContainer = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.1,
-                delayChildren: 0.2
-            }
-        }
-    };
-
     if (loading) {
-        console.log(staggerContainer)
         return (
-            <div className="flex justify-center items-center min-h-screen bg-white dark:bg-black">
-                <div className="w-16 h-16 border-t-4 border-b-4 border-black dark:border-white rounded-full animate-spin"></div>
+            <div className="flex justify-center items-center min-h-screen bg-[#050505]">
+                <div className="w-16 h-16 border-t-2 border-white rounded-full animate-spin"></div>
             </div>
         );
     }
 
-    // Gérer les erreurs
     if (error) {
         return (
-            <div className="flex justify-center items-center min-h-screen bg-white dark:bg-black p-4">
-                <div className="max-w-md w-full bg-red-50 dark:bg-red-900/20 p-6 rounded-lg shadow-lg text-center">
-                    <p className="text-red-600 dark:text-red-400 mb-4">{error.message || "Une erreur est survenue."}</p>
-                    <button
-                        onClick={() => window.location.reload()}
-                        className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors duration-300"
-                    >
-                        Réessayer
-                    </button>
-                </div>
+            <div className="flex justify-center items-center min-h-screen bg-black p-4 text-white font-mono">
+                Erreur de chargement: {error.message}
             </div>
         );
     }
 
     return (
-        <main className="bg-white dark:bg-black min-h-screen text-black dark:text-white">
-            {/* Hero / Intro Section */}
-            <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
-                <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
-                    <div className="flex flex-col md:flex-row items-center gap-16">
-                        {/* Profile Image - Circular & Premium */}
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                            className="relative shrink-0"
+        <main className="bg-white dark:bg-[#050505] min-h-screen text-black dark:text-white selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black overflow-hidden font-sans pt-24 lg:pt-32">
+            
+            {/* HERO SECTION - Brutalist & Massive */}
+            <section className="px-6 md:px-12 lg:px-20 mb-32">
+                <div className="flex flex-col lg:flex-row items-start justify-between gap-12 border-b-[2px] border-black dark:border-white pb-20">
+                    
+                    {/* Typographie Calibrée et Élégante */}
+                    <div className="w-full lg:w-3/5">
+                        <motion.h1 
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, ease: "easeOut" }}
+                            className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 leading-tight"
                         >
-                            <div className="w-48 h-48 md:w-64 md:h-64 rounded-full p-1 bg-gradient-to-tr from-gray-200 to-transparent dark:from-gray-800">
-                                <div className="w-full h-full rounded-full overflow-hidden border-4 border-white dark:border-black shadow-2xl">
-                                    <img
-                                        src="https://avatars.githubusercontent.com/u/118616410?v=4"
-                                        alt="Fox Profile"
-                                        className="w-full h-full object-cover"
-                                    />
-                                </div>
-                            </div>
-                            {/* Decorative elements */}
-                            <div className="absolute -top-4 -right-4 w-24 h-24 bg-gray-100 dark:bg-gray-900 rounded-full -z-10 blur-2xl opacity-60"></div>
-                            <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-gray-200 dark:bg-gray-800 rounded-full -z-10 blur-3xl opacity-40"></div>
-                        </motion.div>
+                            Hello, I'm <br/>
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-500 to-black dark:from-white dark:to-gray-600">
+                                {profile?.nom || "Fox"}
+                            </span>
+                        </motion.h1>
 
-                        {/* Text Content */}
-                        <motion.div
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                            className="text-center md:text-left"
+                        <motion.div 
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 1, delay: 0.5 }}
+                            className="flex flex-col gap-6"
                         >
-                            <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6">
-                                Hello, I'm <br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-500 to-black dark:from-gray-400 dark:to-white">
-                                    {profile?.nom || "Fox"}
-                                </span>
-                            </h1>
-                            <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 max-w-2xl font-light leading-relaxed">
+                            <p className="text-xl md:text-2xl font-light tracking-wide max-w-2xl text-gray-500">
                                 {profile?.sousTitre || "Engineering Scientist passionné par l'innovation et la création de solutions performantes."}
                             </p>
-
-                            {/* Social Links */}
-                            <div className="mt-8 flex items-center justify-center md:justify-start gap-6">
+                            
+                            <div className="flex gap-4">
                                 {profile?.github && (
-                                    <a href={profile.github} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-black dark:hover:text-white transition-colors">
-                                        <span className="sr-only">GitHub</span>
-                                        <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" /></svg>
+                                    <a href={profile.github} target="_blank" rel="noopener noreferrer" className="p-3 border border-gray-300 dark:border-gray-700 hover:border-black dark:hover:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors rounded-full">
+                                        <Github className="w-5 h-5" />
                                     </a>
                                 )}
                                 {profile?.linkedIn && (
-                                    <a href={profile.linkedIn} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-black dark:hover:text-white transition-colors">
-                                        <span className="sr-only">LinkedIn</span>
-                                        <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" /></svg>
-                                    </a>
-                                )}
-                                {profile?.cv && (
-                                    <a href={profile.cv} target="_blank" rel="noopener noreferrer" className="px-6 py-2 bg-black dark:bg-white text-white dark:text-black rounded-full text-sm font-medium hover:opacity-80 transition-opacity">
-                                        CV
+                                    <a href={profile.linkedIn} target="_blank" rel="noopener noreferrer" className="p-3 border border-gray-300 dark:border-gray-700 hover:border-black dark:hover:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors rounded-full">
+                                        <Linkedin className="w-5 h-5" />
                                     </a>
                                 )}
                             </div>
+                            
+                            {/* Petite photo Pop Culture / Hacker Vibes */}
+                            <div className="mt-6 md:mt-10 lg:mt-12 group/pop flex items-start">
+                                <div className="p-2 rounded-2xl bg-gray-50/50 dark:bg-zinc-900/50 border border-gray-200 dark:border-zinc-800 backdrop-blur-sm">
+                                    <img 
+                                        src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=600&auto=format&fit=crop" 
+                                        alt="Matrix Code / Hacker Aesthetic"
+                                        className="h-24 md:h-32 w-auto max-w-[200px] object-cover rounded-xl filter grayscale group-hover/pop:grayscale-0 transition-all duration-700 shadow-sm"
+                                    />
+                                </div>
+                            </div>
                         </motion.div>
                     </div>
+
+                    {/* Image Profil Modérée */}
+                    <motion.div 
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+                        className="w-full lg:w-2/5 aspect-[4/5] relative overflow-hidden group"
+                    >
+                        <ImageWithSkeleton 
+                            src={meImage}
+                            alt="Fox Profile"
+                            className="w-full h-full object-cover filter grayscale-75 transition-all duration-700 group-hover:grayscale-0"
+                            containerClassName="rounded-3xl shadow-2xl"
+                        />
+                        <div className="absolute inset-0 border-[2px] border-black/10 dark:border-white/10 rounded-3xl pointer-events-none z-10" />
+                        
+                        {profile?.cv && (
+                            <a href={profile.cv} target="_blank" rel="noopener noreferrer" className="absolute bottom-6 right-6 z-20 px-6 py-3 bg-white dark:bg-black text-black dark:text-white font-bold tracking-widest text-xs shadow-xl rounded-full hover:scale-105 transition-transform">
+                                CV
+                            </a>
+                        )}
+                    </motion.div>
                 </div>
             </section>
 
-            {/* Bio Section */}
+            {/* BIO QUOTE */}
             {profile && (
-                <section className="py-20 bg-gray-50 dark:bg-gray-900/30">
-                    <div className="max-w-4xl mx-auto px-6 lg:px-8">
-                        <motion.div
-                            variants={fadeInUp}
-                            initial="hidden"
-                            whileInView="visible"
-                            viewport={{ once: true }}
-                            className="prose prose-lg dark:prose-invert mx-auto text-center"
-                        >
-                            <p className="text-2xl md:text-3xl font-medium leading-relaxed text-gray-800 dark:text-gray-200">
-                                "{profile.descriptionP1}"
-                            </p>
-                            <p className="mt-8 text-lg text-gray-600 dark:text-gray-400">
-                                {profile.descriptionP2}
-                            </p>
-                        </motion.div>
-                    </div>
+                <section className="px-6 md:px-12 lg:px-20 mb-32">
+                    <motion.div 
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-100px" }}
+                        transition={{ duration: 0.8 }}
+                        className="max-w-4xl mx-auto text-center"
+                    >
+                        <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold leading-relaxed mb-8 text-black dark:text-white">
+                            "{profile.descriptionP1}"
+                        </h2>
+                        <div className="w-24 h-1 bg-gray-300 dark:bg-gray-700 mx-auto mb-8" />
+                        <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 leading-relaxed font-light">
+                            {profile.descriptionP2}
+                        </p>
+                    </motion.div>
                 </section>
             )}
 
-            {/* Skills Section */}
-            <section className="py-32">
-                <div className="max-w-7xl mx-auto px-6 lg:px-8">
+            {/* EXPERTISE GRID */}
+            <section className="bg-gray-50 dark:bg-gray-900/30 py-32 px-6 md:px-12 lg:px-20 mb-32">
+                <div className="max-w-7xl mx-auto">
                     <div className="mb-20 border-b border-gray-200 dark:border-gray-800 pb-8">
-                        <h2 className="text-4xl md:text-6xl font-bold tracking-tighter">Expertise</h2>
+                        <h2 className="text-4xl md:text-5xl font-bold tracking-tight">Expertise</h2>
                     </div>
-
+                    
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
                         {skills.map((skill, index) => (
-                            <motion.div
+                            <motion.div 
                                 key={index}
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                transition={{ delay: index * 0.05 }}
+                                transition={{ duration: 0.5, delay: index * 0.05 }}
                             >
                                 <div className="flex justify-between items-end mb-4">
-                                    <h3 className="text-xl font-medium">{skill.name}</h3>
+                                    <div className="flex items-center gap-3">
+                                        <h3 className="text-xl font-medium">{skill.name}</h3>
+                                    </div>
                                     <span className="text-sm text-gray-500 font-mono">{skill.level}%</span>
                                 </div>
-                                <div className="w-full h-1 bg-gray-100 dark:bg-gray-800 overflow-hidden">
+                                <div className="w-full h-1 bg-gray-200 dark:bg-gray-800 overflow-hidden rounded-full mb-3">
                                     <motion.div
-                                        className="h-full bg-black dark:bg-white"
+                                        className="h-full bg-black dark:bg-white rounded-full"
                                         initial={{ width: 0 }}
                                         whileInView={{ width: `${skill.level}%` }}
                                         viewport={{ once: true }}
                                         transition={{ duration: 1, ease: "easeOut" }}
                                     />
                                 </div>
-                                <div className="mt-3 flex gap-2">
-                                    {skill.categories.map((cat, i) => (
-                                        <span key={i} className="text-xs text-gray-500 uppercase tracking-wider">{cat}</span>
-                                    ))}
+                                <div className="flex flex-wrap items-center justify-between gap-2 mt-4">
+                                    <div className="flex gap-2">
+                                        {skill.categories.map((cat, i) => (
+                                            <span key={i} className="text-xs text-gray-500 uppercase tracking-wider">
+                                                {cat} {i < skill.categories.length - 1 && '•'}
+                                            </span>
+                                        ))}
+                                    </div>
+                                    <div className="flex gap-2 bg-gray-100 dark:bg-gray-800 p-1.5 rounded-lg border border-gray-200 dark:border-gray-700">
+                                        {skill.icons.map((icon, i) => (
+                                            <img key={i} src={icon} alt="tech logo" className="w-5 h-5 object-contain filter drop-shadow-sm grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500" />
+                                        ))}
+                                    </div>
                                 </div>
                             </motion.div>
                         ))}
@@ -255,60 +248,62 @@ export const AboutPage: React.FC = () => {
                 </div>
             </section>
 
-            {/* Journey Section */}
-            <section className="py-32 bg-black text-white dark:bg-white dark:text-black">
-                <div className="max-w-7xl mx-auto px-6 lg:px-8">
-                    <div className="mb-20">
-                        <h2 className="text-4xl md:text-6xl font-bold tracking-tighter">Parcours</h2>
-                    </div>
+            {/* JOURNEY LOG */}
+            <section className="px-6 md:px-12 lg:px-20 mb-40">
+                <div className="mb-24 flex items-end justify-between border-b-[2px] border-black dark:border-white pb-6">
+                    <h2 className="text-5xl md:text-[6vw] font-black uppercase tracking-tighter leading-none">
+                        PARCOURS.
+                    </h2>
+                    <span className="text-sm font-bold uppercase tracking-widest text-gray-500 hidden md:block">
+                        HISTORIQUE DES MISSIONS
+                    </span>
+                </div>
 
-                    <div className="relative border-l border-white/20 dark:border-black/20 ml-4 md:ml-0 md:border-l-0">
-                        <div className="space-y-16">
-                            {milestones.map((milestone, index) => (
-                                <motion.div
-                                    key={index}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    className="relative md:grid md:grid-cols-12 md:gap-8"
-                                >
-                                    {/* Year */}
-                                    <div className="md:col-span-3 mb-2 md:mb-0 pl-8 md:pl-0 md:text-right">
-                                        <span className="text-sm font-mono opacity-60">{milestone.year}</span>
-                                    </div>
-
-                                    {/* Content */}
-                                    <div className="md:col-span-9 pl-8 md:pl-0 md:border-l md:border-white/20 md:dark:border-black/20 md:pl-12 relative">
-                                        {/* Dot */}
-                                        <div className="absolute left-[-5px] md:left-[-5px] top-2 w-2.5 h-2.5 bg-white dark:bg-black rounded-full ring-4 ring-black dark:ring-white"></div>
-
-                                        <h3 className="text-2xl font-bold mb-4 leading-tight">{milestone.title}</h3>
-                                        <p className="text-lg opacity-80 font-light leading-relaxed max-w-3xl">
-                                            {milestone.description}
-                                        </p>
-                                    </div>
-                                </motion.div>
-                            ))}
-                        </div>
-                    </div>
+                <div className="space-y-0">
+                    {milestones.map((milestone, index) => (
+                        <motion.div 
+                            key={index}
+                            initial={{ opacity: 0, y: 50 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, margin: "-100px" }}
+                            transition={{ duration: 0.8 }}
+                            className="flex flex-col lg:flex-row gap-8 lg:gap-16 py-16 border-b border-gray-200 dark:border-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-900/50 transition-colors px-6 lg:-mx-6 cursor-default group"
+                        >
+                            <div className="lg:w-1/4 shrink-0">
+                                <span className="text-2xl font-mono font-bold text-gray-400 group-hover:text-black dark:group-hover:text-white transition-colors block">
+                                    {milestone.year}
+                                </span>
+                            </div>
+                            
+                            <div className="lg:w-3/4">
+                                {/* Title exactly as user asked */}
+                                <h3 className="text-2xl md:text-3xl font-bold tracking-tight leading-snug mb-4">
+                                    {milestone.title}
+                                </h3>
+                                {/* Description exactly as user asked */}
+                                <p className="text-xl font-light text-gray-600 dark:text-gray-400 leading-relaxed max-w-3xl">
+                                    {milestone.description}
+                                </p>
+                            </div>
+                        </motion.div>
+                    ))}
                 </div>
             </section>
 
-            {/* CTA */}
-            <section className="py-32 text-center">
-                <div className="max-w-3xl mx-auto px-6">
-                    <h2 className="text-4xl md:text-5xl font-bold mb-8 tracking-tight">
-                        Prêt à créer quelque chose d'unique ?
-                    </h2>
-                    <div className="flex flex-col sm:flex-row justify-center gap-6">
-                        <Link to="/contact" className="px-8 py-4 bg-black dark:bg-white text-white dark:text-black rounded-full font-medium hover:opacity-90 transition-opacity">
-                            Me contacter
-                        </Link>
-                        <Link to="/projects" className="px-8 py-4 border border-gray-200 dark:border-gray-800 rounded-full font-medium hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
-                            Voir mes projets
-                        </Link>
+            {/* CTA Brutalist Block */}
+            <section className="px-6 md:px-12 lg:px-20 mb-32 flex justify-center">
+                <Link 
+                    to="/contact"
+                    className="group relative flex flex-col md:flex-row items-center justify-center w-full max-w-5xl aspect-video md:aspect-[21/9] border-[2px] border-black dark:border-white overflow-hidden bg-white dark:bg-[#050505]"
+                >
+                    <div className="absolute inset-0 bg-black dark:bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out z-0" />
+                    <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 mix-blend-difference text-white">
+                        <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight text-center px-4">
+                            Prêt à créer quelque chose d'unique ?
+                        </h2>
+                        <ArrowRight className="w-10 h-10 md:w-16 md:h-16 group-hover:translate-x-4 transition-transform duration-300" />
                     </div>
-                </div>
+                </Link>
             </section>
         </main>
     );

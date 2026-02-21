@@ -7,7 +7,6 @@ import {
     Mail, 
     Phone, 
     MapPin, 
-    Send, 
     Github, 
     Linkedin, 
     Youtube, 
@@ -15,8 +14,11 @@ import {
     Facebook,
     Plus,
     Minus,
-    MessageSquare
+    ArrowRight
 } from 'lucide-react';
+import Lottie from 'lottie-react';
+import foxTyping from '../assets/lotties/fox-loader.json';
+import foxZen from '../assets/lotties/fox-zen.json';
 
 export const ContactPage: React.FC = () => {
     // --- State ---
@@ -30,6 +32,7 @@ export const ContactPage: React.FC = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const [profile, setProfile] = useState<Profile | null>(null);
     const [activeAccordion, setActiveAccordion] = useState<number | null>(null);
+    const [focusedInput, setFocusedInput] = useState<string | null>(null);
 
     // --- API Calls ---
     const { data: profileData } = useApi<Profile>({
@@ -40,9 +43,9 @@ export const ContactPage: React.FC = () => {
     useEffect(() => {
         if (profileData && profileData.results && profileData.results.length > 0) {
             setProfile(profileData.results[0]);
-            document.title = `Contact - ${profileData.results[0].nom || 'Fox Engineering'}`;
+            document.title = `Lancer un projet - ${profileData.results[0].nom || 'Fox Engineering'}`;
         }
-        console.log(errorMessage)
+        console.log(errorMessage);
     }, [profileData]);
 
     // --- Handlers ---
@@ -84,208 +87,181 @@ export const ContactPage: React.FC = () => {
     const faqs = [
         {
             q: "Quels sont vos délais habituels ?",
-            a: "Les délais varient selon la complexité. Un site vitrine peut prendre 2 à 3 semaines, tandis qu'une plateforme SaaS complète peut prendre 1 à 3 mois. Je fournis une feuille de route détaillée avant chaque début de projet."
+            a: "L'excellence prend du temps. Un site vitrine premium s'établit sur 1 semaine. Les architectures SaaS ou mobiles demandent 2 semaines à 1 mois. Une roadmap chirurgicale vous est fournie post-audit."
         },
         {
-            q: "Comment se déroule la collaboration ?",
-            a: "Nous commençons par un appel de découverte. Ensuite, j'envoie une proposition. Une fois approuvée, nous passons à la conception/prototypage, des sprints de développement réguliers avec des points d'étape, et enfin le lancement + support."
+            q: "Comment se déroule le workflow ?",
+            a: "1. Appel stratégique (30min). 2. Proposition architecturale. 3. Sprints de développement transparents. 4. QA & Déploiement. 5. Maintenance proactive."
         },
-        {
-            q: "Proposez-vous de la maintenance ?",
-            a: "Absolument. Je propose des forfaits mensuels pour les correctifs de sécurité, les mises à jour, les sauvegardes, et pour m'assurer que votre actif numérique reste impeccable."
-        },
-        {
-            q: "Quelle est votre pile technologique ?",
-            a: "Mon arsenal comprend React (Next.js/Vite), TypeScript, Node.js, Python (Django/FastAPI), et des infrastructures cloud comme AWS/Vercel. Je choisis le meilleur outil pour chaque mission."
-        }
+       
     ];
 
     return (
-        <main className="bg-white dark:bg-black min-h-screen relative overflow-hidden selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black">
-            {/* Ambient Noise */}
-            <div className="fixed inset-0 pointer-events-none z-50 opacity-[0.04] bg-[url('/noise.png')] mix-blend-overlay"></div>
+        <main className="bg-white dark:bg-[#050505] min-h-screen relative selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black font-sans overflow-x-hidden">
             
-            {/* Split Layout Container */}
             <div className="flex flex-col lg:flex-row min-h-screen">
                 
-                {/* --- Left Panel: Sticky Info --- */}
-                <section className="lg:w-5/12 lg:h-screen lg:sticky lg:top-0 bg-gray-50 dark:bg-zinc-900 border-r border-gray-200 dark:border-zinc-800 p-8 md:p-12 flex flex-col justify-between overflow-hidden relative">
-                    <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/5 dark:bg-blue-400/5 rounded-full blur-3xl pointer-events-none -translate-y-1/2 translate-x-1/2" />
+                {/* --- Left Panel: The Grand Form & FAQ --- */}
+                <section className="w-full lg:w-[55%] bg-white dark:bg-[#050505] min-h-screen p-8 pt-32 md:p-16 lg:px-24 xl:px-32 lg:pb-32 lg:pt-40 z-10">
                     
-                    {/* Header */}
-                    <div className="relative z-10 pt-20 lg:pt-0">
-                        <motion.span 
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            className="inline-block px-3 py-1 mb-6 text-[10px] font-bold tracking-[0.2em] uppercase bg-black text-white dark:bg-white dark:text-black rounded-full"
-                        >
-                            Contactez-moi
-                        </motion.span>
-                        <motion.h1 
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.1 }}
-                            className="text-6xl md:text-7xl font-black tracking-tighter leading-[0.9] mb-6 text-black dark:text-white"
-                        >
-                            PARLONS <br/>
-                            <span className="text-gray-400 dark:text-gray-600">PROJET.</span>
-                        </motion.h1>
-                        <p className="text-gray-500 dark:text-gray-400 max-w-sm text-lg leading-relaxed">
-                            Prêt à lancer votre prochain projet ambitieux ? Envoyez un message et créons ensemble quelque chose d'exceptionnel.
-                        </p>
-                    </div>
-
-                    {/* Contact details */}
-                    <motion.div 
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.3 }}
-                        className="space-y-8 relative z-10 mt-12 lg:mt-0"
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 1, ease: "easeOut" }}
+                        className="mb-20"
                     >
-                        {profile && (
-                            <div className="space-y-6">
-                                <a href={`mailto:${profile.email}`} className="flex items-center gap-4 group">
-                                    <div className="p-3 rounded-full bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-all duration-300">
-                                        <Mail className="w-5 h-5" />
-                                    </div>
-                                    <div>
-                                        <p className="text-xs font-bold uppercase text-gray-400 tracking-wider mb-0.5">Email</p>
-                                        <p className="text-lg font-medium text-black dark:text-white">{profile.email}</p>
-                                    </div>
-                                </a>
-
-                                {profile.telephone && (
-                                    <a href={`tel:${profile.telephone}`} className="flex items-center gap-4 group">
-                                        <div className="p-3 rounded-full bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-all duration-300">
-                                            <Phone className="w-5 h-5" />
-                                        </div>
-                                        <div>
-                                            <p className="text-xs font-bold uppercase text-gray-400 tracking-wider mb-0.5">Téléphone</p>
-                                            <p className="text-lg font-medium text-black dark:text-white">{profile.telephone}</p>
-                                        </div>
-                                    </a>
-                                )}
-
-                                <div className="flex items-center gap-4">
-                                    <div className="p-3 rounded-full bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700">
-                                        <MapPin className="w-5 h-5" />
-                                    </div>
-                                    <div>
-                                        <p className="text-xs font-bold uppercase text-gray-400 tracking-wider mb-0.5">Localisation</p>
-                                        <p className="text-lg font-medium text-black dark:text-white">Yaoundé, Cameroun</p>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Social Row */}
-                        <div className="pt-8 border-t border-gray-200 dark:border-zinc-800 flex gap-4">
-                            {profile?.github && <SocialLink href={profile.github} icon={<Github className="w-5 h-5" />} />}
-                            {profile?.linkedIn && <SocialLink href={profile.linkedIn} icon={<Linkedin className="w-5 h-5" />} />}
-                            {profile?.instagram && <SocialLink href={profile.instagram} icon={<Instagram className="w-5 h-5" />} />}
-                            {profile?.youtube && <SocialLink href={profile.youtube} icon={<Youtube className="w-5 h-5" />} />}
-                            {profile?.facebook && <SocialLink href={profile.facebook} icon={<Facebook className="w-5 h-5" />} />}
-                        </div>
+                        <h1 className="text-6xl md:text-7xl lg:text-[7vw] font-black tracking-tighter uppercase leading-[0.85] text-black dark:text-white mb-8">
+                            LANCER <br/>
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-400 to-gray-200 dark:from-gray-600 dark:to-gray-800">L'OFFENSIVE.</span>
+                        </h1>
+                        <p className="text-xl md:text-2xl font-light text-gray-500 dark:text-gray-400 max-w-xl border-l-[1px] border-black dark:border-white pl-6">
+                            Vous avez une vision ambitieuse ? Transformons-la en une architecture numérique implacable. Remplissez ce formulaire et préparez-vous au déploiement.
+                        </p>
                     </motion.div>
-                </section>
-
-                {/* --- Right Panel: Form & FAQ --- */}
-                <section className="lg:w-7/12 bg-white dark:bg-black min-h-screen p-8 md:p-16 lg:p-24 overflow-y-auto">
                     
                     {/* The Form */}
-                    <div className="max-w-xl mx-auto mb-24">
-                        <h3 className="text-2xl font-bold mb-8 text-black dark:text-white flex items-center gap-2">
-                             <MessageSquare className="w-6 h-6" /> Envoyer un message
-                        </h3>
+                    <div className="max-w-xl mb-32 relative">
+                        {formStatus === 'success' && (
+                            <motion.div 
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                className="mb-8 p-6 bg-black text-white dark:bg-white dark:text-black border border-transparent font-bold tracking-widest uppercase text-sm"
+                            >
+                                TRANSMISSION RÉUSSIE. NOUS ANALYSONS VOS DONNÉES.
+                            </motion.div>
+                        )}
+                        {formStatus === 'error' && (
+                            <motion.div 
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                className="mb-8 p-6 bg-red-600 text-white font-bold tracking-widest uppercase text-sm"
+                            >
+                                ERREUR DE TRANSMISSION. VEUILLEZ RÉESSAYER.
+                            </motion.div>
+                        )}
                         
-                        <form onSubmit={handleSubmit} className="space-y-8">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <form onSubmit={handleSubmit} className="space-y-12">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                                 <MinimalInput 
-                                    label="Nom" 
+                                    label="Votre Nom" 
                                     name="nom" 
                                     value={formData.nom} 
                                     onChange={handleChange} 
-                                    placeholder="Jean Dupont" 
+                                    onFocus={() => setFocusedInput('nom')}
+                                    onBlur={() => setFocusedInput(null)}
+                                    focused={focusedInput === 'nom'}
                                 />
                                 <MinimalInput 
-                                    label="Email" 
+                                    label="Email Professionnel" 
                                     name="email" 
+                                    type="email"
                                     value={formData.email} 
                                     onChange={handleChange} 
-                                    type="email"
-                                    placeholder="jean@exemple.com" 
+                                    onFocus={() => setFocusedInput('email')}
+                                    onBlur={() => setFocusedInput(null)}
+                                    focused={focusedInput === 'email'}
                                 />
                             </div>
 
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold uppercase tracking-wider text-gray-400 ml-1">Sujet</label>
+                            <div className="space-y-4">
+                                <label className="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 flex items-center justify-between">
+                                    <span>Nature de la Mission</span>
+                                </label>
                                 <div className="relative">
                                     <select
                                         name="objet"
                                         value={formData.objet}
                                         onChange={handleChange}
-                                        className="w-full bg-transparent border-b border-gray-200 dark:border-zinc-800 py-4 text-lg focus:outline-none focus:border-black dark:focus:border-white transition-colors appearance-none cursor-pointer text-black dark:text-white"
+                                        onFocus={() => setFocusedInput('objet')}
+                                        onBlur={() => setFocusedInput(null)}
+                                        className="w-full bg-transparent border-b-[2px] border-gray-200 dark:border-zinc-800 py-4 text-xl md:text-2xl font-light focus:outline-none focus:border-black dark:focus:border-white transition-colors appearance-none cursor-pointer text-black dark:text-white"
                                         required
                                     >
                                         {serviceOptions.map(opt => (
-                                            <option key={opt.value} value={opt.value} className="bg-white dark:bg-black">{opt.label}</option>
+                                            <option key={opt.value} value={opt.value} className="bg-white dark:bg-[#050505] text-lg">
+                                                {opt.label}
+                                            </option>
                                         ))}
                                     </select>
                                     <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none">
-                                        <Plus className="w-4 h-4 text-gray-400" />
+                                        <Plus className={`w-6 h-6 transition-colors duration-500 ${focusedInput === 'objet' ? 'text-black dark:text-white' : 'text-gray-300 dark:text-zinc-700'}`} />
                                     </div>
+                                    <motion.div 
+                                        className="absolute bottom-0 left-0 h-[2px] bg-black dark:bg-white"
+                                        initial={{ width: 0 }}
+                                        animate={{ width: focusedInput === 'objet' ? '100%' : '0%' }}
+                                        transition={{ duration: 0.3 }}
+                                    />
                                 </div>
                             </div>
 
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold uppercase tracking-wider text-gray-400 ml-1">Détails</label>
-                                <textarea
-                                    name="contenu"
-                                    value={formData.contenu}
-                                    onChange={handleChange}
-                                    rows={4}
-                                    placeholder="Parlez-moi de votre projet, de vos délais et de vos objectifs..."
-                                    className="w-full bg-transparent border-b border-gray-200 dark:border-zinc-800 py-4 text-lg focus:outline-none focus:border-black dark:focus:border-white transition-colors resize-none text-black dark:text-white placeholder-gray-300 dark:placeholder-zinc-700"
-                                    required
-                                />
+                            <div className="space-y-4">
+                                <label className="text-xs font-bold uppercase tracking-[0.2em] text-gray-400">
+                                    Exigences du projet
+                                </label>
+                                <div className="relative">
+                                    <textarea
+                                        name="contenu"
+                                        value={formData.contenu}
+                                        onChange={handleChange}
+                                        onFocus={() => setFocusedInput('contenu')}
+                                        onBlur={() => setFocusedInput(null)}
+                                        rows={4}
+                                        className="w-full bg-transparent border-b-[2px] border-gray-200 dark:border-zinc-800 py-4 text-xl md:text-2xl font-light focus:outline-none focus:border-black dark:focus:border-white transition-colors resize-none text-black dark:text-white placeholder-gray-200 dark:placeholder-zinc-800"
+                                        required
+                                    />
+                                    <motion.div 
+                                        className="absolute bottom-0 left-0 h-[2px] bg-black dark:bg-white"
+                                        initial={{ width: 0 }}
+                                        animate={{ width: focusedInput === 'contenu' ? '100%' : '0%' }}
+                                        transition={{ duration: 0.3 }}
+                                    />
+                                </div>
                             </div>
 
                             <div className="pt-8">
                                 <button
                                     type="submit"
                                     disabled={formStatus === 'submitting'}
-                                    className="group relative inline-flex items-center gap-3 px-8 py-4 bg-black dark:bg-white text-white dark:text-black rounded-full font-bold tracking-wide transition-all hover:pr-10 disabled:opacity-50"
+                                    className="group relative inline-flex items-center justify-center w-full lg:w-auto overflow-hidden bg-black dark:bg-white text-white dark:text-black py-6 px-12 transition-transform active:scale-95 disabled:opacity-50"
                                 >
-                                    <span>{formStatus === 'submitting' ? 'Envoi en cours...' : 'Envoyer le message'}</span>
-                                    <Send className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                                    
-                                    {formStatus === 'success' && (
-                                        <span className="absolute -top-12 left-0 w-full text-center text-sm font-bold text-green-500 bg-green-100 dark:bg-green-900/30 py-2 rounded-lg">
-                                            Message envoyé !
-                                        </span>
-                                    )}
-                                    {formStatus === 'error' && (
-                                        <span className="absolute -top-12 left-0 w-full text-center text-sm font-bold text-red-500 bg-red-100 dark:bg-red-900/30 py-2 rounded-lg">
-                                            Erreur d'envoi.
-                                        </span>
-                                    )}
+                                    <div className="absolute inset-0 w-0 bg-white dark:bg-black group-hover:w-full transition-all duration-700 ease-out z-0" />
+                                    <span className="relative z-10 flex items-center gap-4 text-sm md:text-base font-bold uppercase tracking-[0.2em] group-hover:text-black dark:group-hover:text-white transition-colors duration-700">
+                                        {formStatus === 'submitting' ? 'Initialisation...' : 'Confirmer le lancement'}
+                                        <ArrowRight className="w-5 h-5 transform group-hover:translate-x-2 transition-transform" />
+                                    </span>
                                 </button>
                             </div>
                         </form>
                     </div>
 
-                    {/* FAQ */}
-                    <div className="max-w-xl mx-auto border-t border-gray-200 dark:border-zinc-800 pt-16">
-                        <h3 className="text-2xl font-bold mb-8 text-black dark:text-white">Questions Fréquentes</h3>
-                        <div className="space-y-2">
+                    {/* FAQ and Fox Section */}
+                    <div className="max-w-xl xl:max-w-2xl mt-32 relative z-20">
+                        {/* The Typing Fox Animation placed next to FAQ */}
+                        <motion.div 
+                            className="hidden md:block absolute left-[85%] lg:left-[95%] bottom-[-10%] w-[400px] lg:w-[550px] xl:w-[700px] pointer-events-none z-[-1] filter drop-shadow-2xl origin-bottom-left"
+                            initial={{ opacity: 0, scale: 0.8, x: 50 }}
+                            animate={{ opacity: 1, scale: 1, x: 0 }}
+                            transition={{ duration: 1.5, ease: "easeOut", delay: 0.5 }}
+                        >
+                            <Lottie animationData={foxTyping} loop={true} />
+                        </motion.div>
+
+                        <div className="relative z-10">
+                            <span className="text-xs font-bold uppercase tracking-[0.2em] text-gray-400 block mb-12">Renseignements Stratégiques</span>
+                        <div className="space-y-0 border-t border-black dark:border-white">
                             {faqs.map((faq, idx) => (
-                                <div key={idx} className="border-b border-gray-100 dark:border-zinc-800/50">
+                                <div key={idx} className="border-b border-black dark:border-white group">
                                     <button 
                                         onClick={() => toggleAccordion(idx)}
-                                        className="w-full py-6 flex justify-between items-center text-left hover:text-black dark:hover:text-white transition-colors"
+                                        className="w-full py-8 flex justify-between items-center text-left"
                                     >
-                                        <span className="font-medium text-lg text-gray-800 dark:text-gray-200">{faq.q}</span>
-                                        {activeAccordion === idx ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+                                        <span className="font-bold text-xl md:text-2xl tracking-tight text-black dark:text-white group-hover:pr-4 transition-all duration-300">
+                                            {faq.q}
+                                        </span>
+                                        <div className="relative w-6 h-6 flex items-center justify-center border border-black dark:border-white rounded-full transition-transform duration-500 shrink-0">
+                                            {activeAccordion === idx ? <Minus className="w-3 h-3" /> : <Plus className="w-3 h-3" />}
+                                        </div>
                                     </button>
                                     <AnimatePresence>
                                         {activeAccordion === idx && (
@@ -295,7 +271,7 @@ export const ContactPage: React.FC = () => {
                                                 exit={{ height: 0, opacity: 0 }}
                                                 className="overflow-hidden"
                                             >
-                                                <p className="pb-6 text-gray-500 dark:text-gray-400 leading-relaxed">
+                                                <p className="pb-8 text-xl font-light text-gray-600 dark:text-gray-400 leading-relaxed pr-8">
                                                     {faq.a}
                                                 </p>
                                             </motion.div>
@@ -304,7 +280,83 @@ export const ContactPage: React.FC = () => {
                                 </div>
                             ))}
                         </div>
+                        </div>
                     </div>
+                </section>
+
+                {/* --- Right Panel: The Visual & Contact Details --- */}
+                <section className="w-full lg:w-[45%] h-[60vh] lg:h-screen lg:sticky lg:top-0 relative overflow-hidden group border-l-[1px] border-black/10 dark:border-white/10 bg-black">
+                    
+                    {/* The Heroic Background Lottie */}
+                    <div className="absolute inset-0 flex items-center justify-center z-0 overflow-hidden">
+                        <motion.div 
+                            className="w-[150%] h-[150%] md:w-[130%] md:h-[130%] pointer-events-none filter drop-shadow-2xl opacity-60 flex items-center justify-center"
+                            initial={{ scale: 0.8 }}
+                            animate={{ scale: 1 }}
+                            transition={{ duration: 1.5, ease: "easeOut" }}
+                        >
+                            <Lottie animationData={foxZen} loop={true} className="w-full max-w-[800px] h-auto object-contain" />
+                        </motion.div>
+                    </div>
+                    {/* Dark gradient to ensure text readability */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent z-0" />
+                    
+
+                    {/* The Contact Data Overlay */}
+                    <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.5, duration: 1 }}
+                        className="absolute bottom-0 left-0 w-full p-8 md:p-16 lg:p-20 z-10 flex flex-col justify-end h-full"
+                    >
+                        {profile && (
+                            <div className="space-y-12">
+                                <div>
+                                    <span className="text-xs font-black uppercase tracking-[0.4em] text-gray-500 block mb-2 drop-shadow-md">Quartier Général</span>
+                                    <div className="flex items-center gap-3 text-white hover:text-gray-300 transition-colors">
+                                        <MapPin className="w-5 h-5 shrink-0" />
+                                        <span className="text-xl md:text-2xl font-semibold tracking-wide text-white">Yaoundé, Cameroun</span>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-8">
+                                    <a href={`mailto:${profile.email}`} className="block group/link">
+                                        <span className="text-xs font-black uppercase tracking-[0.4em] text-gray-500 block mb-2 drop-shadow-md">Canal Principal</span>
+                                        <div className="flex items-center gap-3 text-white">
+                                            <Mail className="w-5 h-5 shrink-0" />
+                                            <span className="text-xl md:text-2xl font-semibold tracking-wide group-hover/link:underline decoration-2 underline-offset-4 transition-all break-all text-white">
+                                                {profile.email}
+                                            </span>
+                                        </div>
+                                    </a>
+
+                                    {profile.telephone && (
+                                        <a href={`tel:${profile.telephone}`} className="block group/link">
+                                            <span className="text-xs font-black uppercase tracking-[0.4em] text-gray-500 block mb-2 drop-shadow-md">Signal Vocal</span>
+                                            <div className="flex items-center gap-3 text-white">
+                                                <Phone className="w-5 h-5 shrink-0" />
+                                                <span className="text-xl md:text-2xl font-semibold tracking-wide group-hover/link:underline decoration-2 underline-offset-4 transition-all text-white">
+                                                    {profile.telephone}
+                                                </span>
+                                            </div>
+                                        </a>
+                                    )}
+                                </div>
+
+                                {/* Networks */}
+                                <div className="pt-12 border-t-[2px] border-white/20">
+                                    <span className="text-xs font-black uppercase tracking-[0.4em] text-gray-500 block mb-6 drop-shadow-md">Réseaux</span>
+                                    <div className="flex gap-6">
+                                        {profile?.github && <SocialLink href={profile.github} icon={<Github className="w-6 h-6" />} />}
+                                        {profile?.linkedIn && <SocialLink href={profile.linkedIn} icon={<Linkedin className="w-6 h-6" />} />}
+                                        {profile?.instagram && <SocialLink href={profile.instagram} icon={<Instagram className="w-6 h-6" />} />}
+                                        {profile?.youtube && <SocialLink href={profile.youtube} icon={<Youtube className="w-6 h-6" />} />}
+                                        {profile?.facebook && <SocialLink href={profile.facebook} icon={<Facebook className="w-6 h-6" />} />}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </motion.div>
                 </section>
             </div>
         </main>
@@ -313,13 +365,24 @@ export const ContactPage: React.FC = () => {
 
 // --- Sub-components ---
 
-const MinimalInput = ({ label, ...props }: any) => (
-    <div className="space-y-2">
-        <label className="text-xs font-bold uppercase tracking-wider text-gray-400 ml-1">{label}</label>
-        <input 
-            {...props}
-            className="w-full bg-transparent border-b border-gray-200 dark:border-zinc-800 py-4 text-lg focus:outline-none focus:border-black dark:focus:border-white transition-colors text-black dark:text-white placeholder-gray-300 dark:placeholder-zinc-700" 
-        />
+const MinimalInput = ({ label, focused, ...props }: any) => (
+    <div className="relative space-y-4">
+        <label className={`text-xs font-bold uppercase tracking-[0.2em] transition-colors duration-500 ${focused ? 'text-black dark:text-white' : 'text-gray-400'}`}>
+            {label}
+        </label>
+        <div className="relative">
+            <input 
+                {...props}
+                className="w-full bg-transparent border-b-[2px] border-gray-200 dark:border-zinc-800 py-4 text-xl md:text-2xl font-light focus:outline-none focus:border-transparent transition-colors text-black dark:text-white placeholder-transparent" 
+            />
+            {/* Animated Bottom Border */}
+            <motion.div 
+                className="absolute bottom-0 left-0 h-[2px] bg-black dark:bg-white"
+                initial={{ width: 0 }}
+                animate={{ width: focused ? '100%' : '0%' }}
+                transition={{ duration: 0.3 }}
+            />
+        </div>
     </div>
 );
 
@@ -328,7 +391,7 @@ const SocialLink = ({ href, icon }: { href: string; icon: React.ReactNode }) => 
         href={href} 
         target="_blank" 
         rel="noopener noreferrer"
-        className="p-3 bg-gray-100 dark:bg-zinc-800/50 rounded-full text-gray-600 dark:text-gray-400 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all"
+        className="text-white/60 hover:text-white hover:-translate-y-1 transform transition-all duration-300"
     >
         {icon}
     </a>

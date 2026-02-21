@@ -42,63 +42,61 @@ export const Footer: React.FC = () => {
     };
 
     return (
-        <footer className="bg-white dark:bg-black border-t border-gray-200 dark:border-gray-900 pt-24 pb-12">
-            <div className="max-w-7xl mx-auto px-6 lg:px-8">
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-24">
-                    {/* Brand & Newsletter */}
-                    <div className="md:col-span-5 space-y-8">
-                        <Link to="/" className="block">
-                            <img
-                                src="/logo-fox-light.png"
-                                alt="Fox Logo"
-                                className="h-10 w-auto"
-                            />
-                        </Link>
-                        <p className="text-gray-600 dark:text-gray-400 max-w-sm text-lg leading-relaxed">
-                            Ingénierie logicielle et services numériques pour les entreprises et startups innovantes.
+        <footer className="bg-[#020202] text-white pt-32 pb-12 relative z-20 border-t border-white/5">
+            <div className="container mx-auto px-8 lg:px-16">
+                
+                {/* Top Section - Brand & Newsletter */}
+                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-16 mb-32">
+                    <div className="w-full lg:w-1/2">
+                        <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-8 leading-tight">
+                            Fox<br/>Engineering
+                        </h2>
+                        <p className="text-gray-400 font-light text-lg max-w-sm mb-12">
+                            L'avant-garde de l'ingénierie logicielle. Nous sculptons l'avenir numérique avec une précision implacable.
                         </p>
-
-                        <div className="pt-4">
-                            <h3 className="text-sm font-semibold text-black dark:text-white mb-4">
-                                Restez informé
-                            </h3>
-                            <form onSubmit={handleSubscribe} className="flex gap-2 max-w-sm">
-                                <input
-                                    type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    placeholder="Votre email"
-                                    className="flex-1 bg-gray-50 dark:bg-gray-900 border-0 rounded-lg px-4 py-3 text-black dark:text-white placeholder-gray-500 focus:ring-2 focus:ring-black dark:focus:ring-white transition-all"
-                                    disabled={subscriptionStatus === 'loading'}
-                                />
-                                <button
-                                    type="submit"
-                                    disabled={subscriptionStatus === 'loading'}
-                                    className="bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-lg font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
-                                >
-                                    {subscriptionStatus === 'loading' ? '...' : 'OK'}
-                                </button>
-                            </form>
+                        
+                        <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-4 max-w-md w-full relative">
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                placeholder="Votre email pour la newsletter..."
+                                className="flex-1 bg-transparent border-b border-white/20 px-0 py-4 text-white placeholder-gray-600 focus:border-white focus:outline-none focus:ring-0 transition-colors font-mono text-sm uppercase tracking-wider"
+                                disabled={subscriptionStatus === 'loading'}
+                            />
+                            <button
+                                type="submit"
+                                disabled={subscriptionStatus === 'loading'}
+                                className="group flex items-center gap-2 text-sm font-bold uppercase tracking-[0.2em] hover:text-gray-300 transition-colors sm:absolute sm:right-0 sm:top-4"
+                            >
+                                {subscriptionStatus === 'loading' ? 'Patientez...' : 'Souscrire'}
+                                {!subscriptionStatus && (
+                                    <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="square" strokeLinejoin="miter" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                    </svg>
+                                )}
+                            </button>
                             {statusMessage && (
-                                <p className={`mt-2 text-sm ${subscriptionStatus === 'error' ? 'text-red-500' : 'text-green-500'}`}>
+                                <p className={`absolute -bottom-8 left-0 text-xs font-mono uppercase tracking-widest ${subscriptionStatus === 'error' ? 'text-red-500' : 'text-green-500'}`}>
                                     {statusMessage}
                                 </p>
                             )}
-                        </div>
+                        </form>
                     </div>
 
-                    {/* Navigation Links */}
-                    <div className="md:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-8">
+                    {/* Navigation Grid */}
+                    <div className="w-full lg:w-1/2 grid grid-cols-2 md:grid-cols-3 gap-12 font-mono text-sm uppercase tracking-widest">
                         <div>
-                            <h3 className="font-semibold text-black dark:text-white mb-6">Navigation</h3>
+                            <span className="text-gray-600 block mb-8 font-bold">Index</span>
                             <ul className="space-y-4">
-                                {['Accueil', 'Projets', 'À propos', 'Blog', 'Contact'].map((item) => (
+                                {['Accueil', 'Projets', 'Services', 'Blog'].map((item) => (
                                     <li key={item}>
                                         <Link
-                                            to={item === 'Accueil' ? '/' : `/${item.toLowerCase().replace('à ', '').replace(' ', '-')}`}
-                                            className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors"
+                                            to={item === 'Accueil' ? '/' : `/${item.toLowerCase()}`}
+                                            className="text-gray-300 hover:text-white transition-colors relative group inline-block"
                                         >
                                             {item}
+                                            <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-white transition-all duration-300 group-hover:w-full" />
                                         </Link>
                                     </li>
                                 ))}
@@ -106,34 +104,51 @@ export const Footer: React.FC = () => {
                         </div>
 
                         <div>
-                            <h3 className="font-semibold text-black dark:text-white mb-6">Outils</h3>
+                            <span className="text-gray-600 block mb-8 font-bold">Laboratoire</span>
                             <ul className="space-y-4">
-                                <li><a href="https://mood-music-fox.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors">Mood-Music</a></li>
-                                <li><a href="https://nan-cv.vercel.app" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors">NAN-CV</a></li>
-                                <li><a href="https://yt-learn.myfox.tech/" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors">YT-Learn</a></li>
-                                <li><a href="https://foxy-blue-light.myfox.tech" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors">FoxyBlueLight</a></li>
+                                {['Mood-Music', 'NAN-CV', 'YT-Learn', 'QualityShoot'].map((item) => (
+                                    <li key={item}>
+                                        <a href="#" className="text-gray-300 hover:text-white transition-colors relative group inline-block">
+                                            {item}
+                                            <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-white transition-all duration-300 group-hover:w-full" />
+                                        </a>
+                                    </li>
+                                ))}
                             </ul>
                         </div>
 
                         <div>
-                            <h3 className="font-semibold text-black dark:text-white mb-6">Social</h3>
+                            <span className="text-gray-600 block mb-8 font-bold">Réseau</span>
                             <ul className="space-y-4">
-                                <li><a href="https://www.instagram.com/i_am_the_fox_coder/" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors">Instagram</a></li>
-                                <li><a href="https://github.com/Tiger-Foxx/" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors">GitHub</a></li>
-                                <li><a href="https://www.linkedin.com/in/arthur-pascal-montgomery-donfack-48b4a2311/" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors">LinkedIn</a></li>
+                                {['Instagram', 'GitHub', 'LinkedIn', 'YouTube'].map((item) => (
+                                    <li key={item}>
+                                        <a href="#" className="text-gray-300 hover:text-white transition-colors relative group inline-block">
+                                            {item}
+                                            <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-white transition-all duration-300 group-hover:w-full" />
+                                        </a>
+                                    </li>
+                                ))}
                             </ul>
                         </div>
                     </div>
                 </div>
 
-                <div className="pt-8 border-t border-gray-100 dark:border-gray-900 flex flex-col md:flex-row justify-between items-center gap-4">
-                    <p className="text-sm text-gray-500 dark:text-gray-500">
-                        &copy; {currentYear} Fox Engineering. Tous droits réservés.
+                {/* Bottom Section */}
+                <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6 font-mono text-xs uppercase tracking-widest text-gray-600">
+                    <p>
+                        &copy; {currentYear} Fox Engineering. Tous Droits Réservés.
                     </p>
-                    <div className="flex gap-6 text-sm text-gray-500 dark:text-gray-500">
-                        <Link to="/privacy" className="hover:text-black dark:hover:text-white transition-colors">Confidentialité</Link>
-                        <Link to="/terms" className="hover:text-black dark:hover:text-white transition-colors">Conditions</Link>
+                    <div className="flex gap-8">
+                        <Link to="/legal" className="hover:text-white transition-colors">Mentions Légales</Link>
+                        <Link to="/privacy" className="hover:text-white transition-colors">Confidentialité</Link>
                     </div>
+                </div>
+                
+                {/* Absolutely gigantic background text (Watermark effect) */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full overflow-hidden pointer-events-none flex justify-center opacity-[0.02]">
+                    <span className="text-[20vw] font-black uppercase tracking-tighter whitespace-nowrap">
+                        FOX ENG
+                    </span>
                 </div>
             </div>
         </footer>
