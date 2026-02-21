@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion} from 'framer-motion';
 import bgImage from '../../assets/images/bg3.jpg';
 import { Link } from 'react-router-dom';
 

@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { ImageWithSkeleton } from '../components/ui/ImageWithSkeleton';
 import { Github, Linkedin, ArrowRight } from 'lucide-react';
 import meImage from '../assets/images/me.png';
+import popImage from '../assets/images/pop.png';
 
 export const AboutPage: React.FC = () => {
     const [profile, setProfile] = useState<Profile | null>(null);
@@ -139,13 +140,16 @@ export const AboutPage: React.FC = () => {
                                 )}
                             </div>
                             
-                            {/* Petite photo Pop Culture / Hacker Vibes */}
-                            <div className="mt-6 md:mt-10 lg:mt-12 group/pop flex items-start">
-                                <div className="p-2 rounded-2xl bg-gray-50/50 dark:bg-zinc-900/50 border border-gray-200 dark:border-zinc-800 backdrop-blur-sm">
+                            {/* Grande photo Pop Culture / Hacker Vibes */}
+                            <div className="mt-8 md:mt-12 lg:mt-16 group/pop flex flex-col items-start gap-3">
+                                <span className="text-sm md:text-base font-mono font-medium text-gray-500 italic">
+                                    (et enoooorme geek 😉)
+                                </span>
+                                <div className="p-2 rounded-2xl bg-gray-50/50 dark:bg-zinc-900/50 border border-gray-200 dark:border-zinc-800 backdrop-blur-sm w-full max-w-md">
                                     <img 
-                                        src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=600&auto=format&fit=crop" 
+                                        src={popImage}
                                         alt="Matrix Code / Hacker Aesthetic"
-                                        className="h-24 md:h-32 w-auto max-w-[200px] object-cover rounded-xl filter grayscale group-hover/pop:grayscale-0 transition-all duration-700 shadow-sm"
+                                        className="h-32 md:h-48 lg:h-64 w-full object-cover rounded-xl filter grayscale-50 group-hover/pop:grayscale-0 transition-all duration-700 shadow-sm"
                                     />
                                 </div>
                             </div>
@@ -162,7 +166,7 @@ export const AboutPage: React.FC = () => {
                         <ImageWithSkeleton 
                             src={meImage}
                             alt="Fox Profile"
-                            className="w-full h-full object-cover filter grayscale-75 transition-all duration-700 group-hover:grayscale-0"
+                            className="w-full h-full object-cover filter grayscale-25 transition-all duration-700 group-hover:grayscale-0"
                             containerClassName="rounded-3xl shadow-2xl"
                         />
                         <div className="absolute inset-0 border-[2px] border-black/10 dark:border-white/10 rounded-3xl pointer-events-none z-10" />
@@ -238,7 +242,7 @@ export const AboutPage: React.FC = () => {
                                     </div>
                                     <div className="flex gap-2 bg-gray-100 dark:bg-gray-800 p-1.5 rounded-lg border border-gray-200 dark:border-gray-700">
                                         {skill.icons.map((icon, i) => (
-                                            <img key={i} src={icon} alt="tech logo" className="w-5 h-5 object-contain filter drop-shadow-sm grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500" />
+                                            <img key={i} src={icon} alt="tech logo" className="w-5 h-5 object-contain filter drop-shadow-sm  opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500" />
                                         ))}
                                     </div>
                                 </div>
@@ -291,10 +295,10 @@ export const AboutPage: React.FC = () => {
             </section>
 
             {/* CTA Brutalist Block */}
-            <section className="px-6 md:px-12 lg:px-20 mb-32 flex justify-center">
+            <section className="px-6 md:px-12 lg:px-20 mb-32 flex justify-center w-full">
                 <Link 
                     to="/contact"
-                    className="group relative flex flex-col md:flex-row items-center justify-center w-full max-w-5xl aspect-video md:aspect-[21/9] border-[2px] border-black dark:border-white overflow-hidden bg-white dark:bg-[#050505]"
+                    className="group relative flex flex-col md:flex-row items-center justify-center w-full py-16 md:py-20 lg:py-24 border-[2px] border-black dark:border-white overflow-hidden bg-white dark:bg-[#050505]"
                 >
                     <div className="absolute inset-0 bg-black dark:bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out z-0" />
                     <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 mix-blend-difference text-white">
