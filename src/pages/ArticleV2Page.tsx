@@ -10,7 +10,6 @@ import {
     CommentairePayload,
     PaginatedResponse,
     SubscribePayload,
-    ArticleV2ListItem,
     UnifiedPostItem,
 } from '@/types';
 import BlockRenderer from '@/components/article/BlockRenderer';
