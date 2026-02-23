@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useApi } from '../../hooks/useApi';
-import { Post } from '../../types';
+import { UnifiedPostItem } from '../../types';
 
 // Fonction pour formater la date
 const formatDate = (dateString: string | undefined): string => {
@@ -15,8 +15,8 @@ const formatDate = (dateString: string | undefined): string => {
 };
 
 export const RecentBlogPostsSection: React.FC = () => {
-    const { data, loading, error } = useApi<{ results: Post[] }>({
-        endpoint: '/api/posts/?limit=6&ordering=-date_publication',
+    const { data, loading, error } = useApi<{ results: UnifiedPostItem[] }>({
+        endpoint: '/api/all-posts/?limit=6',
         loadOnMount: true,
     });
 
@@ -92,11 +92,11 @@ export const RecentBlogPostsSection: React.FC = () => {
                                     className={`group relative overflow-hidden rounded-3xl bg-gray-100 dark:bg-gray-900 ${isFeatured ? 'md:col-span-2 md:row-span-2 min-h-[400px] md:min-h-[600px]' : 'min-h-[300px]'
                                         }`}
                                 >
-                                    <Link to={`/blog/${post.id}`} className="block h-full w-full">
+                                    <Link to={post.article_type === 'v2' ? `/article/${post.slug}` : `/blog/${post.id}`} className="block h-full w-full">
                                         {/* Image de fond */}
                                         <div className="absolute inset-0">
                                             <img
-                                                src={post.photo500_x_800 || post.photo800_x_533}
+                                                src={post.photo_cover_url}
                                                 alt={post.titre}
                                                 className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                                                 onError={(e) => {

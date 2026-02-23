@@ -1,0 +1,72 @@
+{
+  "titre": "Mathématiques de la Réalité : Rendu Physique et Ray Tracing",
+  "description": "Découvrez comment les mathématiques pures et les algorithmes de pointe se rejoignent pour recréer la lumière du monde réel dans nos moteurs graphiques.",
+  "photo_cover_url": "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
+  "photo_banner_url": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80",
+  "categorie": "Computer Graphics",
+  "auteur": "Fox",
+  "auteur_title": "Computer Engineering Scientist",
+  "auteur_avatar_url": "https://avatars.githubusercontent.com/u/108226053",
+  "date": "2024-03-10",
+  "is_published": true,
+  "blocks": [
+    {
+      "type": "text",
+      "content": "<h2>La Quête du Photoréalisme</h2><p>Depuis les premiers polygones non texturés jusqu'aux environnements impossibles à distinguer d'une photographie, la synthèse d'images a toujours eu un seul bût : simuler le comportement de la lumière. Le <strong>Physically Based Rendering (PBR)</strong> n'est pas qu'une technique, c'est l'application stricte des lois de la physique à nos pixels.</p>"
+    },
+    {
+      "type": "equation",
+      "content": "L_o(x, \\omega_o) = L_e(x, \\omega_o) + \\int_{\\Omega} f_r(x, \\omega_i, \\omega_o) L_i(x, \\omega_i) (\\omega_i \\cdot n) d\\omega_i"
+    },
+    {
+      "type": "text",
+      "content": "<p>L'équation de rendu, formulée par James Kajiya en 1986, est le Saint Graal du Ray Tracing. Elle stipule que la lumière sortante d'un point est la somme de la lumière émise par ce point et de la lumière réfléchie par toutes les autres directions.</p><h3>Au coeur de la BRDF</h3><p>La Bidirectional Reflectance Distribution Function ($f_r$ dans l'équation ci-dessus) est ce qui différencie le plastique du métal poli. Voici à quoi ressemblent ces matériaux sous l'oeil d'un moteur :</p>"
+    },
+    {
+      "type": "gallery",
+      "items": [
+        {
+          "url": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
+          "caption": "Réflexion Spéculaire Parfaite",
+          "alt": "Metal reflection"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1549490349-8643362247b5?auto=format&fit=crop&w=800&q=80",
+          "caption": "Dispersion Lambertienne",
+          "alt": "Matte surface"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "content": "<h2>L'implémentation du Monte Carlo</h2><p>Résoudre l'intégrale de l'équation de rendu analytiquement est impossible dans une scène complexe. Nous utilisons donc l'intégration de Monte Carlo, tirant des rayons aléatoires pour estimer la valeur. Plus nous tirons de rayons, moins il y a de bruit.</p>"
+    },
+    {
+      "type": "code",
+      "language": "cpp",
+      "content": "Vector3f integrate(const Ray& ray, const Scene& scene, int depth) {\n    if (depth > MAX_BOUNCES) return Vector3f(0.0);\n    \n    Intersection isect = scene.intersect(ray);\n    if (!isect.hit) return scene.getEnvironmentLight(ray);\n    \n    // Echantillonnage de la BRDF\n    Vector3f wi = isect.material->sampleBRDF(ray.direction, isect.normal);\n    float pdf = isect.material->pdf(ray.direction, wi, isect.normal);\n    \n    // Récursion Monte Carlo\n    Ray next_ray(isect.point, wi);\n    Vector3f incoming_light = integrate(next_ray, scene, depth + 1);\n    \n    return isect.emitted() + (isect.material->eval(ray.direction, wi, isect.normal) \n           * incoming_light * std::max(0.0f, dot(wi, isect.normal))) / pdf;\n}"
+    },
+    {
+      "type": "carousel",
+      "items": [
+        {
+          "url": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1200&q=80",
+          "caption": "1 Échantillon par Pixel (Bruité)"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200&q=80",
+          "caption": "100 Échantillons par Pixel (C'est mieux)"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?auto=format&fit=crop&w=1200&q=80",
+          "caption": "1000 Échantillons + Denoising IA (Parfait)"
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "text": "La réalité n'est qu'une approximation très coûteuse à calculer.",
+      "author": "Anonyme (Engine Developer)"
+    }
+  ]
+}

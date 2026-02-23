@@ -19,6 +19,7 @@ import { ProjectDetailPage } from './pages/ProjectDetailPage';
 import { AboutPage } from './pages/AboutPage';
 import { BlogPage } from './pages/BlogPage';
 import { BlogPostPage } from './pages/BlogPostPage';
+import { ArticleV2Page } from './pages/ArticleV2Page';
 import { ContactPage } from './pages/ContactPage';
 import { ErrorPage } from './pages/ErrorPage';
 import { LoginPage } from './pages/LoginPage';
@@ -97,6 +98,7 @@ const App: React.FC = () => {
                                 <Route path="/about" element={<AboutPage />} />
                                 <Route path="/blog" element={<BlogPage />} />
                                 <Route path="/blog/:slug" element={<BlogPostPage />} />
+                                <Route path="/article/:slug" element={<ArticleV2Page />} />
                                 <Route path="/contact" element={<ContactPage />} />
                                 <Route path="/login" element={<LoginPage />} />
 

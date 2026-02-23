@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { useApi } from '../hooks/useApi';
-import { Post, PaginatedResponse } from '../types';
+import { UnifiedPostItem, PaginatedResponse } from '../types';
 import newsletterService from "@/services/newsletter.service.ts";
 import { 
     Search, 
@@ -27,7 +27,7 @@ interface Category {
 
 export const BlogPage: React.FC = () => {
     // --- State ---
-    const [posts, setPosts] = useState<Post[]>([]);
+    const [posts, setPosts] = useState<UnifiedPostItem[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<string>('all');
     const [searchQuery, setSearchQuery] = useState<string>('');
@@ -51,7 +51,7 @@ export const BlogPage: React.FC = () => {
 
     // --- API Calls ---
     const buildEndpoint = () => {
-        let endpoint = `/api/posts/?limit=${limit}&offset=${(currentPage - 1) * limit}`;
+        let endpoint = `/api/all-posts/?limit=${limit}&offset=${(currentPage - 1) * limit}`;
         if (selectedCategory !== 'all') {
             endpoint += `&categorie=${selectedCategory}`;
         }
@@ -66,7 +66,7 @@ export const BlogPage: React.FC = () => {
         loading: postsLoading,
         error: postsError,
         refetch: refetchPosts
-    } = useApi<PaginatedResponse<Post>>({
+    } = useApi<PaginatedResponse<UnifiedPostItem>>({
         endpoint: buildEndpoint(),
         loadOnMount: true
     });
@@ -220,7 +220,7 @@ export const BlogPage: React.FC = () => {
                                     <div className="relative h-2/3 overflow-hidden group">
                                         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 z-10" />
                                         <img 
-                                            src={post.photo500_x_800 || post.photo800_x_533 || '/images/fallback-post.jpg'}
+                                            src={post.photo_cover_url || '/images/fallback-post.jpg'}
                                             alt={post.titre}
                                             className="w-full h-full object-cover transition-transform duration-700 ease-out"
                                         />
@@ -238,7 +238,7 @@ export const BlogPage: React.FC = () => {
                                             <h3 className="text-2xl font-bold mb-2 text-black dark:text-white leading-tight line-clamp-3">{post.titre}</h3>
                                         </div>
                                         <Link 
-                                            to={`/blog/${post.id}`}
+                                            to={post.article_type === 'v2' ? `/article/${post.slug}` : `/blog/${post.slug}`}
                                             className="mt-2 w-full py-3 flex items-center justify-center gap-2 bg-black dark:bg-white text-white dark:text-black rounded-xl font-bold text-sm tracking-wide active:scale-95 transition-transform"
                                         >
                                             Lire l'article <ArrowUpRight className="w-4 h-4" />
@@ -276,13 +276,13 @@ export const BlogPage: React.FC = () => {
                                 >
                                     <div className="h-56 relative overflow-hidden bg-gray-200 dark:bg-zinc-800">
                                         <img
-                                            src={post.photo800_x_533 || post.photo500_x_800 || '/images/fallback-post.jpg'}
+                                            src={post.photo_cover_url || '/images/fallback-post.jpg'}
                                             alt={post.titre}
                                             className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                                         />
                                         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-[2px]">
                                             <Link 
-                                                to={`/blog/${post.id}`}
+                                                to={post.article_type === 'v2' ? `/article/${post.slug}` : `/blog/${post.slug}`}
                                                 className="px-6 py-3 bg-white text-black rounded-full font-bold text-sm tracking-wide flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 shadow-xl"
                                             >
                                                 Lire <ArrowUpRight className="w-4 h-4" />
@@ -298,7 +298,7 @@ export const BlogPage: React.FC = () => {
                                     <div className="p-6 flex flex-col flex-grow">
                                         <div className="mb-3 flex justify-between items-center text-xs text-gray-500 font-mono">
                                             <span>{formatDate(post.date)}</span>
-                                            <span className="flex items-center gap-1"><BookOpen className="w-3 h-3" /> {Math.ceil(post.description.length / 200)} min read</span>
+                                            <span>{Math.ceil(post.description.length / 200)} min read</span>
                                         </div>
                                         <h3 className="text-xl font-bold text-black dark:text-white mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-tight">
                                             {post.titre}

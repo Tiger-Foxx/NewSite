@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { useApi } from '../hooks/useApi'; // Assurez-vous que le chemin est correct
 import { apiService } from '../services/api'; // Assurez-vous que le chemin est correct
-import { Post, Commentaire, CommentairePayload, PaginatedResponse, SubscribePayload } from '../types'; // Assurez-vous que le chemin est correct
+import { Post, Commentaire, CommentairePayload, PaginatedResponse, SubscribePayload, UnifiedPostItem } from '../types'; // Assurez-vous que le chemin est correct
 import DOMPurify from 'dompurify';
 import Lottie from "lottie-react";
 import foxLoaderAnimation from "@/assets/lotties/fox-loader.json";
@@ -15,7 +15,7 @@ export const BlogPostPage: React.FC = () => {
     const navigate = useNavigate();
     const [post, setPost] = useState<Post | null>(null);
     const [comments, setComments] = useState<Commentaire[]>([]);
-    const [relatedPosts, setRelatedPosts] = useState<Post[]>([]);
+    const [relatedPosts, setRelatedPosts] = useState<UnifiedPostItem[]>([]);
     const [commentFormData, setCommentFormData] = useState<CommentairePayload>({
         nom: '',
         email: '',
@@ -55,14 +55,14 @@ export const BlogPostPage: React.FC = () => {
             // if (metaDescription) {
             //     metaDescription.setAttribute('content', postData.description || postData.titre);
             // }
-            fetchRelatedPosts(postData.categorie, postData.id);
+            fetchRelatedPosts(postData.categorie, postData.id.toString());
         }
     }, [postData]);
 
-    const fetchRelatedPosts = async (categorie: string, postId: number) => {
+    const fetchRelatedPosts = async (categorie: string, excludeSlug: string) => {
         try {
-            const response = await apiService.get<{ results: Post[]; count: number }>(
-                `/api/posts/?categorie=${encodeURIComponent(categorie)}&limit=3&exclude_id=${postId}`
+            const response = await apiService.get<{ results: UnifiedPostItem[]; count: number }>(
+                `/api/all-posts/?categorie=${encodeURIComponent(categorie)}&limit=3&exclude_slug=${excludeSlug}`
             );
             setRelatedPosts(response.data.results || []);
         } catch (error) {
@@ -538,21 +538,16 @@ export const BlogPostPage: React.FC = () => {
                                             <div className="space-y-4">
                                                 {relatedPosts.map(relatedPost => (
                                                     <Link
-                                                        key={relatedPost.id}
-                                                        to={`/blog/${relatedPost.id}`}
+                                                        key={relatedPost.id || relatedPost.slug}
+                                                        to={relatedPost.article_type === 'v2' ? `/article/${relatedPost.slug}` : `/blog/${relatedPost.id}`}
                                                         className="flex items-start space-x-3 group"
                                                     >
-                                                        {relatedPost.photo500_x_800 && (
+                                                        {relatedPost.photo_cover_url && (
                                                             <div className="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden">
                                                                 <img
-                                                                    src={relatedPost.photo500_x_800}
+                                                                    src={relatedPost.photo_cover_url}
                                                                     alt={relatedPost.titre}
                                                                     className="w-full h-full object-cover"
-                                                                    onError={(e) => {
-                                                                        const target = e.target as HTMLImageElement;
-                                                                        target.onerror = null;
-                                                                        target.src = '/images/fallback-post.jpg';
-                                                                    }}
                                                                 />
                                                             </div>
                                                         )}

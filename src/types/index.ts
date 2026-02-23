@@ -4,6 +4,7 @@ import {Post} from "@/types/blog.types.ts";
 export * from './api.types';
 export * from './blog.types';
 export * from './projects.types';
+export * from './article.types';
 
 export interface Profile {
     results?: any;

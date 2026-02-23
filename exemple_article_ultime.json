@@ -1,0 +1,114 @@
+{
+  "titre": "Hardcore CUDA : Forger un Moteur d'Inférence Deep Learning from Scratch en C++",
+  "description": "Oubliez PyTorch et TensorFlow l'espace d'un instant. Plongeons dans l'abysse de la mémoire partagée, des registres GPU, et des kernels CUDA pour construire un pipeline d'inférence ultra-performant from scratch.",
+  "photo_cover_url": "https://images.unsplash.com/photo-1591405351990-4726e331f141?auto=format&fit=crop&w=1600&q=80",
+  "photo_banner_url": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=2000&q=80",
+  "categorie": "Low-Level / IA",
+  "auteur": "Fox",
+  "auteur_title": "Computer Engineering Scientist",
+  "auteur_avatar_url": "https://avatars.githubusercontent.com/u/108226053",
+  "date": "2026-02-23",
+  "is_published": true,
+  "blocks": [
+    {
+      "type": "text",
+      "content": "<h2>L'Illusion du Haut Niveau</h2><p>Le monde moderne de l'IA nous a rendus complaisants. Une ligne d'importation Python, quelques appels d'API de haut niveau, et des réseaux de neurones complexes s'exécutent par magie. Mais que se passe-t-il vraiment sur le silicium ? Pourquoi votre modèle est-il ralenti par des goulots d'étranglement mémoire invisibles ? La réponse se trouve dans l'<strong>abîme du bas niveau</strong>.</p><p>Aujourd'hui, nous n'allons pas utiliser un framework. Nous allons construire l'infrastructure sur laquelle ces frameworks reposent.</p>"
+    },
+    {
+      "type": "quote",
+      "text": "Software is getting slower more rapidly than hardware becomes faster.",
+      "author": "Niklaus Wirth"
+    },
+    {
+      "type": "text",
+      "content": "<h2>Architecture du Moteur: Penser en Matrice</h2><p>Au cœur de tout modèle Deep Learning réside une opération mathématique brutale et répétitive : la multiplication de matrices (GEMM - General Matrix Multiply). Un GPU n'est rien d'autre qu'un monstre conçu pour dévorer ces matrices. L'objectif de notre moteur est de saturer les coeurs Tensor (Tensor Cores) sans affamer la bande passante mémoire.</p>"
+    },
+    {
+      "type": "image",
+      "url": "https://images.unsplash.com/photo-1620712948633-bd5b46e32bc0?auto=format&fit=crop&w=1200&q=80",
+      "caption": "Silicium à nu : Le champ de bataille des opérations vectorielles.",
+      "alt": "Processor macro"
+    },
+    {
+      "type": "text",
+      "content": "<h3>Mathématiques de la Vitesse : Le Produit Scalaire</h3><p>La multiplication matricielle classique $C = A \\times B$ possède une complexité algorithmique naive de $\\mathcal{O}(N^3)$.</p>"
+    },
+    {
+      "type": "equation",
+      "content": "C_{i,j} = \\sum_{k=1}^{K} A_{i,k} B_{k,j} + bias_{i}"
+    },
+    {
+      "type": "text",
+      "content": "<p>Cependant, lire les éléments de $A$ et $B$ depuis la mémoire globale du GPU (VRAM) pour chaque opération tue littéralement les performances. La VRAM a une latence énorme par rapport aux registres. L'astuce est le <strong>Tiling</strong>, ou la parcellisation de la mémoire.</p>"
+    },
+    {
+      "type": "gallery",
+      "items": [
+        {
+          "url": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80",
+          "caption": "VRAM (Haute capacité, Lente)"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
+          "caption": "SRAM / Cache L1 (Minuscule, Ultra rapide)"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "content": "<h2>Le Kernel CUDA GEMM Optimisé</h2><p>Voici la fondation. Ce n'est pas un Kernel naif. Nous allons utiliser la mémoire partagée (Shared Memory) pour charger des \"tuiles\" de nos matrices, permettant aux threads d'un même bloc de coopérer et de réutiliser les données sans taper dans la mémoire globale.</p>"
+    },
+    {
+      "type": "code",
+      "language": "cpp",
+      "content": "template <int TILE_SIZE>\n__global__ void matrixMulKernel(float* C, float* A, float* B, int M, int N, int K) {\n    // Allocations en Shared Memory (Ultra rapide)\n    __shared__ float s_A[TILE_SIZE][TILE_SIZE];\n    __shared__ float s_B[TILE_SIZE][TILE_SIZE];\n\n    int bx = blockIdx.x, by = blockIdx.y;\n    int tx = threadIdx.x, ty = threadIdx.y;\n\n    int row = by * TILE_SIZE + ty;\n    int col = bx * TILE_SIZE + tx;\n\n    float sum = 0.0f;\n\n    // Boucle sur les sous-matrices\n    for (int t = 0; t < (K + TILE_SIZE - 1) / TILE_SIZE; ++t) {\n        // Chargement coopératif depuis la VRAM vers la Shared Memory\n        if (row < M && t * TILE_SIZE + tx < K)\n            s_A[ty][tx] = A[row * K + t * TILE_SIZE + tx];\n        else\n            s_A[ty][tx] = 0.0f;\n\n        if (t * TILE_SIZE + ty < K && col < N)\n            s_B[ty][tx] = B[(t * TILE_SIZE + ty) * N + col];\n        else\n            s_B[ty][tx] = 0.0f;\n\n        __syncthreads(); // Attendre que tout le bloc soit chargé\n\n        // Multiplication sur la tuile en cours\n        for (int k = 0; k < TILE_SIZE; ++k) {\n            sum += s_A[ty][k] * s_B[k][tx];\n        }\n\n        __syncthreads(); // Attendre la fin des calculs avant la procaine passe\n    }\n\n    if (row < M && col < N) {\n        C[row * N + col] = sum;\n    }\n}"
+    },
+    {
+      "type": "text",
+      "content": "<p>Ce kernel permet d'atteindre plus de 70% de la performance crête d'un GPU sur une opération GEMM. La fonction <code>__syncthreads()</code> s'assure qu'aucun thread ne prenne de l'avance, évitant ainsi une race condition massive.</p><h3>La Fonction d'Activation</h3><p>Après le passage linéaire de la matrice, nous passons le résultat dans une fonction de transfert non linéaire. Le GELU (Gaussian Error Linear Unit) est devenu standard depuis l'avènement des Transformers. Il s'approxime par :</p>"
+    },
+    {
+      "type": "equation",
+      "content": "GELU(x) \\approx 0.5x \\left(1 + \\tanh\\left(\\sqrt{\\frac{2}{\\pi}} \\left(x + 0.044715 x^3\\right)\\right)\\right)"
+    },
+    {
+      "type": "text",
+      "content": "<p>L'implémentation de cette équation en CUDA exige des intrinsics mathématiques (<code>__fsqrt_rn</code>, <code>__expf</code>) pour éviter de ruiner la bande passante avec du calcul long.</p>"
+    },
+    {
+      "type": "code",
+      "language": "cpp",
+      "content": "__global__ void fast_gelu_kernel(float* x, int size) {\n    int idx = blockIdx.x * blockDim.x + threadIdx.x;\n    if (idx < size) {\n        float val = x[idx];\n        float cdf = 0.5f * (1.0f + tanhf(0.7978845608f * (val + 0.044715f * val * val * val)));\n        x[idx] = val * cdf;\n    }\n}"
+    },
+    {
+      "type": "text",
+      "content": "<h2>Profiling et Bandwidth Analytics</h2><p>Comment savons-nous que notre code est bon ? Nsight Compute, le profiler d'NVIDIA. Il révèle nos péchés : memory coalescing, warp divergence, et bank conflicts.</p>"
+    },
+    {
+      "type": "carousel",
+      "items": [
+        {
+          "url": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80",
+          "caption": "Divergence Warp : Le Tueur de Performance"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80",
+          "caption": "Analyse de Bande Passante (Roofline Model)"
+        },
+        {
+          "url": "https://images.unsplash.com/photo-1504639725590-34d0984388bd?auto=format&fit=crop&w=1200&q=80",
+          "caption": "Saturation des Tensor Cores"
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "text": "Il n'y a pas de code parfait, il n'y a que du code qu'on a arrêté de profiler.",
+      "author": "Fox Engineering"
+    },
+    {
+      "type": "text",
+      "content": "<h2>Conclusion de l'Architecture</h2><p>En alignant méticuleusement l'accès mémoire, en exploitant le cache L1 au travers de la Shared Memory, et en écrivant nos kernels d'activation de manière mathématiquement agressive, nous avons posé la brique élémentaire d'un moteur performant.</p><p>Dans la prochaine partie, nous aborderons la fusion de kernels (Kernel Fusion), qui nous fera gagner encore 40% de temps d'exécution en combinant la multiplication matricielle et la fonction d'activation dans un seul passage sur le GPU.</p>"
+    }
+  ]
+}

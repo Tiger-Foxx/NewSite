@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useApi } from '../../hooks/useApi';
-import { Post } from '../../types';
+import { UnifiedPostItem } from '../../types';
 import { ImageWithSkeleton } from '../ui/ImageWithSkeleton';
 
 const formatDate = (dateString: string | undefined): string => {
@@ -15,8 +15,8 @@ const formatDate = (dateString: string | undefined): string => {
 };
 
 export const BlogDesktop: React.FC = () => {
-    const { data, loading } = useApi<{ results: Post[] }>({
-        endpoint: '/api/posts/?limit=4&ordering=-date_publication',
+    const { data, loading } = useApi<{ results: UnifiedPostItem[] }>({
+        endpoint: '/api/all-posts/?limit=4',
         loadOnMount: true,
     });
 
@@ -53,9 +53,9 @@ export const BlogDesktop: React.FC = () => {
                                         transition={{ duration: 0.8 }}
                                     >
                                         <div className="md:w-3/5 overflow-hidden">
-                                            <Link to={`/blog/${post.id}`} className="block w-full h-[500px] lg:h-[700px] relative">
+                                            <Link to={post.article_type === 'v2' ? `/article/${post.slug}` : `/blog/${post.id}`} className="block w-full h-[500px] lg:h-[700px] relative">
                                                 <ImageWithSkeleton
-                                                    src={post.photo500_x_800 || post.photo800_x_533}
+                                                    src={post.photo_cover_url}
                                                     alt={post.titre}
                                                     // Restored the grayscale to be stronger as requested, but keeping it elegant
                                                     className="w-full h-full object-cover filter grayscale-[90%] opacity-90 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000 transform group-hover:scale-105"
@@ -75,7 +75,7 @@ export const BlogDesktop: React.FC = () => {
                                                     {formatDate(post.date)}
                                                 </span>
                                             </div>
-                                            <Link to={`/blog/${post.id}`}>
+                                            <Link to={post.article_type === 'v2' ? `/article/${post.slug}` : `/blog/${post.id}`}>
                                                 {/* Notice the removal of "uppercase" class here to fix user concern about readability */}
                                                 <h3 className="text-4xl lg:text-5xl font-bold tracking-tight text-black dark:text-white leading-tight mb-8 hover:underline decoration-2 underline-offset-8">
                                                     {post.titre}
@@ -85,7 +85,7 @@ export const BlogDesktop: React.FC = () => {
                                                 {post.description || "Découvrez une analyse pointue sur l'ingénierie moderne à travers ce nouveau billet."}
                                             </p>
                                             <Link 
-                                                to={`/blog/${post.id}`}
+                                                to={post.article_type === 'v2' ? `/article/${post.slug}` : `/blog/${post.id}`}
                                                 className="inline-flex items-center gap-4 uppercase tracking-[0.2em] text-xs font-bold text-black dark:text-white"
                                             >
                                                 Lire l'article
@@ -107,9 +107,9 @@ export const BlogDesktop: React.FC = () => {
                                     viewport={{ once: true, margin: "-100px" }}
                                     transition={{ duration: 0.8, delay: index * 0.1 }}
                                 >
-                                    <Link to={`/blog/${post.id}`} className="block relative h-64 overflow-hidden mb-6">
+                                    <Link to={post.article_type === 'v2' ? `/article/${post.slug}` : `/blog/${post.id}`} className="block relative h-64 overflow-hidden mb-6">
                                         <ImageWithSkeleton
-                                            src={post.photo500_x_800 || post.photo800_x_533}
+                                            src={post.photo_cover_url}
                                             alt={post.titre}
                                             className="w-full h-full object-cover filter saturate-50 group-hover:saturate-100 transition-all duration-700 transform group-hover:scale-105"
                                             onError={(e) => {
@@ -129,7 +129,7 @@ export const BlogDesktop: React.FC = () => {
                                             </span>
                                         </div>
 
-                                        <Link to={`/blog/${post.id}`}>
+                                        <Link to={post.article_type === 'v2' ? `/article/${post.slug}` : `/blog/${post.id}`}>
                                             {/* Removed uppercase for better readability as requested */}
                                             <h3 className="font-bold tracking-tight text-black dark:text-white text-xl md:text-2xl mb-4 group-hover:underline decoration-1 underline-offset-4 line-clamp-3 leading-snug">
                                                 {post.titre}
