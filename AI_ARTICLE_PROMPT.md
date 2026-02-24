@@ -315,4 +315,180 @@ Tu vas construire l'article en utilisant la clé `"blocks"`, qui prend un tablea
   ]
 }
 
+
 ````
+
+- exemple 3 :
+  json```
+
+```
+{
+  "titre": "SteelFox : J'ai Construit un Outil de Hacking Windows en Python (et c'est Open Source)",
+  "description": "112 modules, 12 catégories, des rapports dark comme l'âme d'un pentesteur. SteelFox aspire tout ce que Windows cache sur toi — mots de passe, tokens Discord, seeds crypto, clés SSH. Visite guidée.",
+  "photo_cover_url": "https://github.com/Tiger-Foxx/fox-steel/blob/main/steelfox/assets/image-steel-fox.png?raw=true",
+  "photo_banner_url": "https://github.com/Tiger-Foxx/fox-steel/blob/main/steelfox/assets/image-steel-fox.png?raw=true",
+  "categorie": "Cybersécurité / Hacking Éthique",
+  "auteur": "Fox",
+  "auteur_title": "Computer Engineering Scientist",
+  "auteur_avatar_url": "https://avatars.githubusercontent.com/u/118616410?v=4",
+  "date": "2026-02-23",
+  "is_published": true,
+  "blocks": [
+    {
+      "type": "text",
+      "content": "<h2>Commence par lire ça avant de paniquer 😅</h2><p>Oui. J'ai construit un outil qui extrait des mots de passe. Des tokens de session. Des clés SSH. Des seeds de wallets crypto. Des hashes du registre SAM de Windows. L'historique de tes connexions RDP. Le contenu de ton presse-papier. Et encore beaucoup d'autres choses que tu préfèrerais garder pour toi.</p><p>Non, je ne suis pas un criminel. Non, cet outil n'a pas été conçu pour compromettre ta machine à ton insu. <strong>SteelFox est un framework de sécurité offensive</strong>, conçu pour les pentesters, les équipes de sécurité interne, les chercheurs, et toute personne qui veut savoir à quel point son infrastructure Windows est exposée — avant qu'un vrai attaquant ne le découvre à sa place.</p><p>La distinction est fondamentale : un scalpel entre les mains d'un chirurgien sauve des vies. Le même scalpel dans d'autres mains... bah, on préfère ne pas y penser. SteelFox, c'est pareil. Et dans cet article, je vais te montrer exactement ce qu'il fait, comment il le fait, ce qu'il révèle sur la façon dont Windows gère (et expose) tes secrets — et ce que tu devrais en conclure pour ta propre sécurité.</p><p>Accroche-toi, ça va être long. Et techniquement passionnant 🦊</p>"
+    },
+    {
+      "type": "image",
+      "url": "https://github.com/Tiger-Foxx/fox-steel/blob/main/steelfox/assets/image-steel-fox.png?raw=true",
+      "caption": "SteelFox — Advanced Windows Credential & Reconnaissance Framework, v1.3.1",
+      "alt": "SteelFox banner"
+    },
+    {
+      "type": "text",
+      "content": "<h2>Le contexte : pourquoi un outil comme ça existe</h2><p>Imagine la scène : tu es RSSI d'une entreprise de taille moyenne. Tu as déployé un antivirus, un EDR, une politique de mots de passe complexes. Tu te sens plutôt bien. Et puis un jour, un pentesteur contractuel passe une heure sur l'un de tes postes de travail avec un accès utilisateur standard et repart avec :</p><ul><li>Les mots de passe Chrome de l'employé (oui, tous)</li><li>Son token Discord actif (donc accès à ses serveurs)</li><li>Ses credentials AWS CLI stockés dans <code>~/.aws/credentials</code></li><li>La liste de tous les réseaux WiFi auxquels ce PC s'est connecté, avec leurs mots de passe</li><li>L'historique PowerShell qui contient un mot de passe tapé en clair trois semaines plus tôt</li></ul><p>Ce scénario n'est pas hypothétique. Il se produit tous les jours dans des entreprises qui pensaient avoir fait le minimum. <strong>SteelFox automatise exactement cette phase de collecte</strong> — ce qu'on appelle le <em>post-exploitation credential harvesting</em> dans le jargon — pour que les équipes de sécurité puissent évaluer leur exposition de manière systématique et reproductible, plutôt que de dépendre des connaissances fragmentées de chaque pentesteur.</p><p>C'est ça, l'idée de départ. Pas de l'exhibitionnisme technique. Une vraie réponse à un vrai problème.</p>"
+    },
+    {
+      "type": "quote",
+      "text": "Un système qu'on n'a jamais attaqué est un système dont on ne connaît pas les failles. Et l'ignorance, en sécurité, ça coûte cher.",
+      "author": "Fox"
+    },
+    {
+      "type": "text",
+      "content": "<h2>Alors concrètement, SteelFox fait quoi ? 🤔</h2><p>SteelFox, c'est un framework Python qui tourne sur Windows 10 et 11. Il s'exécute, il scanne, il génère un rapport. Simple à décrire, brutal dans les résultats.</p><p>Il est organisé en <strong>112 modules</strong> répartis dans <strong>12 catégories</strong>. Chaque module s'occupe d'un logiciel ou d'une source de données précise. Laisse-moi te faire le tour du propriétaire de ce qu'il va chercher.</p><h3>Les Navigateurs</h3><p>Chrome, Edge, Brave, Opera, Vivaldi, Firefox, Librewolf — tous les navigateurs Chromium et Mozilla de ta machine. SteelFox ne se contente pas de récupérer les mots de passe. Il va chercher les cookies de session (qui permettent souvent de se connecter à un site sans même avoir besoin du mot de passe), les données d'autofill (noms, adresses, numéros de carte), l'historique de navigation, et les bookmarks. Sur le test illustré dans le rapport ci-dessous, <strong>1314 items</strong> ont été extraits des seuls navigateurs Chromium. Mille. Trois. Cent. Quatorze.</p>"
+    },
+    {
+      "type": "image",
+      "url": "https://github.com/Tiger-Foxx/fox-steel/blob/main/steelfox/assets/screen-shoot-steel-fox-html-report-2-Chrome.png?raw=true",
+      "caption": "1314 items extraits de Chrome — logins, autofill, emails, cartes bancaires. Le rapport les affiche en grille 4 colonnes avec masquage des valeurs sensibles.",
+      "alt": "SteelFox Chrome credentials dashboard"
+    },
+    {
+      "type": "text",
+      "content": "<h3>La Messagerie et les Réseaux Sociaux</h3><p>Discord, Slack, Microsoft Teams, Signal, Skype, WhatsApp Desktop, Telegram, Telegram Desktop Sessions. Ce que SteelFox récupère ici, c'est avant tout les <strong>tokens de session</strong>. Un token Discord actif, c'est un accès complet à ton compte — tous tes serveurs, tous tes messages privés — sans avoir besoin de ton mot de passe ni de ton 2FA. Ce vecteur est particulièrement dangereux parce que la plupart des utilisateurs ignorent totalement qu'un fichier JSON planqué dans AppData contient la clé de leur compte.</p><h3>Les Outils de Développement</h3><p>C'est là que ça devient vraiment intéressant pour les profils techniques. Git (credentials stockées), les clés SSH (clés privées RSA/Ed25519 dans <code>~/.ssh/</code>), Docker (configs d'authentification aux registries), AWS CLI (access key ID + secret), Azure CLI, NPM (token d'authentification), VS Code, les IDEs JetBrains, Postman, Insomnia, GitHub CLI, Terraform, GCP gcloud, Kubernetes configs, HashiCorp Vault, ngrok... <strong>21 modules</strong> couvrent cet espace. Un développeur typique a potentiellement 10 à 15 de ces outils configurés sur sa machine.</p><h3>Le Réseau</h3><p>Tous les profils WiFi enregistrés sur la machine, avec leurs mots de passe en clair. OpenVPN, NordVPN, ProtonVPN, WireGuard, Cisco AnyConnect, FortiClient, GlobalProtect, Tailscale. Si tu te souviens de tous les cafés, hôtels et bureaux auxquels tu t'es connecté depuis que tu as ce PC... SteelFox s'en souvient aussi 😇</p>"
+    },
+    {
+      "type": "image",
+      "url": "https://github.com/Tiger-Foxx/fox-steel/blob/main/steelfox/assets/screen-shoot-steel-fox-html-report-3-wifi-and-search.png?raw=true",
+      "caption": "Module Network : tous les réseaux WiFi enregistrés avec SSID, mot de passe, type d'authentification et chiffrement. La barre de recherche (flèche verte) filtre en temps réel.",
+      "alt": "SteelFox WiFi network recovery"
+    },
+    {
+      "type": "text",
+      "content": "<h3>Les Gestionnaires de Mots de Passe</h3><p>KeePass, Bitwarden, 1Password, LastPass. Attention — SteelFox ne casse pas les coffres forts. Il récupère les fichiers de base de données, les configurations locales, et parfois les master passwords si ils ont été stockés de manière non sécurisée (ce qui arrive plus souvent qu'on ne le voudrait). L'option <code>--password</code> permet de fournir un master password connu pour tenter d'accéder au contenu.</p><h3>Les Wallets Crypto 💸</h3><p>Steam, Epic Games, Battle.net OK... mais surtout : Exodus Wallet, Electrum, Atomic Wallet, Coinomi, Bitcoin Core, Ethereum Keystore, MetaMask, Brave Wallet, Wasabi Wallet. Ce que SteelFox peut récupérer ici va des fichiers de configuration aux fichiers keystore JSON — et dans certains cas, à des seeds dérivées stockées de manière beaucoup trop confiante sur le disque. Si tu gardes des cryptos sur un wallet software sans hardware wallet, ce module devrait te faire réfléchir.</p><h3>Les Internals Windows</h3><p>C'est la couche la plus profonde. Windows Credential Manager (qui stocke les credentials réseau, VPN, sites web), Windows Autologon (le mot de passe d'autologin stocké en clair dans le registre), les DPAPI Credential Files, le SAM Hashdump (les hashes des mots de passe locaux Windows), les fichiers Unattend.xml (qui contiennent parfois des mots de passe en clair laissés par les déploiements automatisés), l'historique PowerShell, les fichiers RDP sauvegardés, et Tortoise SVN.</p><h3>La Reconnaissance Système</h3><p>17 modules dédiés à cartographier la machine elle-même : informations système complètes, recon réseau, liste des logiciels installés, processus actifs, logiciels de sécurité détectés (antivirus, EDR, firewalls), programmes au démarrage, historique des périphériques USB connectés, contenu du presse-papier au moment du scan, historique RDP, privilèges de l'utilisateur courant, fichiers récents ouverts, tâches planifiées, connexions réseau actives, dossiers partagés, exclusions Windows Defender, et le fichier hosts.</p><p>Ce dernier point mérite une mention spéciale : <strong>les exclusions Defender</strong>. Un attaquant (ou un malware) qui a pu modifier ces exclusions a créé des angles morts dans ta protection. SteelFox les liste pour que l'auditeur puisse identifier ces zones grises.</p>"
+    },
+    {
+      "type": "gallery",
+      "items": [
+        {
+          "url": "https://github.com/Tiger-Foxx/fox-steel/blob/main/steelfox/assets/screen-shoot-steel-fox-html-report.png?raw=true",
+          "caption": "Dashboard principal — hostname, date de scan, KPIs (credentials trouvés, catégories, utilisateurs)",
+          "alt": "SteelFox HTML report overview"
+        },
+        {
+          "url": "https://github.com/Tiger-Foxx/fox-steel/blob/main/steelfox/assets/screen-shoot-steel-fox-html-report-2-Chrome.png?raw=true",
+          "caption": "Détail Chrome — chaque credential avec source, champ, valeur masquée et compteur d'utilisation",
+          "alt": "SteelFox Chrome module detail"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "content": "<h2>Le rapport HTML : parce que les données brutes c'est bien, mais lisible c'est mieux</h2><p>Un des aspects qui me tenait vraiment à cœur avec SteelFox, c'est que l'output ne soit pas un vomissement de texte dans un terminal. Quand tu fais un audit de sécurité, tu dois souvent présenter tes résultats à des gens qui ne sont pas forcément techniques. Un rapport lisible, bien organisé, et visuellement propre, c'est pas un luxe — c'est de la communication professionnelle.</p><p>SteelFox génère donc un dashboard HTML en thème \"Jet Black\" 🖤 — un fichier unique, auto-contenu, qui fonctionne hors ligne dans n'importe quel navigateur. Ce que tu trouves dedans :</p><ul><li><strong>Une barre de statut en haut</strong> : hostname de la machine scannée, date et heure du scan, version de SteelFox</li><li><strong>Trois KPI cards</strong> : nombre total de credentials trouvés, nombre de catégories scannées, nombre d'utilisateurs ciblés</li><li><strong>Une sidebar navigable</strong> : chaque catégorie listée avec un badge indiquant le nombre de résultats. Un clic, tu sautes directement à la section</li><li><strong>Une barre de recherche live</strong> : tu tapes un mot-clé, tous les résultats de toutes les catégories se filtrent instantanément</li><li><strong>Les valeurs sensibles masquées</strong> par défaut, révélables au clic — pour éviter les screenshots accidentels en réunion 😬</li><li>Un bouton copier-coller sur chaque valeur</li></ul><p>En plus du HTML, SteelFox peut sortir en <strong>JSON</strong> (pour l'intégration dans des pipelines d'automatisation ou des SIEM) et en <strong>TXT</strong> (pour les puristes du terminal). Et il peut générer les trois formats simultanément avec <code>-oA</code>.</p>"
+    },
+    {
+      "type": "carousel",
+      "items": [
+        {
+          "url": "https://github.com/Tiger-Foxx/fox-steel/blob/main/steelfox/assets/screen-shoot-steel-fox-html-report.png?raw=true",
+          "caption": "Vue globale — sidebar catégories, KPIs, navigation"
+        },
+        {
+          "url": "https://github.com/Tiger-Foxx/fox-steel/blob/main/steelfox/assets/screen-shoot-steel-fox-html-report-2-Chrome.png?raw=true",
+          "caption": "Module Chrome — 1314 items en grille, valeurs masquées"
+        },
+        {
+          "url": "https://github.com/Tiger-Foxx/fox-steel/blob/main/steelfox/assets/screen-shoot-steel-fox-html-report-3-wifi-and-search.png?raw=true",
+          "caption": "Module Réseau — WiFi + barre de recherche active"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "content": "<h2>Le Builder : transformer SteelFox en payload autonome</h2><p>Pour les scénarios de pentest physique — tu sais, la clé USB qu'on pose discrètement à côté d'un poste de travail pendant qu'un employé est parti déjeuner — SteelFox intègre un <strong>Builder</strong>. C'est un outil (GUI ou CLI) qui empaquète tout le framework dans un <code>.exe</code> autonome. Pas besoin de Python sur la machine cible. Pas de dépendances. Juste un exécutable qui fait son travail.</p><p>Ce payload, une fois lancé, s'exécute en <strong>mode stealth total</strong> : pas de fenêtre console, pas de notification, rien de visible pour l'utilisateur. Il scanne tout, génère le rapport HTML, et l'envoie automatiquement par email à l'auditeur via SMTP. Le rapport est aussi sauvegardé localement dans <code>%TEMP%</code>.</p><p>Et pour corser le tout, le Builder permet d'assigner une icône personnalisée à l'exécutable — par exemple, une icône de PDF. Le nom du fichier peut être quelque chose d'innocent comme <code>Rapport_Q4_2025.exe</code>. C'est exactement ce qu'un attaquant ferait. Et c'est exactement ce qu'un pentesteur doit simuler pour tester si les employés exécutent des fichiers inconnus 🎯</p>"
+    },
+    {
+      "type": "gallery",
+      "items": [
+        {
+          "url": "https://github.com/Tiger-Foxx/fox-steel/blob/main/steelfox/assets/screen-shoot.png?raw=true",
+          "caption": "Le Builder GUI — interface Tkinter simple : email destinataire, credentials SMTP, nom et icône du .exe",
+          "alt": "SteelFox Builder GUI"
+        },
+        {
+          "url": "https://github.com/Tiger-Foxx/fox-steel/blob/main/steelfox/assets/example-of-executable-file-named-homework-and-hav-pdf-icon.png?raw=true",
+          "caption": "Exemple de payload généré avec une icône PDF — le genre de fichier qu'un utilisateur non averti va double-cliquer",
+          "alt": "SteelFox spoofed executable"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "content": "<h2>Le scénario physique : USB, payload, rapport</h2><p>Voici comment se déroule un test physique typique avec SteelFox. L'auditeur prépare en amont le payload avec le Builder : il renseigne son adresse email de réception et ses credentials SMTP Gmail (via App Password, pas son vrai mot de passe — on reste propres). Le Builder génère un <code>.exe</code>. L'auditeur le copie sur une clé USB.</p><p>Le jour du test, il pose la clé USB sur le bureau de la cible (ou la connecte furtivement pendant que la personne est absente). L'exécutable tourne. L'auditeur reçoit l'email avec le rapport HTML en pièce jointe. Toute l'opération peut prendre moins d'une minute selon la machine. Et la cible ne voit absolument rien.</p><p>C'est brutal à lire. C'est encore plus brutal à vivre quand on est du côté défensif et qu'on reçoit le rapport. Mais c'est exactement ce genre de démonstration qui convainc un comité de direction d'investir dans la formation à la sécurité des employés.</p>"
+    },
+    {
+      "type": "image",
+      "url": "https://github.com/Tiger-Foxx/fox-steel/blob/main/steelfox/assets/usb-acces-image-of-usb-key-on-computer.png?raw=true",
+      "caption": "Le scénario classique du pentest physique : clé USB + payload + rapport email. SteelFox automatise les trois étapes.",
+      "alt": "USB physical pentest scenario"
+    },
+    {
+      "type": "text",
+      "content": "<h2>L'interface en ligne de commande : puissance et contrôle 🖥️</h2><p>Si le Builder c'est pour le terrain, le CLI c'est pour le labo. SteelFox en ligne de commande est riche, flexible, et bien pensé. Tu peux lancer tous les modules, cibler une catégorie spécifique, choisir ton format de sortie, activer le mode verbeux pour déboguer, passer en mode silencieux pour les pipelines automatisés, ou fournir un master password pour tenter de déchiffrer les coffres-forts des gestionnaires de mots de passe.</p><p>Les modes disponibles vont du plus discret (stealth, aucune console, rapport uniquement) au plus bavard (<code>-vv</code> pour du debug complet). Et la barre de progression en temps réel te donne un feedback visuel pendant le scan — pratique quand il y a 112 modules à dérouler.</p>"
+    },
+    {
+      "type": "image",
+      "url": "https://github.com/Tiger-Foxx/fox-steel/blob/main/steelfox/assets/screen-shoot-command-line-interface.png?raw=true",
+      "caption": "Le CLI de SteelFox en action — barre de progression, catégories, feedback en temps réel",
+      "alt": "SteelFox command line interface"
+    },
+    {
+      "type": "text",
+      "content": "<h2>Ce que SteelFox révèle sur Windows (et sur nous)</h2><p>En construisant les 112 modules de SteelFox, j'ai eu une prise de conscience progressive et un peu inconfortable : <strong>la sécurité de nos secrets numériques sur Windows repose presque entièrement sur un seul verrou : la session utilisateur</strong>.</p><p>DPAPI (Data Protection API), le mécanisme que Windows utilise pour chiffrer les données sensibles des applications, est brillant dans son concept. Il lie le chiffrement à l'identité de l'utilisateur connecté. Résultat : si tu accèdes au disque dur sans ton compte Windows, les données restent chiffrées. C'est une vraie protection contre le vol physique de disque dur.</p><p>Sauf que... dès que tu as une session active sous ce compte, DPAPI déchiffre automatiquement. Aucun token supplémentaire, aucune confirmation. Un processus malveillant qui tourne sous ta session a exactement les mêmes droits que toi sur tes propres secrets DPAPI. Et ça, la plupart des utilisateurs l'ignorent totalement 😬</p><p>Les wallets crypto ajoutent une couche d'ironie supplémentaire. Certains stockent leurs données de configuration dans des fichiers JSON dans <code>%APPDATA%</code>, protégés uniquement par les permissions NTFS. Si tu peux lire le dossier, tu peux lire le fichier. La leçon est claire : pour tout ce qui a de la valeur financière réelle, un <strong>hardware wallet</strong> n'est pas un luxe — c'est la seule vraie protection.</p><p>Et l'historique PowerShell ? Là c'est presque comique. Windows garde un historique de toutes les commandes tapées dans PowerShell dans un fichier texte sur le disque. Combien de sysadmins ont un jour tapé <code>net user administrateur MonMotDePasse123</code> directement dans le terminal et ne s'en souviennent plus ? SteelFox s'en souvient pour eux.</p>"
+    },
+    {
+      "type": "quote",
+      "text": "La sécurité par l'obscurité n'est pas de la sécurité. C'est de l'espoir — et l'espoir est une mauvaise stratégie de défense.",
+      "author": "Fox Engineering"
+    },
+    {
+      "type": "text",
+      "content": "<h2>Sous le capot : comment c'est construit (pour les curieux techniques)</h2><p>SteelFox est architecturé autour de quelques principes de design forts. Le premier, c'est <strong>l'auto-découverte des modules</strong>. Il n'y a aucune liste centrale de modules à maintenir. Le framework scanne les sous-dossiers de <code>steelfox/modules/</code> au démarrage, découvre tous les fichiers Python qui définissent une classe héritant de <code>ModuleBase</code>, et les charge automatiquement. Veux-tu contribuer un nouveau module ? Tu crées un fichier, tu définis la classe, et c'est terminé. Aucune configuration supplémentaire.</p><p>Le second principe, c'est la <strong>séparation stricte des couches</strong> : le moteur de collecte, la couche de rapport, et l'UI sont complètement indépendants. Tu peux utiliser le moteur de scan sans générer de rapport HTML. Tu peux utiliser le générateur de rapport sur des données existantes. Chaque partie est testable et remplaçable sans impacter les autres.</p><p>L'<strong>exécution différée</strong> est aussi un point important. Les modules qui ont besoin d'appels WinAPI lourds (DPAPI, SAM dump) sont exécutés en dernier, après que tous les modules simples ont terminé. Ça optimise les performances globales et évite de bloquer la progression visible sur des opérations longues.</p><p>Enfin, le <strong>multi-user scanning</strong> : quand SteelFox tourne en tant qu'Administrateur, il itère sur tous les profils utilisateurs de la machine. Chaque utilisateur a son propre espace dans le rapport. Sur une machine partagée (serveur, poste de hot-desking), c'est particulièrement révélateur.</p>"
+    },
+    {
+      "type": "text",
+      "content": "<h2>Comment l'installer et l'utiliser (sur ta propre machine, hein 😅)</h2><p>SteelFox est un package Python propre, installable via pip. Il tourne sur Windows 10 et 11, Python 3.10 ou plus récent. Pour une couverture complète, il est recommandé de lancer en tant qu'Administrateur — certains modules (SAM, DPAPI d'autres utilisateurs, Credential Manager global) nécessitent ces privilèges.</p><p>Trois options d'installation : via pip depuis le repo cloné (recommandé), via <code>requirements.txt</code> en mode manuel, ou directement avec le <code>.exe</code> standalone disponible dans les Releases GitHub — celui-là ne nécessite aucun Python sur la machine. Note que ton antivirus va probablement lever une alerte sur l'exe : c'est un faux positif attendu pour tout outil qui accède aux credentials. Ajoute une exclusion ou exécute dans un environnement contrôlé.</p><p>Une fois installé, la commande <code>steelfox</code> est disponible directement dans ton terminal. Quelques exemples de ce que tu peux faire :</p><ul><li><code>steelfox all -oH</code> — scan complet + rapport HTML</li><li><code>steelfox browsers</code> — uniquement les navigateurs</li><li><code>steelfox reconnaissance -oJ</code> — recon système en JSON</li><li><code>steelfox all --stealth -oH -output .\\loot</code> — mode silencieux total, rapport dans ./loot</li><li><code>steelfox all --password \"MonMasterPw\"</code> — avec tentative de déchiffrement des coffres</li><li><code>steelfox --list-modules</code> — liste tous les modules disponibles</li></ul>"
+    },
+    {
+      "type": "text",
+      "content": "<h2>Ce qui arrive ensuite : la roadmap 🗺️</h2><p>SteelFox v1.3.1 est stable et complet sur Windows. Mais la roadmap est ambitieuse. Dans l'ordre de priorité :</p><p>Le support <strong>Linux</strong> arrive en premier — les modules Firefox/Chrome Linux, WiFi (NetworkManager), SSH, GNOME Keyring, KWallet, GPG, et les tokens des CLI cloud (AWS, GCP, Azure) dans leurs variantes Linux. La logique de base est la même, les chemins changent.</p><p>Ensuite <strong>macOS</strong>, avec le Keychain comme cible principale — et c'est là que les choses deviennent vraiment intéressantes techniquement.</p><p>À plus long terme, un système de plugins communautaires et un viewer web pour les rapports (plutôt qu'un fichier HTML self-contained).</p><p>Et évidemment, si tu veux contribuer — le repo est ouvert, la doc est claire, et ajouter un module c'est vraiment simple. Chaque outil non couvert aujourd'hui est une opportunité de contribution.</p>"
+    },
+    {
+      "type": "text",
+      "content": "<h2>En résumé : ce que tu devrais retenir de tout ça</h2><p>SteelFox n'est pas un outil que j'ai construit pour impressionner. C'est un outil que j'ai construit parce que la question <em>\"à quel point mon infrastructure est exposée ?\"</em> mérite une réponse systématique, reproductible, et présentable — pas une intuition approximative.</p><p>Ce qu'il révèle en creux, c'est que Windows est extrêmement généreux avec les applications qui s'exécutent sous ton compte. DPAPI déchiffre à ta place. Les tokens de session vivent dans des fichiers JSON. Les mots de passe PowerShell persistent sur le disque. Les seeds crypto parfois aussi. Et tout ça, un attaquant qui a passé ton périmètre réseau peut le collecter en quelques minutes.</p><p>La bonne nouvelle ? Savoir c'est déjà protéger. Un audit SteelFox suivi d'actions correctives (gestionnaire de mots de passe, hardware wallet, nettoyage de l'historique PS, audit des exclusions Defender) change radicalement ton profil de risque.</p><p>Le code est là : <a href=\"https://github.com/Tiger-Foxx/fox-steel\"><strong>github.com/Tiger-Foxx/fox-steel</strong></a> et tu peux le telecharger ici : <a href=\"https://steelfox.myfox.tech\">steelfox.myfox.tech</a>. Sous licence LGPL-3.0. Libre, open source, et construit avec soin. Lance-le sur ta propre machine, lis le rapport, et dis-moi ce que tu as trouvé 🦊</p>"
+    },
+    {
+      "type": "image",
+      "url": "https://github.com/Tiger-Foxx/fox-steel/blob/main/steelfox/assets/logo-steel-fox-icon.png?raw=true",
+      "caption": "SteelFox — Professional credential auditing for authorized security operations.",
+      "alt": "SteelFox logo"
+    },
+    {
+      "type": "quote",
+      "text": "Construire des outils offensifs pour la défense, c'est comprendre l'attaque pour mieux protéger. C'est le seul ordre logique.",
+      "author": "Fox"
+    }
+  ]
+}
+
+```
