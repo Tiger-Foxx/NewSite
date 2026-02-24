@@ -56,6 +56,7 @@ export const BlogPostPage: React.FC = () => {
             //     metaDescription.setAttribute('content', postData.description || postData.titre);
             // }
             fetchRelatedPosts(postData.categorie, postData.id.toString());
+            console.log(navigate)
         }
     }, [postData]);
 

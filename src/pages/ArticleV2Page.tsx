@@ -62,6 +62,7 @@ export const ArticleV2Page: React.FC = () => {
         if (articleData) {
             setArticle(articleData);
             fetchRelatedArticles(articleData.categorie, articleData.id, slug || '');
+            console.log(navigate)
         }
     }, [articleData]);
 
