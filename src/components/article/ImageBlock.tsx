@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useImageViewer } from '../../context/ImageViewerContext';
 
 interface ImageBlockProps {
     src: string | null;
@@ -14,6 +15,7 @@ interface ImageBlockProps {
 const ImageBlock: React.FC<ImageBlockProps> = ({ src, caption, alt }) => {
     const [loaded, setLoaded] = useState(false);
     const [error, setError] = useState(false);
+    const { openImage } = useImageViewer();
 
     if (!src || error) return null;
 
@@ -39,6 +41,7 @@ const ImageBlock: React.FC<ImageBlockProps> = ({ src, caption, alt }) => {
                     className={`w-full h-auto object-cover transition-all duration-700 ${
                         loaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
                     } hover:scale-[1.02] cursor-zoom-in`}
+                    onClick={() => openImage(src, alt || caption)}
                 />
             </motion.div>
             {caption && (

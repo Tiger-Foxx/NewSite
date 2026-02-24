@@ -1,11 +1,14 @@
 import React from 'react';
 import { ImageWithSkeleton } from '../ui/ImageWithSkeleton';
+import { useImageViewer } from '../../context/ImageViewerContext';
 
 interface GalleryBlockProps {
     data: { url: string; caption?: string; alt?: string }[] | null;
 }
 
 const GalleryBlock: React.FC<GalleryBlockProps> = ({ data }) => {
+    const { openImage } = useImageViewer();
+
     if (!data || data.length === 0) return null;
 
     const gridCols = data.length === 1 ? 'grid-cols-1' : data.length === 2 ? 'grid-cols-2' : data.length === 3 ? 'grid-cols-1 sm:grid-cols-3' : 'grid-cols-2 lg:grid-cols-3';
@@ -14,7 +17,11 @@ const GalleryBlock: React.FC<GalleryBlockProps> = ({ data }) => {
         <figure className="my-12">
             <div className={`grid gap-4 ${gridCols}`}>
                 {data.map((item, index) => (
-                    <div key={index} className="relative group overflow-hidden rounded-2xl bg-gray-100 dark:bg-zinc-900 aspect-square sm:aspect-auto sm:h-64 lg:h-80">
+                    <div 
+                        key={index} 
+                        onClick={() => openImage(item.url, item.alt || item.caption)}
+                        className="relative group overflow-hidden rounded-2xl bg-gray-100 dark:bg-zinc-900 aspect-square sm:aspect-auto sm:h-64 lg:h-80 cursor-zoom-in"
+                    >
                         <ImageWithSkeleton
                             src={item.url}
                             alt={item.alt || `Gallery image ${index + 1}`}

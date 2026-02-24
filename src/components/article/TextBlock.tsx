@@ -1,5 +1,6 @@
 import React from 'react';
 import DOMPurify from 'dompurify';
+import { useImageViewer } from '../../context/ImageViewerContext';
 
 interface TextBlockProps {
     content: string;
@@ -12,6 +13,8 @@ interface TextBlockProps {
  * - Sanitized HTML with prose styling
  */
 const TextBlock: React.FC<TextBlockProps> = ({ content }) => {
+    const { openImage } = useImageViewer();
+
     if (!content) return null;
 
     // Check if content contains HTML tags
@@ -30,11 +33,18 @@ const TextBlock: React.FC<TextBlockProps> = ({ content }) => {
                     [&_ul]:list-none [&_ul]:pl-0 [&_ul]:mb-8 [&_ul>li]:relative [&_ul>li]:pl-6 [&_ul>li]:mb-3
                     [&_ul>li::before]:content-[''] [&_ul>li::before]:absolute [&_ul>li::before]:left-0 [&_ul>li::before]:top-[0.6em] [&_ul>li::before]:w-2 [&_ul>li::before]:h-2 [&_ul>li::before]:bg-black [&_ul>li::before]:dark:bg-white [&_ul>li::before]:rounded-full
                     [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:mb-8 [&_ol>li]:mb-3 [&_ol>li]:pl-2
-                    [&_img]:rounded-2xl [&_img]:my-10 [&_img]:shadow-2xl [&_img]:w-full
+                    [&_img]:rounded-2xl [&_img]:my-10 [&_img]:shadow-2xl [&_img]:w-full [&_img]:cursor-zoom-in [&_img]:transition-transform [&_img]:duration-500 hover:[&_img]:scale-[1.02]
                     [&_blockquote]:border-l-[4px] [&_blockquote]:border-black [&_blockquote]:dark:border-white [&_blockquote]:pl-6 [&_blockquote]:sm:pl-10 [&_blockquote]:italic [&_blockquote]:text-xl [&_blockquote]:sm:text-2xl [&_blockquote]:font-medium [&_blockquote]:text-gray-900 [&_blockquote]:dark:text-gray-100 [&_blockquote]:my-12
                     [&_code]:bg-gray-100 [&_code]:dark:bg-zinc-800 [&_code]:text-black [&_code]:dark:text-white [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded-md [&_code]:font-mono [&_code]:text-sm
                 "
                 dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(content) }}
+                onClick={(e) => {
+                    const target = e.target as HTMLElement;
+                    if (target.tagName.toLowerCase() === 'img') {
+                        const img = target as HTMLImageElement;
+                        openImage(img.src, img.alt);
+                    }
+                }}
             />
         );
     }

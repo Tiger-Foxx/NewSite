@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ImageWithSkeleton } from '../ui/ImageWithSkeleton';
+import { useImageViewer } from '../../context/ImageViewerContext';
 
 interface CarouselBlockProps {
     data: { url: string; caption?: string; alt?: string }[] | null;
@@ -8,6 +9,7 @@ interface CarouselBlockProps {
 
 const CarouselBlock: React.FC<CarouselBlockProps> = ({ data }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
+    const { openImage } = useImageViewer();
 
     if (!data || data.length === 0) return null;
 
@@ -30,11 +32,16 @@ const CarouselBlock: React.FC<CarouselBlockProps> = ({ data }) => {
                     transition={{ duration: 0.5, ease: "easeInOut" }}
                     className="absolute inset-0"
                 >
-                    <ImageWithSkeleton
-                        src={data[currentIndex].url}
-                        alt={data[currentIndex].alt || `Slide ${currentIndex + 1}`}
-                        className="w-full h-full object-cover"
-                    />
+                    <div 
+                        className="w-full h-full cursor-zoom-in" 
+                        onClick={() => openImage(data[currentIndex].url, data[currentIndex].alt || data[currentIndex].caption)}
+                    >
+                        <ImageWithSkeleton
+                            src={data[currentIndex].url}
+                            alt={data[currentIndex].alt || `Slide ${currentIndex + 1}`}
+                            className="w-full h-full object-cover"
+                        />
+                    </div>
                     {data[currentIndex].caption && (
                         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 pb-8">
                             <p className="text-white text-sm sm:text-base font-medium max-w-2xl">

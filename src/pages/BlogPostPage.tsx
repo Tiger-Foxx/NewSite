@@ -9,6 +9,7 @@ import { Post, Commentaire, CommentairePayload, PaginatedResponse, SubscribePayl
 import DOMPurify from 'dompurify';
 import Lottie from "lottie-react";
 import foxLoaderAnimation from "@/assets/lotties/fox-loader.json";
+import { useImageViewer } from '../context/ImageViewerContext';
 
 export const BlogPostPage: React.FC = () => {
     const { slug } = useParams<{ slug: string }>();
@@ -16,6 +17,7 @@ export const BlogPostPage: React.FC = () => {
     const [post, setPost] = useState<Post | null>(null);
     const [comments, setComments] = useState<Commentaire[]>([]);
     const [relatedPosts, setRelatedPosts] = useState<UnifiedPostItem[]>([]);
+    const { openImage } = useImageViewer();
     const [commentFormData, setCommentFormData] = useState<CommentairePayload>({
         nom: '',
         email: '',
@@ -353,7 +355,8 @@ export const BlogPostPage: React.FC = () => {
                                     <img
                                         src={post.photo800_x_533}
                                         alt={post.titre}
-                                        className="w-full h-auto object-cover"
+                                        className="w-full h-auto object-cover cursor-zoom-in"
+                                        onClick={() => openImage(post.photo800_x_533, post.titre)}
                                     />
                                 </motion.div>
                             </div>

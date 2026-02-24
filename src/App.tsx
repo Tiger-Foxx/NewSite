@@ -27,8 +27,9 @@ import { LoginPage } from './pages/LoginPage';
 // Pages d'administration (protégées)
 import AdminNewsletterPage from "@/pages/AdminNewsletterPage.tsx";
 
-// Contexte d'authentification
+// Contexte d'authentification et Viewer d'Image
 import { AuthProvider } from './context/AuthContext';
+import { ImageViewerProvider } from './context/ImageViewerContext';
 
 const App: React.FC = () => {
     const [loading, setLoading] = useState(true);
@@ -78,6 +79,7 @@ const App: React.FC = () => {
     return (
         <>
             <AuthProvider>
+                <ImageViewerProvider>
                 <div className="min-h-screen flex flex-col bg-white dark:bg-black text-black dark:text-white">
                     <Header />
 
@@ -117,6 +119,7 @@ const App: React.FC = () => {
 
                     <Footer />
                 </div>
+                </ImageViewerProvider>
             </AuthProvider>
             <Analytics />
         </>
