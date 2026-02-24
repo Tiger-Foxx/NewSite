@@ -7,6 +7,7 @@ import { apiService } from "@/services"; // Assurez-vous que ce chemin est corre
 // Interface pour une Newsletter (correspondant au modèle Django et à votre usage)
 interface Newsletter {
     id: number;
+    subject: string;
     title: string;
     subtitle: string; // blank=True dans Django, donc optionnel
     main_content: string;
@@ -27,6 +28,7 @@ interface Subscriber {
 
 // Payload pour la création/envoi d'une newsletter via /api/send-newsletter/
 interface SendNewsletterPayload {
+    subject: string;
     title: string;
     subtitle?: string;
     main_content: string;
@@ -54,6 +56,7 @@ export const AdminNewsletterPage: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
 
     const [newsletterForm, setNewsletterForm] = useState<Omit<Newsletter, 'id' | 'created_at'>>({
+        subject: '',
         title: '',
         subtitle: '',
         main_content: '',
@@ -148,8 +151,8 @@ export const AdminNewsletterPage: React.FC = () => {
 
     const handleSendNewsletter = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!newsletterForm.title || !newsletterForm.main_content || !newsletterForm.conclusion) {
-            setError('Veuillez remplir au moins le titre, le contenu principal et la conclusion.');
+        if (!newsletterForm.title || !newsletterForm.main_content || !newsletterForm.conclusion || !newsletterForm.subject) {
+            setError('Veuillez remplir au moins le sujet, le titre, le contenu principal et la conclusion.');
             return;
         }
 
@@ -170,6 +173,7 @@ export const AdminNewsletterPage: React.FC = () => {
             const response = await apiService.post<{ message: string }>('/api/send-newsletter/', payload);
             setSuccess(response.data.message || 'Newsletter envoyée avec succès !');
             setNewsletterForm({
+                subject: '',
                 title: '',
                 subtitle: '',
                 main_content: '',
@@ -263,6 +267,25 @@ export const AdminNewsletterPage: React.FC = () => {
                                 <h2 className="text-xl font-bold text-black dark:text-white mb-6">
                                     Créer une nouvelle newsletter
                                 </h2>
+
+                                <div className="mb-6">
+                                    <label htmlFor="subject" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        Objet de l'email (Subject) <span className="text-red-500">*</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="subject"
+                                        name="subject"
+                                        required
+                                        value={newsletterForm.subject}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-black text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-black dark:focus:ring-white focus:border-transparent"
+                                        placeholder="Ce qui s'affichera dans la boite mail..."
+                                    />
+                                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                        C'est le titre accrocheur qui donne envie d'ouvrir l'email.
+                                    </p>
+                                </div>
 
                                 <div className="mb-6">
                                     <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -445,6 +468,7 @@ export const AdminNewsletterPage: React.FC = () => {
                                             <div className="flex space-x-2">
                                                 <button
                                                     onClick={() => setNewsletterForm({
+                                                        subject: nl.subject || nl.title,
                                                         title: nl.title,
                                                         subtitle: nl.subtitle || '',
                                                         main_content: nl.main_content,
