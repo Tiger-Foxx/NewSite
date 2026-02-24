@@ -227,6 +227,28 @@ export const ArticleV2Page: React.FC = () => {
     const metaDescription = article?.description || 'Lisez cet article détaillé sur Fox Engineering.';
     const metaImage = article?.photo_cover_url || article?.photo_banner_url || `${siteUrl}/favicon.png`;
 
+    const jsonLd = article ? {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": article.titre,
+        "image": [metaImage],
+        "datePublished": article.date ? new Date(article.date).toISOString() : undefined,
+        "author": [{
+            "@type": "Person",
+            "name": article.auteur || "Fox",
+            "url": "https://site.myfox.tech"
+        }],
+        "publisher": {
+            "@type": "Organization",
+            "name": "Fox Engineering",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://site.myfox.tech/favicon.png"
+            }
+        },
+        "description": metaDescription
+    } : null;
+
     return (
         <main className="bg-white dark:bg-black min-h-screen">
             {article && (
@@ -248,6 +270,11 @@ export const ArticleV2Page: React.FC = () => {
                         <meta name="twitter:title" content={postTitle} />
                         <meta name="twitter:description" content={metaDescription} />
                         <meta name="twitter:image" content={metaImage} />
+                        {jsonLd && (
+                            <script type="application/ld+json">
+                                {JSON.stringify(jsonLd)}
+                            </script>
+                        )}
                     </Helmet>
 
                     {/* ═══════════════════════════════════════════════ */}

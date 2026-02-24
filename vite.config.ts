@@ -19,11 +19,11 @@ export default defineConfig({
         "robots.txt",
       ],
       manifest: {
-        name: "Mood Music",
-        short_name: "MoodMusic",
-        description: "Découvrez la musique qui correspond à votre humeur",
-        theme_color: "#302b63",
-        background_color: "#0f0c29",
+        name: "Fox Engineering - Computer Engineering Scientist",
+        short_name: "Fox",
+        description: "Service d'ingénierie informatique spécialisé en développement web, mobile, desktop et cybersécurité.",
+        theme_color: "#000000",
+        background_color: "#ffffff",
         display: "standalone",
         icons: [
           {

@@ -229,6 +229,28 @@ export const BlogPostPage: React.FC = () => {
 
     const currentPageUrl = window.location.href;
 
+    const jsonLd = post ? {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": post.titre,
+        "image": [metaImage],
+        "datePublished": post.date ? new Date(post.date).toISOString() : undefined,
+        "author": [{
+            "@type": "Person",
+            "name": post.auteur || "Fox",
+            "url": "https://site.myfox.tech"
+        }],
+        "publisher": {
+            "@type": "Organization",
+            "name": "Fox Engineering",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://site.myfox.tech/favicon.png"
+            }
+        },
+        "description": metaDescriptionContent
+    } : null;
+
     return (
         <main className="bg-white dark:bg-black min-h-screen">
             {post && (
@@ -254,6 +276,12 @@ export const BlogPostPage: React.FC = () => {
                     <meta name="twitter:image" content={metaImage} />
                     {/* <meta name="twitter:site" content="@VotrePseudoTwitter" /> */}
                     {/* <meta name="twitter:creator" content={post.auteur ? `@PseudoTwitterAuteur` : '@VotrePseudoTwitter'} /> */}
+                    
+                    {jsonLd && (
+                        <script type="application/ld+json">
+                            {JSON.stringify(jsonLd)}
+                        </script>
+                    )}
                 </Helmet>
             )}
 
