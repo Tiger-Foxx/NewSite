@@ -76,11 +76,7 @@ export const BlogPostPage: React.FC = () => {
         }
     }, [commentsData]);
 
-    useEffect(() => {
-        if (postError) {
-            navigate('/404', { replace: true });
-        }
-    }, [postError, navigate]);
+    // Supression de la redirection brutale vers 404 en cas d'erreur API passagère
 
     const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -184,28 +180,31 @@ export const BlogPostPage: React.FC = () => {
         );
     }
 
-    if (!post && !postLoading) { // S'assure que le chargement est terminé et que post est toujours null
+    if (postError || !post) {
         return (
-            <>
-                <Helmet>
-                <title>Article non trouvé - Fox Engineering</title>
-                    <meta name="robots" content="noindex" />
-                </Helmet>
-                <div className="flex justify-center items-center min-h-screen bg-white dark:bg-black text-center">
-                    <div className="p-8">
-                        <h1 className="text-2xl font-bold text-black dark:text-white mb-4">Oops! Article non trouvé.</h1>
-                        <p className="text-gray-600 dark:text-gray-400 mb-8">
-                            Il semble que l'article que vous cherchez n'existe pas ou a été déplacé.
-                        </p>
-                        <Link
-                            to="/blog"
-                            className="px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-lg font-medium hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
-                        >
-                            Retourner au Blog
-                        </Link>
-                    </div>
+            <div className="min-h-screen pt-16 md:pt-20 flex flex-col items-center justify-center text-center px-4 bg-white dark:bg-black text-black dark:text-white">
+                <div className="w-32 h-32 mx-auto mb-6 opacity-80 mix-blend-luminosity grayscale">
+                    <Lottie animationData={foxLoaderAnimation} loop={false} />
                 </div>
-            </>
+                <h2 className="text-3xl font-bold mb-4">L'article n'a pas pu être chargé</h2>
+                <p className="text-lg text-gray-600 dark:text-gray-400 max-w-lg mb-8">
+                    Le serveur rencontre peut-être un léger ralentissement ou l'article a été déplacé.
+                </p>
+                <div className="flex gap-4">
+                    <button
+                        onClick={() => window.location.reload()}
+                        className="px-6 py-3 bg-black dark:bg-white text-white dark:text-black rounded-lg font-medium hover:scale-105 active:scale-95 transition-all"
+                    >
+                        Réessayer
+                    </button>
+                    <Link
+                        to="/blog"
+                        className="px-6 py-3 border border-gray-300 dark:border-gray-700 rounded-lg font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                    >
+                        Retourner au Blog
+                    </Link>
+                </div>
+            </div>
         );
     }
 

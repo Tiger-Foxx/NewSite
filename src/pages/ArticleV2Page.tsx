@@ -71,11 +71,7 @@ export const ArticleV2Page: React.FC = () => {
         }
     }, [commentsData]);
 
-    useEffect(() => {
-        if (articleError) {
-            navigate('/404', { replace: true });
-        }
-    }, [articleError, navigate]);
+    // Supression de la redirection brutale vers 404 en cas d'erreur API passagère
 
     const fetchRelatedArticles = async (categorie: string, _articleId: number, currentSlug: string) => {
         try {
@@ -175,6 +171,26 @@ export const ArticleV2Page: React.FC = () => {
                         Chargement de l'article...
                     </motion.div>
                 </div>
+            </div>
+        );
+    }
+
+    if (articleError || !article) {
+        return (
+            <div className="min-h-screen pt-16 md:pt-20 flex flex-col items-center justify-center text-center px-4 bg-white dark:bg-black text-black dark:text-white">
+                <div className="w-32 h-32 mx-auto mb-6 opacity-80 mix-blend-luminosity grayscale">
+                    <Lottie animationData={foxLoaderAnimation} loop={false} />
+                </div>
+                <h2 className="text-3xl font-bold mb-4">L'article n'a pas pu être chargé</h2>
+                <p className="text-lg text-gray-600 dark:text-gray-400 max-w-lg mb-8">
+                    Le serveur rencontre peut-être un léger ralentissement ou l'article a été déplacé.
+                </p>
+                <button
+                    onClick={() => window.location.reload()}
+                    className="px-8 py-3 bg-black dark:bg-white text-white dark:text-black rounded-xl font-bold hover:scale-105 active:scale-95 transition-all"
+                >
+                    Réessayer
+                </button>
             </div>
         );
     }
